@@ -1,0 +1,14 @@
+Installation:
+
+
+
+Testing:
+
+  ruby/the gem itself:
+    rake spec
+
+  javascripts:
+    rake jasmine:server
+    or
+    rake jasmine:ci
+
