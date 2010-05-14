@@ -1,0 +1,1 @@
+# copy assets (javascripts/stylesheets/images) into the rails project

@@ -1,0 +1,1 @@
+# generate tool views/controller -- put things in routes
