@@ -81,3 +81,4 @@ Object.extend(Midas, {
     return (agent && document.getElementById && document.designMode && agent != 'konqueror' && agent != 'msie') ? true : false;
   }
 });
+

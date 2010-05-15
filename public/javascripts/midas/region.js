@@ -38,3 +38,4 @@ Midas.Region = Class.create({
     this.element.contentEditable = 'inherit';
   }
 });
+

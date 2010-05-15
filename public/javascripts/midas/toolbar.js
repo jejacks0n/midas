@@ -47,3 +47,4 @@ Midas.Toolbar = Class.create({
     this.element.remove();
   }
 });
+
