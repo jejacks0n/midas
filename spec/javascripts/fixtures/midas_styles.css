@@ -1,0 +1,7 @@
+#jasmine_content {
+  opacity: .50;
+  position: absolute;
+  right: 50px;
+  top: 50px;
+  border: 1px solid red;
+  }

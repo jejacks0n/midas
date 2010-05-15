@@ -9,20 +9,28 @@ module Jasmine
 
     def generate_fixtures
       FileUtils.cd File.join(spec_dir, 'fixtures') do
-        File.open 'fixtures.js', 'w' do |javascript_file|
-          javascript_file.write %Q{jasmine.fixtures = {};\n\n}
+        File.open 'fixtures.js', 'w' do |js_file|
 
-          Dir['*.html'].each do |html_filename|
-            fixture_name = html_filename.sub /\.html$/, ''
-
-            javascript_file.write %Q{jasmine.fixtures['#{fixture_name}'] = "}
-
-            File.foreach html_filename do |line_of_html|
-              javascript_file.write line_of_html.chomp.gsub('"', '\\"')
+          # import html files
+          js_file.write %Q{jasmine.fixtures = {};\n}
+          Dir['*.html'].each do |filename|
+            js_file.write %Q{jasmine.fixtures['#{filename.sub(/\.html$/, '')}'] = "}
+            File.foreach filename do |line|
+              js_file.write line.chomp.gsub('"', '\\"')
             end
-            
-            javascript_file.write %Q{";\n\n}
+            js_file.write %Q{";\n\n}
           end
+
+          # import css files
+          js_file.write %Q{\njasmine.css = {};\n}
+          Dir['*.css'].each do |filename|
+            js_file.write %Q{jasmine.css['#{filename.sub(/\.css$/, '')}'] = "}
+            File.foreach filename do |line|
+              js_file.write line.chomp.gsub('"', '\\"')
+            end
+            js_file.write %Q{";\n\n}
+          end
+
         end
       end
     end
