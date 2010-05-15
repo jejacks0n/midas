@@ -1,5 +1,5 @@
 jasmine.include('midas/midas.js', true);
-jasmine.include('midas/editor.js', true);
+jasmine.include('midas/region.js', true);
 jasmine.include('midas/toolbar.js', true);
 
 describe('Midas.Toolbar', function() {

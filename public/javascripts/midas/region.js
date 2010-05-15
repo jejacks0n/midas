@@ -1,5 +1,5 @@
 if (!Midas) var Midas = {};
-Midas.Editor = Class.create({
+Midas.Region = Class.create({
   version: 0.2,
   name: null,
   options: {
@@ -7,7 +7,7 @@ Midas.Editor = Class.create({
   },
 
   initialize: function(element, options) {
-    if (!Midas.version) throw ('Midas.Editor requires Midas');
+    if (!Midas.version) throw ('Midas.Region requires Midas');
 
     this.element = $(element);
     if (!this.element || !Midas.agentIsCapable()) return;

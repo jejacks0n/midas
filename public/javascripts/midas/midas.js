@@ -6,7 +6,7 @@ var Midas = Class.create({
     saveMethod: 'put'
   },
 
-  initialize: function(options, toolbarOptions, editorOptions) {
+  initialize: function(options, toolbarOptions, regionOptions) {
     this.options = Object.extend(Object.clone(this.options), options);
 
     this.toolbar = new Midas.Toolbar(toolbarOptions);
@@ -14,7 +14,7 @@ var Midas = Class.create({
     this.regions = [];
     this.regionElements = $$('div.' + this.options['classname']);
     this.regionElements.each(function(element) {
-      this.regions.push(new Midas.Editor(element, editorOptions));
+      this.regions.push(new Midas.Region(element, regionOptions));
     }.bind(this));
   },
 
