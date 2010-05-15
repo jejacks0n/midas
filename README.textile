@@ -1,14 +1,21 @@
-Installation:
+= Installation
 
 
 
-Testing:
+= Development
 
-  ruby/the gem itself:
-    rake spec
+  Testing:
 
-  javascripts:
-    rake jasmine:server
-    or
-    rake jasmine:ci
+    ruby:
+      rake spec
 
+    javascript:
+      rake jasmine:server
+      or
+      rake jasmine:ci
+
+      integration:
+        rake midas:minify_js
+        rake jasmine:server
+
+        navigate to http://localhost:8888/__spec__/integration.html
