@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'rake'
+Dir[File.join(File.dirname(__FILE__), "/tasks/**/*.rake")].sort.each { |ext| load ext }
+
 ENV['PATH'] += ':/opt/local/bin'
 
 begin
@@ -11,6 +13,7 @@ begin
     gem.email = "jejacks0n@gmail.com"
     gem.homepage = "http://github.com/jejacks0n/midas"
     gem.authors = ["Jeremy Jackson"]
+    gem.add_dependency "packr", ">= 3.1.0"
     gem.add_development_dependency "rspec", ">= 1.3.0"
     gem.add_development_dependency "jasmine", ">= 0.10.3.5"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
