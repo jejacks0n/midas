@@ -12,6 +12,7 @@
 #
 src_files:
   - prototype.js
+  - midas/*.js
 
 # stylesheets
 #
