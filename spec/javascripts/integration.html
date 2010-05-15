@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+  <title>Midas Integration</title>
+  <meta content='text/html; charset=UTF-8' http-equiv='content-type' />
+  <meta content='en' http-equiv='content-language' />
+  <meta content='no' http-equiv='imagetoolbar' />
+
+  <script src="/prototype.js" type="text/javascript"></script>
+
+  <script src="/midas/midas.js" type="text/javascript"></script>
+  <script src="/midas/editor.js" type="text/javascript"></script>
+  <script src="/midas/toolbar.js" type="text/javascript"></script>
+  <style type="text/css">
+    #toolbar {
+      margin-bottom: 30px;
+      }
+    #toolbar a {
+      border: 1px solid green;
+      background: #333;
+      color: #FFF;
+      display: inline-block;
+      padding: 2px 10px;
+      }
+    .editable {
+      outline: 1px dotted #F00;
+      width: 200px;
+      height: 200px;
+      float: left;
+      }
+    .not-editable {
+      outline: 1px solid #999;
+      width: 200px;
+      height: 200px;
+      float: left;
+      }
+  </style>
+</head>
+<body>
+
+  <div id="toolbar">
+    <a onclick="midas = new Midas()">Init</a>
+    <a onclick="midas.save()">Save</a>
+  </div>
+
+  <div id="region1" class="editable">
+    Lorem Ipsum....
+  </div>
+
+  <div id="region2" class="editable">
+  </div>
+
+  <div id="region3" class="not-editable">
+    Not editable
+  </div>
+
+</body>
+</html>

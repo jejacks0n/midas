@@ -10,11 +10,15 @@ describe('Midas', function () {
   });
 
   afterEach(function () {
+    try {
+      window.midas.destroy();
+      window.midas = null;
+    } catch(e) {}
     //jasmine.unloadCSS('midas_styles');
   });
 
   it('should make all regions with the editable class editable', function() {
-    var midas = new Midas();
+    window.midas = new Midas();
 
     expect($('region1').contentEditable).toEqual('true');
     expect($('region2').contentEditable).toEqual('true');
@@ -22,21 +26,33 @@ describe('Midas', function () {
   });
 
   it('should accept options in the constructor', function() {
-    var midas = new Midas({classname: 'not-editable'});
+    window.midas = new Midas({classname: 'not-editable'});
 
     expect($('region1').contentEditable).not.toEqual('true');
     expect($('region3').contentEditable).toEqual('true');
   });
 
   it('should assign all editable regions to member variables', function() {
-    var midas = new Midas();
+    window.midas = new Midas();
 
     expect(midas.regions.length).toEqual(2);
     expect(midas.regionElements).toContain($('region1'));
     expect(midas.regionElements).toContain($('region2'));
   });
 
+  it('should destroy', function() {
+    window.midas = new Midas();
+    midas.destroy();
+  });
+
   describe('static methods', function () {
+
+    // I'm not really sure how to test these.. most of the other tests will
+    // be broken if these two fail in a given browser, because most of the
+    // features require a level of support in the browser.
+    it('should return that it knows what browser is being used', function() {
+      expect(Midas.agent()).not.toEqual(false);
+    });
 
     it('should detect if the browser is capible of editing', function() {
       expect(Midas.agentIsCapable()).toEqual(true);
@@ -54,9 +70,9 @@ describe('Midas', function () {
     });
 
     it('should call serialize on the regions', function () {
-      var midas = new Midas();
+      window.midas = new Midas();
       spyOn(midas.regions[1], 'serialize').andCallFake(function() {
-        return {name: 'foo', content: 'bar'};
+        return {name: 'banana', content: 'juice'};
       });
       midas.save();
 
@@ -66,13 +82,13 @@ describe('Midas', function () {
     describe('using put (updating)', function() {
 
       it('should generate an ajax request', function () {
-        var midas = new Midas({
-          saveUrl: '/server',
+        window.midas = new Midas({
+          saveUrl: '/peanuts',
           saveMethod: 'put'
         });
         midas.save();
 
-        expect(Ajax.Request).wasCalledWith('/server', {
+        expect(Ajax.Request).wasCalledWith('/peanuts', {
           method: 'put',
           parameters: {_method: 'put', region1: 'region1', region2: 'region2'}
         });
@@ -83,13 +99,13 @@ describe('Midas', function () {
     describe('using post (creating)', function() {
 
       it('should generate an ajax request', function () {
-        var midas = new Midas({
-          saveUrl: '/server',
+        window.midas = new Midas({
+          saveUrl: '/oranges',
           saveMethod: 'post'
         });
         midas.save();
 
-        expect(Ajax.Request).wasCalledWith('/server', {
+        expect(Ajax.Request).wasCalledWith('/oranges', {
           method: 'post',
           parameters: {region1: 'region1', region2: 'region2'}
         });
