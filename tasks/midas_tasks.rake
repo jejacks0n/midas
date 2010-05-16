@@ -31,8 +31,9 @@ namespace :midas do
     %w[midas region toolbar dialog].each do |file|
       code << File.read(File.join(File.dirname(__FILE__), "/../public/javascripts/midas/#{file}.js"))
     end
-    File.open(File.join(output_path, 'midas.js'), 'wb') { |file| file.write(code) }
-    File.open(File.join(output_path, 'midas.min.js'), 'wb') { |file| file.write(Packr.pack(code, :base62 => true)) }
+    config = File.read(File.join(File.dirname(__FILE__), "/../public/javascripts/midas/config.js"))
+    File.open(File.join(output_path, 'midas.js'), 'wb') { |file| file.write(code + config) }
+    File.open(File.join(output_path, 'midas.min.js'), 'wb') { |file| file.write(Packr.pack(code, :base62 => true) + config) }
   end
 
   task :copy_assets do

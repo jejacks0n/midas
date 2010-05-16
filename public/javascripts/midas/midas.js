@@ -3,12 +3,14 @@ var Midas = Class.create({
   options: {
     classname: 'editable',
     saveUrl: window.location.href,
-    saveMethod: 'put'
+    saveMethod: 'put',
+    configuration: null
   },
 
   initialize: function(options, toolbarOptions, regionOptions) {
     this.options = Object.extend(Object.clone(this.options), options);
 
+    this.configuration = this.configuration || Midas.Config;
     this.toolbar = new Midas.Toolbar(toolbarOptions);
 
     this.regions = [];

@@ -11,8 +11,12 @@
 #   - dist/**/*.js
 #
 src_files:
-  - prototype.js
-  - midas/*.js
+  - javascripts/prototype.js
+  - javascripts/midas/midas.js
+  - javascripts/midas/region.js
+  - javascripts/midas/toolbar.js
+  - javascripts/midas/dialog.js
+  - javascripts/midas/config.js
 
 # stylesheets
 #
@@ -60,7 +64,7 @@ spec_files:
 #
 # src_dir: public
 #
-src_dir: public/javascripts
+src_dir: public
 
 # spec_dir
 #
