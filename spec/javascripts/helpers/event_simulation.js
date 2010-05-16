@@ -449,5 +449,31 @@ jasmine.simulate = {
    */
   keyup: function(target, options) {
     this.fireKeyEvent('keyup', target, options);
+  },
+
+  //--------------------------------------------------------------------------
+  // Other events
+  //--------------------------------------------------------------------------
+
+  /**
+   * Executes a focus event
+   * -- not simulated, but it seems like the right place to put it.
+   *
+   * @param {HTMLElement} target The element to act on.
+   * @static
+   */
+  focus: function(target) {
+    target.focus();
+  },
+
+  /**
+   * Executes a focus event
+   * -- not simulated, but it seems like the right place to put it.
+   *
+   * @param {HTMLElement} target The element to act on.
+   * @static
+   */
+  blur: function(target) {
+    target.blur();
   }
 };
