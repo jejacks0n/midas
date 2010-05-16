@@ -1,49 +1,120 @@
 if (!Midas) var Midas = {};
 Midas.Toolbar = Class.create({
   version: 0.2,
+  contexts: [],
   options: {
-    appendTo: null
+    appendTo: null,
+    configuration: null
   },
 
   initialize: function(options) {
-    if (!Midas.version) throw ('Midas.Toolbar requires Midas');
+    if (!Midas.version) throw('Midas.Toolbar requires Midas');
 
     this.options = Object.extend(Object.clone(this.options), options);
+    this.options['configuration'] = this.options['configuration'] || Midas.Config;
 
     this.build();
   },
 
   build: function() {
+    this.element = new Element('div', {id: this.options['id'] || this.generateId()}).addClassName('midas-toolbar');
+
+    if (this.options['configuration']['toolbars']) {
+      for (var toolbar in this.options['configuration']['toolbars']) {
+        var element = new Element('div').addClassName('midas-' + toolbar + 'bar');
+        var buttons = this.options['configuration']['toolbars'][toolbar];
+        for (var button in buttons) {
+          element.appendChild(this.makeButton(button, buttons[button]));
+        }
+        this.element.appendChild(element);
+      }
+    }
+    
+    ($(this.options['appendTo']) || document.body).appendChild(this.element);
+  },
+
+  generateId: function() {
+    if (this.id) return this.id;
+    
     var id = null;
     var element = '';
     while (element !== null) {
       id = 'midas_toolbar' + parseInt(Math.random() * 10000);
       element = $(id);
     }
-    this.element = new Element('div', {id: id, 'class': 'midas-toolbar'});
 
-    var toolbar = '';
-//    toolbar += '<div class="defines-toolbar">';
-//    doc.writeln('<select name="rta_styles" id="rta_styles_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'insertspan\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
-//    for (var i = 0; i < this.m_styles.length; i++) doc.writeln('<option value="' + this.m_styles[i][0] + '">' + this.m_styles[i][1] + '</option>');
-//    doc.writeln('</select>');
-//    doc.writeln('<select name="rta_blocks" id="rta_blocks_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'formatblock\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
-//    for (var i = 0; i < this.m_blocks.length; i++) doc.writeln('<option value="' + this.m_blocks[i][0] + '">' + this.m_blocks[i][1] + '</option>');
-//    doc.writeln('</select>');
-//    doc.writeln('<select name="rta_fonts" id="rta_fonts_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'fontname\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
-//    for (var i = 0; i < this.m_fonts.length; i++) doc.writeln('<option value="' + this.m_fonts[i][0] + '">' + this.m_fonts[i][1] + '</option>');
-//    doc.writeln('</select>');
-//    doc.writeln('<select name="rta_sizes" id="rta_sizes_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'fontsize\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
-//    for (var i = 0; i < this.m_sizes.length; i++) doc.writeln('<option value="' + this.m_sizes[i][0] + '">' + this.m_sizes[i][1] + '</option>');
-//    doc.writeln('</select>');
-//    toolbar += '</div>';
+    this.id = id;
+    return id;
+  },
 
-    toolbar += '<div class="button-toolbar">';
-    toolbar += '</div>';
+  makeButton: function(name, buttonSpec) {
+    var element;
+    if (Object.isArray(buttonSpec)) {
+      element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]}).update('' + buttonSpec[0] + '');
 
+      var buttonTypes = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
+      buttonTypes.each(function(buttonType) {
+        var type = buttonType[0];
+        var action = buttonType[1];
+        switch(type) {
+          case 'toggle':
+            element.observe('click', function() {
+              element.toggleClassName('pressed');
+            });
+            break;
+          case 'context':
+            this.contexts.push({element: element, callback: action || name});
+            break;
+          case 'dialog':
+            if (!action) throw('Button ' + name + ' is missing arguments');
+            element.observe('click', function() {
+              var url = Object.isFunction(action) ? action(name, this) : action;
+              alert('this would open a dialog with the url: ' + url);
+            }.bind(this));
+            break;
+          case 'panel':
+            if (!action) throw('Button ' + name + ' is missing arguments');
+            element.observe('click', function() {
+              var url = Object.isFunction(action) ? action(name, this) : action;
+              alert('this would open a panel with the url: ' + url);
+            }.bind(this));
+            break;
+          case 'palette':
+            if (!action) throw('Button ' + name + ' is missing arguments');
+            element.observe('click', function() {
+              var url = Object.isString(action) ? action : action(name, this);
+              alert('this would open a palette with the url: ' + url);
+            }.bind(this));
+            break;
+          case 'select':
+            if (!action) throw('Button ' + name + ' is missing arguments');
+            element.observe('click', function() {
+              var contents = Object.isArray(action) ? action : action(name, this);
+              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
+            }.bind(this));
+            break;
+          default:
+            if (type) throw('Unknown button type ' + type + ' for the ' + name + ' button');
+        }
+      }.bind(this));
+    } else if (Object.isString(buttonSpec)) {
+      element = this.makeSeparator(buttonSpec);
+    } else {
+      element = this.makeButtonGroup(buttonSpec);
+    }
+    return element;
+  },
 
-    this.element.update(toolbar);
-    ($(this.options.appendTo) || document.body).appendChild(this.element);
+  makeButtonGroup: function(group) {
+    var element = new Element('div').addClassName('group');
+    for (var button in group) {
+      element.appendChild(this.makeButton(button, group[button]));
+    }
+    return element;
+  },
+
+  makeSeparator: function(button) {
+    return new Element('span').addClassName(button == '*' ? 'flex-spacer' : button == '-' ? 'line-spacer' : 'spacer');
   },
 
   destroy: function() {
