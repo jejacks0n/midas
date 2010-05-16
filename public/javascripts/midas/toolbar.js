@@ -2,7 +2,7 @@ if (!Midas) var Midas = {};
 Midas.Toolbar = Class.create({
   version: 0.2,
   options: {
-    customToolbar: null
+    appendTo: null
   },
 
   initialize: function(options) {
@@ -20,11 +20,10 @@ Midas.Toolbar = Class.create({
       id = 'midas_toolbar' + parseInt(Math.random() * 10000);
       element = $(id);
     }
-    this.element = new Element('div', {id: id, classname: 'midas_toolbar'});
+    this.element = new Element('div', {id: id, 'class': 'midas-toolbar'});
 
     var toolbar = '';
-    toolbar = (this.options.customToolbar) ? '<div class="custom-toolbar">' + this.options.customToolbar + '</div>' : '';
-    toolbar += '<div class="predefines-toolbar">';
+//    toolbar += '<div class="defines-toolbar">';
 //    doc.writeln('<select name="rta_styles" id="rta_styles_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'insertspan\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
 //    for (var i = 0; i < this.m_styles.length; i++) doc.writeln('<option value="' + this.m_styles[i][0] + '">' + this.m_styles[i][1] + '</option>');
 //    doc.writeln('</select>');
@@ -37,14 +36,17 @@ Midas.Toolbar = Class.create({
 //    doc.writeln('<select name="rta_sizes" id="rta_sizes_' + this.m_id + this.m_toolbarCount + '" onChange="' + onClick + 'RichTextarea.getInstance(\'' + this.m_id + '\').handleCommand(\'fontsize\', this.options[selectedIndex].value); this.selectedIndex = 0;">');
 //    for (var i = 0; i < this.m_sizes.length; i++) doc.writeln('<option value="' + this.m_sizes[i][0] + '">' + this.m_sizes[i][1] + '</option>');
 //    doc.writeln('</select>');
+//    toolbar += '</div>';
+
+    toolbar += '<div class="button-toolbar">';
     toolbar += '</div>';
 
+
     this.element.update(toolbar);
-    document.body.appendChild(this.element);
+    ($(this.options.appendTo) || document.body).appendChild(this.element);
   },
 
   destroy: function() {
     this.element.remove();
   }
 });
-
