@@ -2,3 +2,6 @@
   visibility: hidden;
   position: absolute;
   }
+.editable {
+  height: 200px;
+  }

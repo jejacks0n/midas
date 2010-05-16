@@ -23,7 +23,7 @@ var Midas = Class.create({
     this.regionElements = $$('div.' + this.options['classname']);
     var index = 0;
     this.regionElements.each(function(element) {
-      this.regions.push(new Midas.Region(element, regionOptions, index));
+      this.regions.push(new Midas.Region(element, regionOptions, 'midas_region_' + index));
       index++;
     }.bind(this));
 
