@@ -8,17 +8,23 @@ var Midas = Class.create({
   },
 
   initialize: function(options, toolbarOptions, regionOptions) {
-    if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features.');
+    if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features');
 
     this.options = Object.extend(Object.clone(this.options), options);
+    this.options['configuration'] = this.options['configuration'] || Midas.Config;
 
-    this.options.configuration = this.options.configuration || Midas.Config;
+    toolbarOptions = toolbarOptions || {};
+    Object.extend(toolbarOptions, {configuration: this.options['configuration']});
     this.toolbar = new Midas.Toolbar(toolbarOptions);
 
+    regionOptions = regionOptions || {};
+    Object.extend(regionOptions, {configuration: this.options['configuration']});
     this.regions = [];
     this.regionElements = $$('div.' + this.options['classname']);
+    var index = 0;
     this.regionElements.each(function(element) {
-      this.regions.push(new Midas.Region(element, regionOptions));
+      this.regions.push(new Midas.Region(element, regionOptions, index));
+      index++;
     }.bind(this));
   },
 

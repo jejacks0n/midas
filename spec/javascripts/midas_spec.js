@@ -27,10 +27,18 @@ describe('Midas', function () {
   });
 
   it('should allow the configuration to be provided in the options', function() {
-    var config = { toolbar: {}, buttonbar: {} };
+    var config = { actions: {}, buttons: {} };
     window.midas = new Midas({configuration: config});
 
     expect(midas.options.configuration).toEqual(config);
+  });
+
+  it("should pass it's configuration along to the toolbar and regions", function() {
+    var config = { actions: {}, buttons: {} };
+    window.midas = new Midas({configuration: config});
+
+    expect(midas.toolbar.options.configuration).toEqual(config);
+    expect(midas.regions[0].options.configuration).toEqual(config);
   });
 
   it('should only instantiate if a browser has contentEditable features', function() {

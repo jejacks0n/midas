@@ -3,17 +3,19 @@ Midas.Region = Class.create({
   version: 0.2,
   name: null,
   options: {
-
+    configuration: null
   },
 
-  initialize: function(element, options) {
-    if (!Midas.version) throw ('Midas.Region requires Midas');
+  initialize: function(element, options, index) {
+    if (!Midas.version) throw('Midas.Region requires Midas');
+    if (!Midas.agentIsCapable()) throw('Midas.Region requires a browser that has contentEditable features');
 
     this.element = $(element);
-    if (!this.element || !Midas.agentIsCapable()) return;
-
+    if (!this.element) throw('Unable to locate that element');
+    
     this.options = Object.extend(Object.clone(this.options), options);
-    this.name = this.element.getAttribute('id');
+    this.options['configuration'] = this.options['configuration'] || Midas.Config;
+    this.name = this.element.getAttribute('id') || 'midas_region_' + index;
 
     this.makeEditable();
   },
