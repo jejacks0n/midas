@@ -5,6 +5,7 @@ jasmine.include('/__spec__/fixtures/fixtures.js', true);
  * Loads a given fixture file into the jasmine_content div.
  *
  * @param {String} filename of the fixture you want to load (minus the .html)
+ * @static
  */
 jasmine.loadFixture = function(filename) {
   if (!jasmine.fixtures[filename]) throw('Unable to load that fixture.');
@@ -16,6 +17,7 @@ jasmine.loadFixture = function(filename) {
  * Loads a given css fixture file into the document.
  *
  * @param {String} filename of the css you want to load (minus the .css)
+ * @static
  */
 jasmine.loadCSS = function(filename) {
   if (!jasmine.css[filename]) throw('Unable to load that css.');
@@ -31,6 +33,7 @@ jasmine.loadCSS = function(filename) {
  * Unloads a given css fixture file from the document.
  *
  * @param {String} filename of the css you want to load (minus the .css)
+ * @static
  */
 jasmine.unloadCSS = function(filename) {
   var element = document.getElementById('css_' + filename);
@@ -38,3 +41,4 @@ jasmine.unloadCSS = function(filename) {
 
   document.body.removeChild(element);
 };
+
