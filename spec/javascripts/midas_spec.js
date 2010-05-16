@@ -2,7 +2,7 @@ describe('Midas', function () {
 
   beforeEach(function() {
     jasmine.loadFixture('midas_fixture');
-    jasmine.loadCSS('midas_styles');
+    //jasmine.loadCSS('midas_styles');
   });
 
   afterEach(function () {
@@ -13,19 +13,43 @@ describe('Midas', function () {
     //jasmine.unloadCSS('midas_styles');
   });
 
+  it('should accept options in the constructor', function() {
+    window.midas = new Midas({classname: 'not-editable'});
+
+    expect($('region1').contentEditable).not.toEqual('true');
+    expect($('region3').contentEditable).toEqual('true');
+  });
+
+  it('should use the default configuration', function() {
+    window.midas = new Midas();
+
+    expect(midas.options.configuration).toEqual(Midas.Config);
+  });
+
+  it('should allow the configuration to be provided in the options', function() {
+    var config = { toolbar: {}, buttonbar: {} };
+    window.midas = new Midas({configuration: config});
+
+    expect(midas.options.configuration).toEqual(config);
+  });
+
+  it('should only instantiate if a browser has contentEditable features', function() {
+    spyOn(Midas, 'agentIsCapable').andCallFake(function() {
+      return false;
+    });
+    try {
+      window.midas = new Midas();
+    } catch(e) {}
+
+    expect(midas).toBeNull();
+  });
+
   it('should make all regions with the editable class editable', function() {
     window.midas = new Midas();
 
     expect($('region1').contentEditable).toEqual('true');
     expect($('region2').contentEditable).toEqual('true');
     expect($('region3').contentEditable).not.toEqual('true'); // will default to 'inherit' if not specified
-  });
-
-  it('should accept options in the constructor', function() {
-    window.midas = new Midas({classname: 'not-editable'});
-
-    expect($('region1').contentEditable).not.toEqual('true');
-    expect($('region3').contentEditable).toEqual('true');
   });
 
   it('should assign all editable regions to member variables', function() {

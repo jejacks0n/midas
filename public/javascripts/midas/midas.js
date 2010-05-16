@@ -8,9 +8,11 @@ var Midas = Class.create({
   },
 
   initialize: function(options, toolbarOptions, regionOptions) {
+    if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features.');
+
     this.options = Object.extend(Object.clone(this.options), options);
 
-    this.configuration = this.configuration || Midas.Config;
+    this.options.configuration = this.options.configuration || Midas.Config;
     this.toolbar = new Midas.Toolbar(toolbarOptions);
 
     this.regions = [];

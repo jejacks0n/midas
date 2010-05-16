@@ -1,9 +1,9 @@
 
 Midas.Config = {
 
-  // Classes that can be inserted using the toolbar
+  // CSS Classes that can be inserted using the toolbar
   // -- will wrap selections in spans with a classname of whatever is selected
-  classes: [
+  styles: [
     ['red',  'Red text'],
     ['bold', 'Large bold text'],
     ['blue', 'Blue background']
@@ -24,12 +24,16 @@ Midas.Config = {
 
   /* Toolbar buttons (save, preview, etc.)
    *
-   * format: [label, tooltip description, type]
+   * format: [label, tooltip description, type, mixed]
    * type can be:
    *   'button' (default) just calls handleCommand(key of the object, eg. save, preview, undo etc.)
    *   'toggle' will toggle on or off when clicked
-   *   'dialog' will open a dialog window, expects the next array item to be a url
-   *   'panel' will open a panel dialog, expects the next array item to be a url
+   *   'dialog' will open a dialog window, expects the next array item to be:
+   *     a string url
+   *     a function that returns a string url
+   *   'panel' will open a panel dialog, expects the next array item to be:
+   *     a string url
+   *     a function that returns a string url
    */
   toolbar: {
     save:              ['Save', 'Save this page'],
@@ -50,21 +54,26 @@ Midas.Config = {
 
   /* Edit buttons configuration (bold, italics, etc.)
    *
-   * format: [label, type, var]
+   * format: [label, type, var, mixed]
    * type can be:
    *   'button' (default) just calls handleCommand(key of the object, eg. cut, copy, bold etc.)
    *   'toggle' will toggle on or off when clicked
-   *   'palette' will open a palette window, expects the next array item to be a url
-   *   'select' will open a select/pulldown style window, expects the next array item to be an array
-   *   'context' will call a callback function, expects the next array item to be a:
-   *     function that returns a boolean to highlight the button or not (examples below)
-   *     string that matches one of the following: bold, italic !!
+   *   'palette' will open a palette window, expects the next array item to be
+   *     a string url
+   *     a function that returns a url
+   *   'select' will open a select/pulldown style window, expects the next array item to be:
+   *     an array
+   *     a function that returns an array
+   *   'context' will call a callback function, expects the next array item to be:
+   *     a function that returns a boolean to highlight the button or not (examples below)
+   *     a string that matches one of the following: bold, italic !!
    */
   buttonbar: {
-    block:             ['Block Format', 'select', Midas.Config.blocks],
+    style:             ['Style', 'select', function() { return Midas.Config.styles }],
+    block:             ['Block Format', 'select', function() { return Midas.Config.blocks }],
     sep1:              '-',
-    backcolor:         ['Background Color', 'palette', 'backcolor'],
-    forecolor:         ['Text Color', 'palette', 'forecolor'],
+    backcolor:         ['Background Color', 'palette', '/midas/backcolor'],
+    forecolor:         ['Text Color', 'palette', '/midas/forecolor'],
     sep2:              '-',
     clipboard:         {
       cut:             ['Cut'],
