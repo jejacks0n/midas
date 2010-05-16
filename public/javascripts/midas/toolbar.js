@@ -50,7 +50,12 @@ Midas.Toolbar = Class.create({
   makeButton: function(name, buttonSpec) {
     var element;
     if (Object.isArray(buttonSpec)) {
-      element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]}).update('' + buttonSpec[0] + '');
+      element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
+      element.update('<em>' + buttonSpec[0] + '</em>');
+      element.addClassName('midas-button-' + name.replace('_', '-'));
+      element.observe('click', function() {
+        Event.fire(document, 'midas:toolbar', {toolbar: this, name: name, spec: buttonSpec});
+      }.bind(this));
 
       var buttonTypes = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
       buttonTypes.each(function(buttonType) {

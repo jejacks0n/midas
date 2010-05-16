@@ -26,6 +26,14 @@ var Midas = Class.create({
       this.regions.push(new Midas.Region(element, regionOptions, index));
       index++;
     }.bind(this));
+
+    this.setupObservers();
+  },
+
+  setupObservers: function() {
+    document.observe('midas:toolbar', function(e) {
+      console.debug(e.memo);
+    });
   },
 
   serialize: function() {

@@ -1,6 +1,18 @@
 // Load up the fixtures
 jasmine.include('/__spec__/fixtures/fixtures.js', true);
 
+
+/**
+ * Logs the given string to the current logger.
+ *
+ * @param {String} string to log
+ * @static
+ */
+jasmine.log = function(string) {
+  var env = jasmine.getEnv();
+  env.reporter.log(string);
+};
+
 /**
  * Loads a given fixture file into the jasmine_content div.
  *

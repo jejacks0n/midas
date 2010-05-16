@@ -52,10 +52,20 @@ describe('Midas.Toolbar', function() {
     expect($('toolbar').innerHTML).toContain('class="group"');
   });
 
-  it('should make buttons create an array of context buttons', function() {
+  it('should create an array of context buttons', function() {
     window.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
     expect(toolbar.contexts.length).toBeGreaterThan(2);
+  });
+
+  it('should fire a midas:toolbar event when a button is clicked', function() {
+    window.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+    var spy = spyOn(Event, 'fire').andCallFake(function() {
+      jasmine.log('>> Mock Event.fire called...');
+    });
+
+    jasmine.simulate.click($$('.midas-button-orderedlist')[0]);
+    expect(spy.callCount).toEqual(1);
   });
 
   it('should make separators', function() {

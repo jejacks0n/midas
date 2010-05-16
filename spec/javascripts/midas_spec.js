@@ -2,7 +2,7 @@ describe('Midas', function () {
 
   beforeEach(function() {
     jasmine.loadFixture('midas_fixture');
-    //jasmine.loadCSS('midas_styles');
+    jasmine.loadCSS('midas_styles');
   });
 
   afterEach(function () {
@@ -10,7 +10,7 @@ describe('Midas', function () {
       window.midas.destroy();
       window.midas = null;
     } catch(e) {}
-    //jasmine.unloadCSS('midas_styles');
+    jasmine.unloadCSS('midas_styles');
   });
 
   it('should accept options in the constructor', function() {
@@ -45,9 +45,7 @@ describe('Midas', function () {
     spyOn(Midas, 'agentIsCapable').andCallFake(function() {
       return false;
     });
-    try {
-      window.midas = new Midas();
-    } catch(e) {}
+    try { window.midas = new Midas(); } catch(e) {}
 
     expect(midas).toBeNull();
   });
@@ -92,8 +90,7 @@ describe('Midas', function () {
 
     beforeEach(function() {
       spyOn(Ajax, 'Request').andCallFake(function() {
-        var env = jasmine.getEnv();
-        env.reporter.log('>> Mock Ajax.Request called...');
+        jasmine.log('>> Mock Ajax.Request called...');
       });
     });
 
