@@ -1,0 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+.editable {
+  outline: 1px dotted #F00;
+  width: 200px;
+  height: 200px;
+  float: left;
+  }
+.not-editable {
+  outline: 1px solid #999;
+  width: 200px;
+  height: 200px;
+  float: left;
+  }
