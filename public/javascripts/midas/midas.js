@@ -27,13 +27,22 @@ var Midas = Class.create({
       index++;
     }.bind(this));
 
+    this.activeRegion = this.regions[0] ? this.regions[0] : null;
+
     this.setupObservers();
   },
 
   setupObservers: function() {
-    document.observe('midas:toolbar', function(e) {
-      console.debug(e.memo);
+    Event.observe(document, 'midas:toolbar', function(e) {
     });
+
+    Event.observe(document, 'midas:region', function(e) {
+      this.setActiveRegion(e.memo['region']);
+    }.bind(this));
+  },
+
+  setActiveRegion: function(region) {
+    this.activeRegion = region; 
   },
 
   serialize: function() {
@@ -63,6 +72,8 @@ var Midas = Class.create({
     this.regions.each(function(region) {
       region.destroy();
     });
+    this.toolbar = null;
+    this.regions = [];
   }
 });
 
