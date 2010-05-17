@@ -78,6 +78,27 @@ describe('Midas', function () {
 
   describe('static methods', function () {
 
+    it('should track instances of itself', function() {
+      var midas1 = new Midas();
+      var midas2 = new Midas();
+      var midas3 = new Midas();
+
+      expect(Midas.instances.length).toEqual(3);
+
+      midas2.destroy();
+      expect(Midas.instances.length).toEqual(2);
+
+      midas1.destroy();
+      expect(Midas.instances.length).toEqual(1);
+
+      midas3.destroy();
+      expect(Midas.instances.length).toEqual(0);
+
+      midas1 = null;
+      midas2 = null;
+      midas3 = null;
+    });
+
     // I'm not really sure how to test these.. most of the other tests will
     // be broken if these two fail in a given browser, because most of the
     // features require a level of support in the browser.
@@ -161,8 +182,22 @@ describe('Midas', function () {
       expect(this.midas.activeRegion).toEqual(this.midas.regions[0]);
     });
 
-    xit('should pass any button clicks on to the focused region', function() {
-      this.fail();
+    it('should handle and pass any button clicks to the active region', function() {
+      this.midas = new Midas();
+      var spy1 = spyOn(this.midas.activeRegion, 'handleCommand');
+      var spy2 = spyOn(this.midas, 'handleCommand');
+
+      jasmine.simulate.click($$('.midas-button-orderedlist')[0]);
+      expect(spy1.callCount).toEqual(1);
+      expect(spy2.callCount).toEqual(1);
+    });
+
+    it('should handle switching modes', function() {
+      this.midas = new Midas();
+      var spy = spyOn(this.midas, 'handleMode');
+
+      jasmine.simulate.click($$('.midas-button-preview')[0]);
+      expect(spy.callCount).toEqual(1);
     });
 
   });

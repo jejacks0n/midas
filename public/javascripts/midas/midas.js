@@ -6,9 +6,12 @@ var Midas = Class.create({
     saveMethod: 'put',
     configuration: null
   },
+  commandsToHandle: ['save'],
 
   initialize: function(options, toolbarOptions, regionOptions) {
     if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features');
+
+    Midas.registerInstance(this);
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
@@ -33,16 +36,42 @@ var Midas = Class.create({
   },
 
   setupObservers: function() {
-    Event.observe(document, 'midas:toolbar', function(e) {
-    });
+    Event.observe(document, 'midas:button', function(e) {
+      var a = e.memo;
+      //{toolbar: this, name: name, spec: buttonSpec, event: event}
+
+      var handled = this.handleCommand.call(this, a['name'], a['spec'], a['event'], a['toolbar']);
+      if (!handled) this.activeRegion.handleCommand.call(this, a['name'], a['spec'], a['event'], a['toolbar']);
+    }.bind(this));
 
     Event.observe(document, 'midas:region', function(e) {
-      this.setActiveRegion(e.memo['region']);
+      var a = e.memo;
+      //{region: this, name: this.name, event: event}
+
+      this.setActiveRegion(a['region']);
+    }.bind(this));
+
+    Event.observe(document, 'midas:mode', function(e) {
+      var a = e.memo;
+      //{mode: mode}
+
+      this.handleMode(a['mode']);
     }.bind(this));
   },
 
   setActiveRegion: function(region) {
     this.activeRegion = region; 
+  },
+
+  handleCommand: function(action, spec, event, toolbar) {
+    if (this.commandsToHandle.indexOf(action) < 0) return false;
+    if (Object.isFunction(this[action])) return this[action].apply(arguments);
+
+    throw('Unhandled action "' + action + '"');
+  },
+
+  handleMode: function(mode) {
+    //!!
   },
 
   serialize: function() {
@@ -74,12 +103,23 @@ var Midas = Class.create({
     });
     this.toolbar = null;
     this.regions = [];
+    Midas.unregisterInstance(this);
   }
 });
 
 // Midas static methods
 Object.extend(Midas, {
   version: 0.2,
+  instances: [],
+  agentId: null,
+
+  registerInstance: function(instance) {
+    this.instances.push(instance);
+  },
+
+  unregisterInstance: function(instance) {
+    this.instances = this.instances.without(instance);
+  },
 
   agent: function() {
     if (this.agentId) return this.agentId;

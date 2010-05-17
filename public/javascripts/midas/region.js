@@ -4,7 +4,7 @@ Midas.Region = Class.create({
   name: null,
   options: {
     configuration: null,
-    inline: false
+    inline: true
   },
 
   initialize: function(element, options, name) {
@@ -51,6 +51,10 @@ Midas.Region = Class.create({
 
   getContents: function() {
     return this.element.innerHTML.replace(/^\s+|\s+$/g, "");
+  },
+
+  handleCommand: function() {
+    //!!
   },
 
   serialize: function() {

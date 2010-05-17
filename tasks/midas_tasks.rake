@@ -33,7 +33,7 @@ namespace :midas do
     end
     config = File.read(File.join(File.dirname(__FILE__), "/../public/javascripts/midas/config.js"))
     File.open(File.join(output_path, 'midas.js'), 'wb') { |file| file.write(code + config) }
-    File.open(File.join(output_path, 'midas.min.js'), 'wb') { |file| file.write(Packr.pack(code, :base62 => true) + config) }
+    File.open(File.join(output_path, 'midas.min.js'), 'wb') { |file| file.write(Packr.pack(code, :base62 => true) + ";\n" + config) }
   end
 
   task :copy_assets do

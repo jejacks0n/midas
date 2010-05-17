@@ -2,6 +2,7 @@ if (!Midas) var Midas = {};
 Midas.Toolbar = Class.create({
   version: 0.2,
   contexts: [],
+  buttons: {},
   options: {
     appendTo: null,
     configuration: null
@@ -50,15 +51,22 @@ Midas.Toolbar = Class.create({
   makeButton: function(name, buttonSpec) {
     var element;
     if (Object.isArray(buttonSpec)) {
+      var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
+
       element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
       element.update('<em>' + buttonSpec[0] + '</em>');
       element.addClassName('midas-button-' + name.replace('_', '-'));
       element.observe('click', function(event) {
-        Event.fire(document, 'midas:toolbar', {toolbar: this, name: name, spec: buttonSpec, event: event});
+        event.stop();
+        Event.fire(document, 'midas:button', {
+          toolbar: this,
+          name: name,
+          spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
+          event: event
+        });
       }.bind(this));
 
-      var buttonTypes = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
-      buttonTypes.each(function(buttonType) {
+      types.each(function(buttonType) {
         var type = buttonType[0];
         var action = buttonType[1];
         switch(type) {
@@ -70,38 +78,44 @@ Midas.Toolbar = Class.create({
           case 'context':
             this.contexts.push({element: element, callback: action || name});
             break;
+          case 'mode':
+            element.observe('click', function() {
+              Event.fire(document, 'midas:mode', {mode: action || name});
+            }.bind(this));
+            break;
           case 'dialog':
-            if (!action) throw('Button ' + name + ' is missing arguments');
+            if (!action) throw('Button "' + name + '" is missing arguments');
             element.observe('click', function() {
               var url = Object.isFunction(action) ? action(name, this) : action;
               alert('this would open a dialog with the url: ' + url);
             }.bind(this));
             break;
           case 'panel':
-            if (!action) throw('Button ' + name + ' is missing arguments');
+            if (!action) throw('Button "' + name + '" is missing arguments');
             element.observe('click', function() {
               var url = Object.isFunction(action) ? action(name, this) : action;
               alert('this would open a panel with the url: ' + url);
             }.bind(this));
             break;
           case 'palette':
-            if (!action) throw('Button ' + name + ' is missing arguments');
+            if (!action) throw('Button "' + name + '" is missing arguments');
             element.observe('click', function() {
               var url = Object.isString(action) ? action : action(name, this);
               alert('this would open a palette with the url: ' + url);
             }.bind(this));
             break;
           case 'select':
-            if (!action) throw('Button ' + name + ' is missing arguments');
+            if (!action) throw('Button "' + name + '" is missing arguments');
             element.observe('click', function() {
               var contents = Object.isArray(action) ? action : action(name, this);
               alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
             }.bind(this));
             break;
           default:
-            if (type) throw('Unknown button type ' + type + ' for the ' + name + ' button');
+            throw('Unknown button type ' + type + ' for the ' + name + ' button');
         }
       }.bind(this));
+      this.buttons[name] = {element: element, spec: buttonSpec};
     } else if (Object.isString(buttonSpec)) {
       element = this.makeSeparator(buttonSpec);
     } else {
@@ -126,3 +140,4 @@ Midas.Toolbar = Class.create({
     this.element.remove();
   }
 });
+

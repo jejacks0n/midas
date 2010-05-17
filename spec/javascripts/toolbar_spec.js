@@ -51,12 +51,8 @@ describe('Midas.Toolbar', function() {
     
     expect($('toolbar').select('.group').length).toBeGreaterThan(2);
     expect($('toolbar').innerHTML).toContain('class="group"');
-  });
-
-  it('should create an array of context buttons', function() {
-    this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
-
-    expect(this.toolbar.contexts.length).toBeGreaterThan(2);
+    expect(this.toolbar.buttons['preview']['spec']).
+            toEqual(Midas.Config.toolbars['actions']['preview']);
   });
 
   it('should make separators', function() {
@@ -74,6 +70,45 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.element).not.toBeFalsy();
     expect($(this.toolbar.element.getAttribute('id'))).toBeFalsy(null);
     expect($$('.midas-toolbar').length).toEqual(0);
+  });
+
+  describe('button types and their behaviors', function() {
+
+    beforeEach(function() {
+      this.spy = spyOn(Event, 'fire').andCallFake(function() {
+        jasmine.log('>> Mock Event.fire called with ' + arguments.length + ' arguments...');
+      });
+    });
+
+    it('should handle regular buttons', function() {
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+      
+      jasmine.simulate.click(this.toolbar.buttons['cut'].element);
+      expect(this.spy.callCount).toEqual(1);
+    });
+
+    it('should handle toggle buttons', function() {
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+
+      jasmine.simulate.click(this.toolbar.buttons['preview'].element);
+      expect(this.toolbar.buttons['preview'].element.getAttribute('class')).
+              toEqual('midas-button-preview pressed');
+      expect(this.spy.callCount).toEqual(2);
+    });
+
+    it('should handle context buttons', function() {
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+
+      expect(this.toolbar.contexts.length).toBeGreaterThan(2);
+    });
+    
+    it('should handle mode buttons, and buttons with more than one type', function() {
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+
+      jasmine.simulate.click(this.toolbar.buttons['html'].element);
+      expect(this.spy.callCount).toEqual(2);
+    });
+
   });
 
   describe('events that fire', function() {

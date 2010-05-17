@@ -1,4 +1,3 @@
-
 Midas.Config = {
 
   /* Toolbars
@@ -25,6 +24,13 @@ Midas.Config = {
    *     a function that returns a boolean to highlight the button or not (examples below)
    *     note: if a function isn't provided, the key will be passed to the
    *           contextHandler (eg. backcolor, bold, etc.)
+   *   'mode' will toggle a given mode in the editor, expects the action to be:
+   *     a string, denoting the name of the mode
+   *     note: if a string isn't provided, the key will be passed to the
+   *           modeHandler (eg. preview, html, etc.)
+   *     note: it's assumed that when a specific "mode" is turned on, all other "modes" will be
+   *           turned off (this happens automatically), thus putting the editor into a specific
+   *           "state".
    *
    * If a button is an object (not an array, not a string), it's assumed that it's a button group,
    * all of it's children will be expected to be buttons or button groups.  A button group is wrapped
@@ -33,7 +39,7 @@ Midas.Config = {
   toolbars: {
     actions: {
       save:              ['Save', 'Save this page'],
-      preview:           ['Preview', 'Preview this page', ['toggle']],
+      preview:           ['Preview', 'Preview this page', ['toggle'], ['mode']],
       sep1:              ' ',
       undo:              ['Undo', 'Undo your last action'],
       redo:              ['Redo', 'Redo your last action'],
@@ -97,7 +103,7 @@ Midas.Config = {
         sep:             '-'
         },
       removeformatting:  ['Remove Formatting', ''],
-      edithtml:          ['Edit HTML', '', ['toggle']]
+      html:              ['Edit HTML', '', ['toggle'], ['mode']]
       }
     },
 
