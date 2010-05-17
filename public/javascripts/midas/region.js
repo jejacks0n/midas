@@ -38,10 +38,10 @@ Midas.Region = Class.create({
 
   setupObservers: function() {
     this.element.observe('focus', function(event) {
-      Event.fire(document, 'midas:region', {region: this, name: this.name, event: event});
+      Midas.fire('region', {region: this, name: this.name, event: event});
     }.bind(this));
     this.element.observe('click', function(event) {
-      Event.fire(document, 'midas:region', {region: this, name: this.name, event: event});
+      Midas.fire('region', {region: this, name: this.name, event: event});
     }.bind(this));
   },
 

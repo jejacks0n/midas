@@ -58,7 +58,7 @@ Midas.Toolbar = Class.create({
       element.addClassName('midas-button-' + name.replace('_', '-'));
       element.observe('click', function(event) {
         event.stop();
-        Event.fire(document, 'midas:button', {
+        Midas.fire('button', {
           toolbar: this,
           name: name,
           spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
@@ -80,7 +80,7 @@ Midas.Toolbar = Class.create({
             break;
           case 'mode':
             element.observe('click', function() {
-              Event.fire(document, 'midas:mode', {mode: action || name});
+              Midas.fire('mode', {mode: action || name});
             }.bind(this));
             break;
           case 'dialog':

@@ -65,7 +65,7 @@ var Midas = Class.create({
 
   handleCommand: function(action, spec, event, toolbar) {
     if (this.commandsToHandle.indexOf(action) < 0) return false;
-    if (Object.isFunction(this[action])) return this[action].apply(arguments);
+    if (Object.isFunction(this[action])) return this[action].apply(this, arguments);
 
     throw('Unhandled action "' + action + '"');
   },
@@ -112,6 +112,7 @@ Object.extend(Midas, {
   version: 0.2,
   instances: [],
   agentId: null,
+  debugMode: true,
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -148,6 +149,14 @@ Object.extend(Midas, {
 
     // TODO: IE is disabled at this point because it doesn't follow the w3c standards in regards to designMode.
     return (agent && document.getElementById && document.designMode && agent != 'konqueror' && agent != 'msie') ? true : false;
+  },
+
+  fire: function(event, memo) {
+    event = 'midas:' + event;
+    Event.fire(document, event, memo);
+    if (Midas.debugMode && console && console.info) {
+      console.info(['Midas.fire', event, memo]);
+    }
   }
 });
 
