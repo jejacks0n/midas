@@ -4,7 +4,7 @@ Midas.Region = Class.create({
   name: null,
   options: {
     configuration: null,
-    inline: true
+    inline: false
   },
 
   initialize: function(element, options, name) {

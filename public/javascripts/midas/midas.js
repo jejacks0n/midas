@@ -112,7 +112,7 @@ Object.extend(Midas, {
   version: 0.2,
   instances: [],
   agentId: null,
-  debugMode: true,
+  debugMode: false,
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -153,10 +153,10 @@ Object.extend(Midas, {
 
   fire: function(event, memo) {
     event = 'midas:' + event;
-    Event.fire(document, event, memo);
     if (Midas.debugMode && console && console.info) {
       console.info(['Midas.fire', event, memo]);
     }
+    Event.fire(document, event, memo);
   }
 });
 
