@@ -7,51 +7,53 @@ describe('Midas', function () {
 
   afterEach(function () {
     try {
-      window.midas.destroy();
-      window.midas = null;
+      this.midas.destroy();
+      this.midas = null;
     } catch(e) {}
     jasmine.unloadCSS('midas_styles');
   });
 
   it('should accept options in the constructor', function() {
-    window.midas = new Midas({classname: 'not-editable'});
+    this.midas = new Midas({classname: 'not-editable'});
 
     expect($('region1').contentEditable).not.toEqual('true');
     expect($('region3').contentEditable).toEqual('true');
   });
 
   it('should use the default configuration', function() {
-    window.midas = new Midas();
+    this.midas = new Midas();
 
-    expect(midas.options.configuration).toEqual(Midas.Config);
+    expect(this.midas.options.configuration).toEqual(Midas.Config);
   });
 
   it('should allow the configuration to be provided in the options', function() {
     var config = { actions: {}, buttons: {} };
-    window.midas = new Midas({configuration: config});
+    this.midas = new Midas({configuration: config});
 
-    expect(midas.options.configuration).toEqual(config);
+    expect(this.midas.options.configuration).toEqual(config);
   });
 
   it("should pass it's configuration along to the toolbar and regions", function() {
     var config = { actions: {}, buttons: {} };
-    window.midas = new Midas({configuration: config});
+    this.midas = new Midas({configuration: config});
 
-    expect(midas.toolbar.options.configuration).toEqual(config);
-    expect(midas.regions[0].options.configuration).toEqual(config);
+    expect(this.midas.toolbar.options.configuration).toEqual(config);
+    expect(this.midas.regions[0].options.configuration).toEqual(config);
   });
 
   it('should only instantiate if a browser has contentEditable features', function() {
     spyOn(Midas, 'agentIsCapable').andCallFake(function() {
       return false;
     });
-    try { window.midas = new Midas(); } catch(e) {}
+    try { this.midas = new Midas(); } catch(e) {
+      expect(e.toString()).toEqual('Midas requires a browser that has contentEditable features');
+    }
 
-    expect(midas).toBeNull();
+    expect(this.midas).toBeUndefined();
   });
 
   it('should make all regions with the editable class editable', function() {
-    window.midas = new Midas();
+    this.midas = new Midas();
 
     expect($('region1').contentEditable).toEqual('true');
     expect($('region2').contentEditable).toEqual('true');
@@ -59,16 +61,19 @@ describe('Midas', function () {
   });
 
   it('should assign all editable regions to member variables', function() {
-    window.midas = new Midas();
+    this.midas = new Midas();
 
-    expect(midas.regions.length).toEqual(2);
-    expect(midas.regionElements).toContain($('region1'));
-    expect(midas.regionElements).toContain($('region2'));
+    expect(this.midas.regions.length).toEqual(2);
+    expect(this.midas.regionElements).toContain($('region1'));
+    expect(this.midas.regionElements).toContain($('region2'));
   });
 
   it('should destroy', function() {
-    window.midas = new Midas();
-    midas.destroy();
+    this.midas = new Midas();
+    this.midas.destroy();
+
+    expect(this.midas.toolbar).toEqual(null);
+    expect(this.midas.regions).toEqual([]);
   });
 
   describe('static methods', function () {
@@ -89,29 +94,29 @@ describe('Midas', function () {
   describe('when saving', function () {
 
     beforeEach(function() {
-      spyOn(Ajax, 'Request').andCallFake(function() {
-        jasmine.log('>> Mock Ajax.Request called...');
+      this.spy = spyOn(Ajax, 'Request').andCallFake(function() {
+        jasmine.log('>> Mock Ajax.Request called with ' + arguments.length + ' arguments...');
       });
     });
 
     it('should call serialize on the regions', function () {
-      window.midas = new Midas();
-      spyOn(midas.regions[1], 'serialize').andCallFake(function() {
+      this.midas = new Midas();
+      spyOn(this.midas.regions[1], 'serialize').andCallFake(function() {
         return {name: 'banana', content: 'juice'};
       });
-      midas.save();
+      this.midas.save();
 
-      expect(midas.regions[1].serialize).wasCalled();
+      expect(this.midas.regions[1].serialize).wasCalled();
     });
 
     describe('using put (updating)', function() {
 
       it('should generate an ajax request', function () {
-        window.midas = new Midas({
+        this.midas = new Midas({
           saveUrl: '/peanuts',
           saveMethod: 'put'
         });
-        midas.save();
+        this.midas.save();
 
         expect(Ajax.Request).wasCalledWith('/peanuts', {
           method: 'put',
@@ -124,11 +129,11 @@ describe('Midas', function () {
     describe('using post (creating)', function() {
 
       it('should generate an ajax request', function () {
-        window.midas = new Midas({
+        this.midas = new Midas({
           saveUrl: '/oranges',
           saveMethod: 'post'
         });
-        midas.save();
+        this.midas.save();
 
         expect(Ajax.Request).wasCalledWith('/oranges', {
           method: 'post',
@@ -136,6 +141,28 @@ describe('Midas', function () {
         });
       });
 
+    });
+
+  });
+
+  describe('events that are observed', function () {
+
+    // focus() doesn't seem to work well in ci.. works fine in browser though.
+    // I tried runs, waits, and changing the element that was being observed /
+    // fired on, but no luck...using click instead of focus now.
+
+    it('should know which region has focus', function() {
+      this.midas = new Midas();
+
+      jasmine.simulate.click(this.midas.regions[1].element);
+      expect(this.midas.activeRegion).toEqual(this.midas.regions[1]);
+
+      jasmine.simulate.click(this.midas.regions[0].element);
+      expect(this.midas.activeRegion).toEqual(this.midas.regions[0]);
+    });
+
+    xit('should pass any button clicks on to the focused region', function() {
+      this.fail();
     });
 
   });
