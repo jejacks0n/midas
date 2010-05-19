@@ -8,8 +8,8 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
     
-    when /the home\s?page/
-      '/public/integration/midas.html'
+    when /the editor page/
+      '/integration/midas.html'
 
 
     # Add more mappings here.
