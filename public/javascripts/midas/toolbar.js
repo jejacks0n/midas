@@ -13,6 +13,7 @@ Midas.Toolbar = Class.create({
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
+    this.config = this.options['configuration'];
 
     this.build();
   },
@@ -20,10 +21,10 @@ Midas.Toolbar = Class.create({
   build: function() {
     this.element = new Element('div', {id: this.options['id'] || this.generateId()}).addClassName('midas-toolbar');
 
-    if (this.options['configuration']['toolbars']) {
-      for (var toolbar in this.options['configuration']['toolbars']) {
+    if (this.config['toolbars']) {
+      for (var toolbar in this.config['toolbars']) {
         var element = new Element('div').addClassName('midas-' + toolbar + 'bar');
-        var buttons = this.options['configuration']['toolbars'][toolbar];
+        var buttons = this.config['toolbars'][toolbar];
         for (var button in buttons) {
           element.appendChild(this.makeButton(button, buttons[button]));
         }
@@ -48,27 +49,28 @@ Midas.Toolbar = Class.create({
     return id;
   },
 
-  makeButton: function(name, buttonSpec) {
+  makeButton: function(action, buttonSpec) {
     var element;
     if (Object.isArray(buttonSpec)) {
       var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
 
       element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
       element.update('<em>' + buttonSpec[0] + '</em>');
-      element.addClassName('midas-button-' + name.replace('_', '-'));
+      element.addClassName('midas-button-' + action.replace('_', '-'));
       element.observe('click', function(event) {
         event.stop();
+        element.blur();
         Midas.fire('button', {
-          toolbar: this,
-          name: name,
+          action: action,
           spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
-          event: event
+          event: event,
+          toolbar: this
         });
       }.bind(this));
 
       types.each(function(buttonType) {
         var type = buttonType[0];
-        var action = buttonType[1];
+        var mixed = buttonType[1];
         switch(type) {
           case 'toggle':
             element.observe('click', function() {
@@ -76,46 +78,46 @@ Midas.Toolbar = Class.create({
             });
             break;
           case 'context':
-            this.contexts.push({element: element, callback: action || name});
+            this.contexts.push({element: element, callback: mixed || action});
             break;
           case 'mode':
             element.observe('click', function() {
-              Midas.fire('mode', {mode: action || name});
+              Midas.fire('mode', {mode: mixed || action, toolbar: this});
             }.bind(this));
             break;
           case 'dialog':
-            if (!action) throw('Button "' + name + '" is missing arguments');
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
-              var url = Object.isFunction(action) ? action(name, this) : action;
+              var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
               alert('this would open a dialog with the url: ' + url);
             }.bind(this));
             break;
           case 'panel':
-            if (!action) throw('Button "' + name + '" is missing arguments');
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
-              var url = Object.isFunction(action) ? action(name, this) : action;
+              var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
               alert('this would open a panel with the url: ' + url);
             }.bind(this));
             break;
           case 'palette':
-            if (!action) throw('Button "' + name + '" is missing arguments');
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
-              var url = Object.isString(action) ? action : action(name, this);
+              var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
               alert('this would open a palette with the url: ' + url);
             }.bind(this));
             break;
           case 'select':
-            if (!action) throw('Button "' + name + '" is missing arguments');
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
-              var contents = Object.isArray(action) ? action : action(name, this);
+              var contents = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
               alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
             }.bind(this));
             break;
           default:
-            throw('Unknown button type ' + type + ' for the ' + name + ' button');
+            throw('Unknown button type "' + type + '" for the "' + action + '" button');
         }
       }.bind(this));
-      this.buttons[name] = {element: element, spec: buttonSpec};
+      this.buttons[action] = {element: element, spec: buttonSpec};
     } else if (Object.isString(buttonSpec)) {
       element = this.makeSeparator(buttonSpec);
     } else {

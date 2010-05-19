@@ -3,6 +3,7 @@
   width: 200px;
   height: 200px;
   float: left;
+  overflow: hidden;
   }
 .not-editable {
   outline: 1px solid #999;

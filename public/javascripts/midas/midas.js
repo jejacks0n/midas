@@ -6,7 +6,7 @@ var Midas = Class.create({
     saveMethod: 'put',
     configuration: null
   },
-  commandsToHandle: ['save'],
+  actionsToHandle: ['save'],
 
   initialize: function(options, toolbarOptions, regionOptions) {
     if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features');
@@ -15,10 +15,11 @@ var Midas = Class.create({
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
-
+    this.config = this.options['configuration'];
+    
     toolbarOptions = toolbarOptions || {};
     Object.extend(toolbarOptions, {configuration: this.options['configuration']});
-    this.toolbar = new Midas.Toolbar(toolbarOptions);
+    this.toolbar = new Midas.Toolbar(toolbarOptions, this._id);
 
     regionOptions = regionOptions || {};
     Object.extend(regionOptions, {configuration: this.options['configuration']});
@@ -26,7 +27,7 @@ var Midas = Class.create({
     this.regionElements = $$('div.' + this.options['classname']);
     var index = 0;
     this.regionElements.each(function(element) {
-      this.regions.push(new Midas.Region(element, regionOptions, 'midas_region_' + index));
+      this.regions.push(new Midas.Region(element, regionOptions, 'midas' + this._id + '_region_' + index));
       index++;
     }.bind(this));
 
@@ -38,39 +39,45 @@ var Midas = Class.create({
   setupObservers: function() {
     Event.observe(document, 'midas:button', function(e) {
       var a = e.memo;
-      //{toolbar: this, name: name, spec: buttonSpec, event: event}
+      //{action: action, spec: buttonSpec, event: event, toolbar: this}
 
-      var handled = this.handleCommand.call(this, a['name'], a['spec'], a['event'], a['toolbar']);
-      if (!handled) this.activeRegion.handleCommand.call(this, a['name'], a['spec'], a['event'], a['toolbar']);
-    }.bind(this));
+      if (this.toolbar != a['toolbar']) return;
+
+      var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+      if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+    }.bindAsEventListener(this));
+
+    Event.observe(document, 'midas:mode', function(e) {
+      var a = e.memo;
+      //{mode: mode, toolbar: this}
+
+      if (this.toolbar != a['toolbar']) return;
+      
+      this.handleMode(a['mode'], a['toolbar']);
+    }.bindAsEventListener(this));
 
     Event.observe(document, 'midas:region', function(e) {
       var a = e.memo;
       //{region: this, name: this.name, event: event}
 
+      if (this.regions.indexOf(a['region']) < 0) return;
+
       this.setActiveRegion(a['region']);
-    }.bind(this));
-
-    Event.observe(document, 'midas:mode', function(e) {
-      var a = e.memo;
-      //{mode: mode}
-
-      this.handleMode(a['mode']);
-    }.bind(this));
+    }.bindAsEventListener(this));
   },
 
   setActiveRegion: function(region) {
     this.activeRegion = region; 
   },
 
-  handleCommand: function(action, spec, event, toolbar) {
-    if (this.commandsToHandle.indexOf(action) < 0) return false;
+  handleAction: function(action, spec, event, toolbar) {
+    if (this.actionsToHandle.indexOf(action) < 0) return false;
     if (Object.isFunction(this[action])) return this[action].apply(this, arguments);
 
     throw('Unhandled action "' + action + '"');
   },
 
-  handleMode: function(mode) {
+  handleMode: function(mode, toolbar) {
     //!!
   },
 
@@ -94,6 +101,8 @@ var Midas = Class.create({
       method: method,
       parameters: Object.extend(parameters, this.serialize())
     });
+
+    return true;
   },
 
   destroy: function() {

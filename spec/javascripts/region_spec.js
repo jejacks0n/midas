@@ -49,6 +49,17 @@ describe('Midas.Region', function() {
     expect($('region1').contentEditable).toEqual('false');
   });
 
+  it('get the selection', function() {
+    this.region = new Midas.Region('region1');
+    var element = this.region.element;
+
+//    jasmine.simulate.click(element);
+//    jasmine.simulate.keypress(element, {shiftKey: true, keyCode: 39});
+//    jasmine.simulate.keypress(element, {shiftKey: true, keyCode: 39});
+//
+//    console.debug('!!!!!!!!' + window.getSelection().toString());
+  });
+
   describe('behave according to options', function() {
 
     it('should support the inline option: true', function() {
@@ -71,6 +82,75 @@ describe('Midas.Region', function() {
 
   });
 
+  describe('actions and behaviors that are handled', function() {
+
+    beforeEach(function() {
+      Midas.Config.behaviors = {
+        bagel:               'havarti',
+        horizontalrule:      'insertHorizontalRule',
+        forecolor:           '<span style="color:$2">$1</span>',
+        bold:                function(action, fragment) {
+                                return '<span style="font-style:italic">' + fragment + '</span>'
+                             }
+      };
+      this.region = new Midas.Region('region1');
+    });
+
+    it('should fall back to the standard execCommand', function() {
+      var spy = spyOn(document, 'execCommand').andCallThrough();
+      this.region.handleAction('italic');
+
+      expect(spy).wasCalledWith('italic', false, null);
+    });
+
+    it('should throw an exception when the action is unknown', function() {
+      try {
+        this.region.handleAction('pizza');
+      } catch(e) {
+        expect(e.toString()).toEqual('Unknown action "pizza"')
+      }
+    });
+
+    describe('when a behavior is configured', function() {
+
+      it('it should handle execCommand actions', function() {
+        var spy = spyOn(document, 'execCommand').andCallThrough();
+        this.region.handleAction('horizontalrule');
+
+        expect(spy).wasCalledWith('insertHorizontalRule', false, null);
+      });
+
+//      it('should wrap document fragments within a node', function() {
+//      });
+
+      it('should call functions', function() {
+        var spy = spyOn(Midas.Config.behaviors, 'bold');
+        this.region.handleAction('bold');
+
+        expect(spy).wasCalledWith('bold', '...');
+      });
+
+      it('should throw an exception when the behavior is unknown', function() {
+        try {
+          this.region.handleAction('bagel');
+        } catch(e) {
+          expect(e.toString()).toEqual('Unknown action "havarti"')
+        }
+      });
+
+    });
+
+//    it('should handle bold', function() {
+//    });
+//
+//    it('should handle italic', function() {
+//    });
+//
+//    it('should handle underline', function() {
+//    });
+
+  });
+
   describe('events that fire', function() {
 
     beforeEach(function() {
@@ -85,6 +165,20 @@ describe('Midas.Region', function() {
       //jasmine.simulate.focus(this.region.element); // this doesn't work in ci, but it should
       jasmine.simulate.click(this.region.element);
       expect(this.spy.callCount).toEqual(1);
+    });
+
+    it('should fire an event when it gets clicked', function() {
+      this.region = new Midas.Region('region1');
+
+      jasmine.simulate.click(this.region.element);
+      expect(this.spy.callCount).toEqual(1);
+    });
+
+    it('should fire an event when a key is pressed', function() {
+      this.region = new Midas.Region('region1');
+
+//      jasmine.simulate.click(this.region.element);
+//      expect(this.spy.callCount).toEqual(1);
     });
 
   });

@@ -184,8 +184,8 @@ describe('Midas', function () {
 
     it('should handle and pass any button clicks to the active region', function() {
       this.midas = new Midas();
-      var spy1 = spyOn(this.midas.activeRegion, 'handleCommand');
-      var spy2 = spyOn(this.midas, 'handleCommand');
+      var spy1 = spyOn(this.midas.activeRegion, 'handleAction');
+      var spy2 = spyOn(this.midas, 'handleAction');
 
       jasmine.simulate.click($$('.midas-button-orderedlist')[0]);
       expect(spy1.callCount).toEqual(1);

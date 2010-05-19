@@ -33,8 +33,11 @@ Midas.Config = {
    *           "state".
    *
    * If a button is an object (not an array, not a string), it's assumed that it's a button group,
-   * all of it's children will be expected to be buttons or button groups.  A button group is wrapped
-   * within a div for styling.
+   * all of it's children will be expected to be buttons or button groups.  A button group is
+   * wrapped within a div for styling.
+   *
+   * The save action is special, in that it's handled by Midas directly, all other actions are
+   * handled by Midas.Region.
    */
   toolbars: {
     actions: {
@@ -44,16 +47,15 @@ Midas.Config = {
       undo:              ['Undo', 'Undo your last action'],
       redo:              ['Redo', 'Redo your last action'],
       sep2:              ' ',
-      insert_link:       ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
-      insert_media:      ['Media', 'Insert media', ['dialog', '/midas/media']],
-      insert_table:      ['Table', 'Insert a table', ['dialog', '/midas/table']],
-      insert_object:     ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
-      insert_entity:     ['Characters', 'Insert special characters', ['dialog', '/midas/character']],
+      insertlink:        ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
+      insertmedia:       ['Media', 'Insert media', ['dialog', '/midas/media']],
+      inserttable:       ['Table', 'Insert a table', ['dialog', '/midas/table']],
+      insertobject:      ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
+      insertentity:      ['Characters', 'Insert special characters', ['dialog', '/midas/character']],
       inspector:         ['Inspector', 'Open the element inspector', ['panel', '/midas/inspector']],
       sep3:              '*',
       notes:             ['Notes', 'Open the page notes', ['panel', '/midas/notes']]
       },
-
     buttons: {
       style:             ['Style', '', ['select', function() { return Midas.Config.styles }]],
       block:             ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
@@ -62,9 +64,9 @@ Midas.Config = {
       forecolor:         ['Text Color', '', ['palette', '/midas/forecolor'], ['context']],
       sep2:              '-',
       clipboard:         {
-        cut:             ['Cut', ''],
-        copy:            ['Copy', ''],
-        paste:           ['Paste', ''],
+        cut:             ['Cut', ''], // this button will only show if the browser can do it
+        copy:            ['Copy', ''], // this button will only show if the browser can do it
+        paste:           ['Paste', ''], // this button will only show if the browser can do it
         sep:             '-'
         },
       decoration:        {
@@ -105,6 +107,15 @@ Midas.Config = {
       removeformatting:  ['Remove Formatting', ''],
       html:              ['Edit HTML', '', ['toggle'], ['mode']]
       }
+    },
+
+  behaviors: {
+    backcolor:           '<span style="background-color:$2">$1</span>',
+    forecolor:           '<span style="color:$2">$1</span>',
+    bold:                function(action, fragment) {
+                            return '<span style="font-style:italic">' + fragment + '</span>'
+                         },
+    horizontalrule:      'inserthorizontalrule'
     },
 
   /* CSS Classes that can be inserted using the toolbar
