@@ -118,8 +118,9 @@ describe('Midas.Region', function() {
 
     describe('when a behavior is configured', function() {
 
-//    horizontalrule:      ['Horizontal Rule', ''],
-//    pagebreak:           ['Page Break (printing)', ''], // style="page-break-after:always"
+//    overline
+//    horizontalrule
+//    pagebreak
 
 //      it('it should handle execCommand actions', function() {
 //        var spy = spyOn(document, 'execCommand').andCallThrough();
@@ -145,7 +146,7 @@ describe('Midas.Region', function() {
 //          expect(e.toString()).toEqual('Unknown action "havarti"')
 //        }
 //      });
-//
+
     });
 
     describe('expecting special cases', function() {
@@ -173,84 +174,63 @@ describe('Midas.Region', function() {
     describe('expecting built in browser actions', function() {
 
       beforeEach(function() {
+        this.div = $('region4').down('#div1');
         this.region = new Midas.Region('region4');
-        jasmine.simulate.selection($('region4').down('#div1'));
+        jasmine.simulate.selection(this.div);
         this.region.updateSelections();
       });
 
-//    undo:                  ['Undo', 'Undo your last action'],
-//    redo:                  ['Redo', 'Redo your last action'],
+      var actions = $w('bold italic underline strikethrough subscript superscript justifyleft justifycenter justifyright justifyfull insertorderedlist insertunorderedlist');
+      actions.each(function(action) {
+        it('should handle ' + action, function() {
+          this.region.handleAction(action);
 
-      it('should handle bold', function() {
-        this.region.handleAction('bold');
+          switch (action) {
+          case 'bold':
+            expect(this.div.getStyle('font-weight')).toEqual('bold');
+            break;
+          case 'italic':
+            expect(this.div.getStyle('font-style')).toEqual('italic');
+            break;
+          case 'underline':
+            expect(this.div.getStyle('text-decoration')).toEqual('underline');
+            break;
+          case 'strikethrough':
+            expect(this.div.getStyle('text-decoration')).toEqual('line-through');
+            break;
+          case 'subscript':
+            expect(this.div.innerHTML).toEqual('<sub>div1 in region4</sub>');
+            break;
+          case 'superscript':
+            expect(this.div.innerHTML).toEqual('<sup>div1 in region4</sup>');
+            break;
+          case 'justifyleft':
+            expect(this.div.getStyle('text-align')).toEqual('left');
+            break;
+          case 'justifycenter':
+            expect(this.div.getStyle('text-align')).toEqual('center');
+            break;
+          case 'justifyright':
+            expect(this.div.getStyle('text-align')).toEqual('right');
+            break;
+          case 'justifyfull':
+            expect(this.div.getStyle('text-align')).toEqual('justify');
+            break;
+          case 'insertorderedlist':
+            expect(this.div.innerHTML).toEqual('<ol><li>div1 in region4</li></ol>');
+            break;
+          case 'insertunorderedlist':
+            expect(this.div.innerHTML).toEqual('<ul><li>div1 in region4</li></ul>');
+            break;
+          }
+        });
 
-        expect($('region4').down('#div1').getStyle('font-weight')).toEqual('bold');
+      }.bind(this));
+
+      it('should handle undo', function() {
       });
 
-      it('should handle italic', function() {
-        this.region.handleAction('italic');
-
-        expect($('region4').down('#div1').getStyle('font-style')).toEqual('italic');
-      });
-
-      it('should handle underline', function() {
-        this.region.handleAction('underline');
-
-        expect($('region4').down('#div1').getStyle('text-decoration')).toEqual('underline');
-      });
-
-      it('should handle strikethrough', function() {
-        this.region.handleAction('strikethrough');
-
-        expect($('region4').down('#div1').getStyle('text-decoration')).toEqual('line-through');
-      });
-
-      it('should handle subscript', function() {
-        this.region.handleAction('subscript');
-
-        expect($('region4').down('#div1').innerHTML).toEqual('<sub>div1 in region4</sub>');
-      });
-
-      it('should handle superscript', function() {
-        this.region.handleAction('superscript');
-
-        expect($('region4').down('#div1').innerHTML).toEqual('<sup>div1 in region4</sup>');
-      });
-
-      it('should handle justifyleft', function() {
-        this.region.handleAction('justifyleft');
-
-        expect($('region4').down('#div1').getStyle('text-align')).toEqual('left');
-      });
-
-      it('should handle justifycenter', function() {
-        this.region.handleAction('justifycenter');
-
-        expect($('region4').down('#div1').getStyle('text-align')).toEqual('center');
-      });
-
-      it('should handle justifyright', function() {
-        this.region.handleAction('justifyright');
-
-        expect($('region4').down('#div1').getStyle('text-align')).toEqual('right');
-      });
-
-      it('should handle justifyfull', function() {
-        this.region.handleAction('justifyfull');
-
-        expect($('region4').down('#div1').getStyle('text-align')).toEqual('justify');
-      });
-
-      it('should handle insertorderedlist', function() {
-        this.region.handleAction('insertorderedlist');
-
-        expect($('region4').down('#div1').innerHTML).toEqual('<ol><li>div1 in region4</li></ol>');
-      });
-
-      it('should handle insertunorderedlist', function() {
-        this.region.handleAction('insertunorderedlist');
-
-        expect($('region4').down('#div1').innerHTML).toEqual('<ul><li>div1 in region4</li></ul>');
+      it('should handle redo', function() {
       });
 
       it('should handle outdent', function() {
