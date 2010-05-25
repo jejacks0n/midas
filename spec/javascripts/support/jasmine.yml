@@ -13,6 +13,7 @@
 src_files:
   - javascripts/prototype.js
 #  - javascripts/midas.min.js
+  - javascripts/midas/native_extensions.js
   - javascripts/midas/midas.js
   - javascripts/midas/region.js
   - javascripts/midas/toolbar.js

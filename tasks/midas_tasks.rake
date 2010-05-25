@@ -28,7 +28,7 @@ namespace :midas do
   task :minify_js do
     code = '';
     output_path = File.join(File.dirname(__FILE__), '/../public/javascripts')
-    %w[midas region toolbar dialog].each do |file|
+    %w[native_extensions midas region toolbar dialog].each do |file|
       code << File.read(File.join(File.dirname(__FILE__), "/../public/javascripts/midas/#{file}.js"))
     end
     config = File.read(File.join(File.dirname(__FILE__), "/../public/javascripts/midas/config.js"))
