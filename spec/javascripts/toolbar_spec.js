@@ -105,7 +105,7 @@ describe('Midas.Toolbar', function() {
     it('should handle mode buttons, and buttons with more than one type', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
-      jasmine.simulate.click(this.toolbar.buttons['html'].element);
+      jasmine.simulate.click(this.toolbar.buttons['preview'].element);
       expect(this.spy.callCount).toEqual(2);
     });
 
