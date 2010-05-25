@@ -16,6 +16,9 @@ tmtags
 ## VIM
 *.swp
 
+## RVM
+.rvmrc
+
 ## PROJECT::GENERAL
 coverage
 rdoc
