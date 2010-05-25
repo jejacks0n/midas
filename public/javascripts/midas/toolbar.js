@@ -57,16 +57,19 @@ Midas.Toolbar = Class.create({
       element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
       element.update('<em>' + buttonSpec[0] + '</em>');
       element.addClassName('midas-button-' + action.replace('_', '-'));
-      element.observe('click', function(event) {
-        event.stop();
-        element.blur();
-        Midas.fire('button', {
-          action: action,
-          spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
-          event: event,
-          toolbar: this
-        });
+      $w('click dblclick').each(function(eventType) {
+        element.observe(eventType, function(event) {
+          event.stop();
+          element.blur();
+          Midas.fire('button', {
+            action: action,
+            spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
+            event: event,
+            toolbar: this
+          });
+        }.bind(this));
       }.bind(this));
+
 
       types.each(function(buttonType) {
         var type = buttonType[0];
