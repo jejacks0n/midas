@@ -456,6 +456,22 @@ jasmine.simulate = {
   //--------------------------------------------------------------------------
 
   /**
+   * Emulates a selection.. This doesn't simulate moving the mouse to make a
+   * selection, or using the arrow keys with shift, but it does create a
+   * selection that contains whatever target element you pass to it.
+   *
+   * @param {HTMLElement} target The element to select.
+   * @static
+   */
+  selection: function(target) {
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNode(target);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  },
+
+  /**
    * Executes a focus event
    * -- not simulated, but it seems like the right place to put it.
    *
