@@ -19,6 +19,22 @@ describe('Midas.Region', function() {
     expect($('region1').contentEditable).toEqual('true');
   });
 
+  it('should make an empty region contain a &nbsp;, and reset that on focus', function() {
+
+    // this seems like a weird test, but it's for firefox, and is relatively unnoticable.
+    // firefox doesn't like to give focus to a complely blank contentEditable region, so
+    // we put a &nbsp; inside empty ones, and then reset it on focus/click, so you don't
+    // really see the &nbsp;
+
+    this.region = new Midas.Region('region3');
+
+    expect($('region3').innerHTML).toEqual('&nbsp;');
+
+    jasmine.simulate.click(this.region.element);
+
+    expect($('region3').innerHTML).toEqual('&nbsp;');
+  });
+
   it('should accept options in the constructor', function() {
     this.region = new Midas.Region('region1', {sandwich: 'icecream'});
 
@@ -49,17 +65,6 @@ describe('Midas.Region', function() {
     expect($('region1').contentEditable).toEqual('false');
   });
 
-  it('get the selection', function() {
-    this.region = new Midas.Region('region1');
-    var element = this.region.element;
-
-//    jasmine.simulate.click(element);
-//    jasmine.simulate.keypress(element, {shiftKey: true, keyCode: 39});
-//    jasmine.simulate.keypress(element, {shiftKey: true, keyCode: 39});
-//
-//    console.debug('!!!!!!!!' + window.getSelection().toString());
-  });
-
   describe('behave according to options', function() {
 
     it('should support the inline option: true', function() {
@@ -85,22 +90,22 @@ describe('Midas.Region', function() {
   describe('actions and behaviors that are handled', function() {
 
     beforeEach(function() {
-      Midas.Config.behaviors = {
-        bagel:               'havarti',
-        horizontalrule:      'insertHorizontalRule',
-        forecolor:           '<span style="color:$2">$1</span>',
-        bold:                function(action, fragment) {
-                                return '<span style="font-style:italic">' + fragment + '</span>'
-                             }
-      };
+//      Midas.Config.behaviors = {
+//        bagel:               'havarti',
+//        horizontalrule:      'insertHorizontalRule',
+//        forecolor:           '<span style="color:$2">$1</span>',
+//        bold:                function(action, fragment) {
+//                                return '<span style="font-style:italic">' + fragment + '</span>'
+//                             }
+//      };
       this.region = new Midas.Region('region1');
     });
 
     it('should fall back to the standard execCommand', function() {
       var spy = spyOn(document, 'execCommand').andCallThrough();
-      this.region.handleAction('italic');
+      this.region.handleAction('delete');
 
-      expect(spy).wasCalledWith('italic', false, null);
+      expect(spy).wasCalledWith('delete', false, null);
     });
 
     it('should throw an exception when the action is unknown', function() {
@@ -113,41 +118,153 @@ describe('Midas.Region', function() {
 
     describe('when a behavior is configured', function() {
 
-      it('it should handle execCommand actions', function() {
-        var spy = spyOn(document, 'execCommand').andCallThrough();
-        this.region.handleAction('horizontalrule');
+//    horizontalrule:      ['Horizontal Rule', ''],
+//    pagebreak:           ['Page Break (printing)', ''], // style="page-break-after:always"
 
-        expect(spy).wasCalledWith('insertHorizontalRule', false, null);
-      });
-
+//      it('it should handle execCommand actions', function() {
+//        var spy = spyOn(document, 'execCommand').andCallThrough();
+//        this.region.handleAction('horizontalrule');
+//
+//        expect(spy).wasCalledWith('inserthorizontalrule', false, null);
+//      });
+//
 //      it('should wrap document fragments within a node', function() {
 //      });
+//
+//      it('should call functions', function() {
+//        var spy = spyOn(Midas.Config.behaviors, 'bold');
+//        this.region.handleAction('bold');
+//
+//        expect(spy).wasCalledWith('bold');
+//      });
+//
+//      it('should throw an exception when the behavior is unknown', function() {
+//        try {
+//          this.region.handleAction('bagel');
+//        } catch(e) {
+//          expect(e.toString()).toEqual('Unknown action "havarti"')
+//        }
+//      });
+//
+    });
 
-      it('should call functions', function() {
-        var spy = spyOn(Midas.Config.behaviors, 'bold');
-        this.region.handleAction('bold');
+    describe('expecting special cases', function() {
 
-        expect(spy).wasCalledWith('bold', '...');
+      it('should handle indent', function() {
+        this.region = new Midas.Region('region4');
+        jasmine.simulate.selection($('region4').down('#div1'));
+        this.region.updateSelections();
+        this.region.handleAction('indent');
+
+        expect($('region4').down('#div1').getStyle('margin-left')).toEqual('40px');
       });
 
-      it('should throw an exception when the behavior is unknown', function() {
-        try {
-          this.region.handleAction('bagel');
-        } catch(e) {
-          expect(e.toString()).toEqual('Unknown action "havarti"')
-        }
+      it('should handle removeformatting', function() {
+        this.region = new Midas.Region('region4');
+        jasmine.simulate.selection($('region4').down('#div3'));
+        this.region.updateSelections();
+        this.region.handleAction('removeformatting');
+        
+        expect($('region4').down('#div2').innerHTML).toEqual('there is no html here');
       });
 
     });
 
-//    it('should handle bold', function() {
-//    });
-//
-//    it('should handle italic', function() {
-//    });
-//
-//    it('should handle underline', function() {
-//    });
+    describe('expecting built in browser actions', function() {
+
+      beforeEach(function() {
+        this.region = new Midas.Region('region4');
+        jasmine.simulate.selection($('region4').down('#div1'));
+        this.region.updateSelections();
+      });
+
+//    undo:                  ['Undo', 'Undo your last action'],
+//    redo:                  ['Redo', 'Redo your last action'],
+
+      it('should handle bold', function() {
+        this.region.handleAction('bold');
+
+        expect($('region4').down('#div1').getStyle('font-weight')).toEqual('bold');
+      });
+
+      it('should handle italic', function() {
+        this.region.handleAction('italic');
+
+        expect($('region4').down('#div1').getStyle('font-style')).toEqual('italic');
+      });
+
+      it('should handle underline', function() {
+        this.region.handleAction('underline');
+
+        expect($('region4').down('#div1').getStyle('text-decoration')).toEqual('underline');
+      });
+
+      it('should handle strikethrough', function() {
+        this.region.handleAction('strikethrough');
+
+        expect($('region4').down('#div1').getStyle('text-decoration')).toEqual('line-through');
+      });
+
+      it('should handle subscript', function() {
+        this.region.handleAction('subscript');
+
+        expect($('region4').down('#div1').innerHTML).toEqual('<sub>div1 in region4</sub>');
+      });
+
+      it('should handle superscript', function() {
+        this.region.handleAction('superscript');
+
+        expect($('region4').down('#div1').innerHTML).toEqual('<sup>div1 in region4</sup>');
+      });
+
+      it('should handle justifyleft', function() {
+        this.region.handleAction('justifyleft');
+
+        expect($('region4').down('#div1').getStyle('text-align')).toEqual('left');
+      });
+
+      it('should handle justifycenter', function() {
+        this.region.handleAction('justifycenter');
+
+        expect($('region4').down('#div1').getStyle('text-align')).toEqual('center');
+      });
+
+      it('should handle justifyright', function() {
+        this.region.handleAction('justifyright');
+
+        expect($('region4').down('#div1').getStyle('text-align')).toEqual('right');
+      });
+
+      it('should handle justifyfull', function() {
+        this.region.handleAction('justifyfull');
+
+        expect($('region4').down('#div1').getStyle('text-align')).toEqual('justify');
+      });
+
+      it('should handle insertorderedlist', function() {
+        this.region.handleAction('insertorderedlist');
+
+        expect($('region4').down('#div1').innerHTML).toEqual('<ol><li>div1 in region4</li></ol>');
+      });
+
+      it('should handle insertunorderedlist', function() {
+        this.region.handleAction('insertunorderedlist');
+
+        expect($('region4').down('#div1').innerHTML).toEqual('<ul><li>div1 in region4</li></ul>');
+      });
+
+      it('should handle outdent', function() {
+        this.region.handleAction('indent');
+        this.region.handleAction('indent');
+
+        expect($('region4').down('#div1').getStyle('margin-left')).toEqual('80px');
+
+        this.region.handleAction('outdent');
+
+        expect($('region4').down('#div1').getStyle('margin-left')).toEqual('40px');
+      });
+
+    });
 
   });
 
@@ -162,7 +279,9 @@ describe('Midas.Region', function() {
     it('should fire an event when it gets focus', function() {
       this.region = new Midas.Region('region1');
 
-      //jasmine.simulate.focus(this.region.element); // this doesn't work in ci, but it should
+      // this doesn't work in ci, but it should
+      //jasmine.simulate.focus(this.region.element);
+
       jasmine.simulate.click(this.region.element);
       expect(this.spy.callCount).toEqual(1);
     });
@@ -177,8 +296,31 @@ describe('Midas.Region', function() {
     it('should fire an event when a key is pressed', function() {
       this.region = new Midas.Region('region1');
 
-//      jasmine.simulate.click(this.region.element);
-//      expect(this.spy.callCount).toEqual(1);
+      jasmine.simulate.keypress(this.region.element);
+      expect(this.spy.callCount).toEqual(1);
+    });
+
+    it('should update selections on keyup', function() {
+      this.region = new Midas.Region('region1');
+      var spy = spyOn(this.region, 'updateSelections').andCallThrough();
+
+      jasmine.simulate.keydown(this.region.element, {keyCode: 65});
+      jasmine.simulate.keyup(this.region.element, {keyCode: 65});
+
+      expect(spy.callCount).toEqual(1);
+    });
+
+    it('should track selections on mousedown, and on mouseup update them', function() {
+      this.region = new Midas.Region('region1');
+      var spy = spyOn(this.region, 'updateSelections').andCallThrough();
+
+      window.getSelection().selectAllChildren(this.region.element);
+
+      jasmine.simulate.mousedown(this.region.element);
+      expect(this.region.selecting).toEqual(true);
+
+      jasmine.simulate.mouseup(this.region.element);
+      expect(spy.callCount).toEqual(1);
     });
 
   });

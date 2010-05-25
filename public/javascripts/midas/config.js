@@ -34,88 +34,119 @@ Midas.Config = {
    *
    * If a button is an object (not an array, not a string), it's assumed that it's a button group,
    * all of it's children will be expected to be buttons or button groups.  A button group is
-   * wrapped within a div for styling.
+   * wrapped within a div for styling.  It's important to note that each of the keys, regardless of
+   * if it's in a group or not needs to be unique.
    *
    * The save action is special, in that it's handled by Midas directly, all other actions are
    * handled by Midas.Region.
    */
   toolbars: {
     actions: {
-      save:              ['Save', 'Save this page'],
-      preview:           ['Preview', 'Preview this page', ['toggle'], ['mode']],
-      sep1:              ' ',
-      undo:              ['Undo', 'Undo your last action'],
-      redo:              ['Redo', 'Redo your last action'],
-      sep2:              ' ',
-      insertlink:        ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
-      insertmedia:       ['Media', 'Insert media', ['dialog', '/midas/media']],
-      inserttable:       ['Table', 'Insert a table', ['dialog', '/midas/table']],
-      insertobject:      ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
-      insertentity:      ['Characters', 'Insert special characters', ['dialog', '/midas/character']],
-      inspector:         ['Inspector', 'Open the element inspector', ['panel', '/midas/inspector']],
-      sep3:              '*',
-      notes:             ['Notes', 'Open the page notes', ['panel', '/midas/notes']]
+      save:                  ['Save', 'Save this page'],
+      preview:               ['Preview', 'Preview this page', ['toggle'], ['mode']],
+      sep1:                  ' ',
+      undo:                  ['Undo', 'Undo your last action'],
+      redo:                  ['Redo', 'Redo your last action'],
+      sep2:                  ' ',
+      insertlink:            ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
+      insertmedia:           ['Media', 'Insert media', ['dialog', '/midas/media']],
+      inserttable:           ['Table', 'Insert a table', ['dialog', '/midas/table']],
+      insertobject:          ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
+      insertentity:          ['Characters', 'Insert special characters', ['dialog', '/midas/character']],
+      inspector:             ['Inspector', 'Open the element inspector', ['panel', '/midas/inspector']],
+      sep3:                  '*',
+      notes:                 ['Notes', 'Open the page notes', ['panel', '/midas/notes']]
       },
     buttons: {
-      style:             ['Style', '', ['select', function() { return Midas.Config.styles }]],
-      block:             ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
-      sep1:              '-',
-      backcolor:         ['Background Color', '', ['palette', '/midas/backcolor'], ['context']],
-      forecolor:         ['Text Color', '', ['palette', '/midas/forecolor'], ['context']],
-      sep2:              '-',
-      clipboard:         {
-        cut:             ['Cut', ''], // this button will only show if the browser can do it
-        copy:            ['Copy', ''], // this button will only show if the browser can do it
-        paste:           ['Paste', ''], // this button will only show if the browser can do it
-        sep:             '-'
+      style:                 ['Style', '', ['select', function() { return Midas.Config.styles }]],
+      formatblock:           ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
+      sep1:                  '-',
+      backcolor:             ['Background Color', '', ['palette', '/midas/backcolor'], ['context']],
+      forecolor:             ['Text Color', '', ['palette', '/midas/forecolor'], ['context']],
+      sep2:                  '-',
+      clipboard:             {
+        cut:                 ['Cut', ''], // this button will only show if the browser can execute it
+        copy:                ['Copy', ''], // this button will only show if the browser can execute it
+        paste:               ['Paste', ''], // this button will only show if the browser can execute it
+        sep:                 '-'
         },
-      decoration:        {
-        bold:            ['Bold', '', ['context']],
-        italic:          ['Italicize', '', ['context']],
-        overline:        ['Overline', '', ['context']],
-        strikethrough:   ['Strikethrough', '', ['context']],
-        underline:       ['Underline', '', ['context']],
-        sep:             '-'
+      decoration:            {
+        bold:                ['Bold', '', ['context']],
+        italic:              ['Italicize', '', ['context']],
+        overline:            ['Overline', '', ['context']],
+        strikethrough:       ['Strikethrough', '', ['context']],
+        underline:           ['Underline', '', ['context']],
+        sep:                 '-'
         },
-      script:            {
-        subscript:       ['Subscript', '', ['context']],
-        superscript:     ['Superscript', '', ['context']],
-        sep:             '-'
+      script:                {
+        subscript:           ['Subscript', '', ['context']],
+        superscript:         ['Superscript', '', ['context']],
+        sep:                 '-'
         },
-      justify:           {
-        justifyleft:     ['Align Left', '', ['context']],
-        justifycenter:   ['Center', '', ['context']],
-        justifyright:    ['Align Right', '', ['context']],
-        justifyfull:     ['Justify Full', '', ['context']],
-        sep:             '-'
+      justify:               {
+        justifyleft:         ['Align Left', '', ['context']],
+        justifycenter:       ['Center', '', ['context']],
+        justifyright:        ['Align Right', '', ['context']],
+        justifyfull:         ['Justify Full', '', ['context']],
+        sep:                 '-'
         },
-      list:              {
-        orderedlist:     ['Numbered List', '', ['context']],
-        unorderedlist:   ['Unordered List', '', ['context']],
-        sep:             '-'
+      list:                  {
+        insertorderedlist:   ['Numbered List', '', ['context']],
+        insertunorderedlist: ['Unordered List', '', ['context']],
+        sep:                 '-'
         },
-      indent:            {
-        outdent:         ['Decrease Indentation', ''],
-        indent:          ['Increase Indentation', ''],
-        sep:             '-'
+      indent:                {
+        outdent:             ['Decrease Indentation', ''],
+        indent:              ['Increase Indentation', ''],
+        sep:                 '-'
         },
-      breaks:            {
-        horizontalrule:  ['Horizontal Rule', ''],
-        pagebreak:       ['Page Break (printing)', ''], // style="page-break-after:always"
-        sep:             '-'
+      breaks:                {
+        horizontalrule:      ['Horizontal Rule', ''],
+        pagebreak:           ['Page Break (printing)', ''], // style="page-break-after:always"
+        sep:                 '-'
         },
-      removeformatting:  ['Remove Formatting', ''],
-      html:              ['Edit HTML', '', ['toggle'], ['mode']]
+      removeformatting:      ['Remove Formatting', ''],
+      html:                  ['Edit HTML', '', ['dialog', '/midas/html'], ['mode']]
       }
     },
 
+  /* Behaviors are used to change the default behaviors of the editor when a given button is
+   * clicked.  For example, we prefer to add HR tags using an HR wrapped within a div with a
+   * classname of hr, which allows for more flexible styling.  To add your own complex
+   * behaviors just prototype them onto Midas.Region.handle.
+   *
+   * An example behavior would be to add a new button, called buynowbutton, and providing a
+   * behavior like:
+   *
+   * buynowbutton: {insertElement: function() {
+   *   return new Element('a', {href: '/buy-now', class: 'buy-now'}).update('Buy Now!');
+   * }}
+   *
+   * It's important to note that the this keyword inside of the callback functions applies to an
+   * instance of Midas.Region.
+   *
+   * Behavior Methods, and expected arguments (arguments can be provided in an array when there
+   * is more than one expected):
+   *   actAs: a string of the action to take
+   *   insertElement: a callback function that returns an html node object
+   *   insertHTML: a callback function that returns a string
+   *   ...
+   */
   behaviors: {
-    backcolor:           '<span style="background-color:$2">$1</span>',
-    forecolor:           '<span style="color:$2">$1</span>',
-    bold:                function(action, fragment) {
-                            return '<span style="font-style:italic">' + fragment + '</span>'
-                         },
-    horizontalrule:      'inserthorizontalrule'
+    horizontalrule:      {insertElement: function() {
+                           return new Element('div', {
+                             'class': 'hr'
+                           }).update('<hr/>');
+                         }},
+    pagebreak:           {insertElement: function() {
+                           return new Element('div', {
+                             'class': 'midas-page-break',
+                             style: 'page-break-after:always'
+                           });
+                         }}
+    
+//    bold:                {classname: 'bold'},
+//    overline:            {style: {'text-decoration': 'overline'}}
     },
 
   /* CSS Classes that can be inserted using the toolbar
@@ -131,13 +162,14 @@ Midas.Config = {
    * -- will wrap selections in selected element
    */
   blocks: [
-    ['<p>',  'Paragraph'],
     ['<h1>', 'Heading 1 &lt;h1&gt;'],
     ['<h2>', 'Heading 2 &lt;h2&gt;'],
     ['<h3>', 'Heading 3 &lt;h3&gt;'],
     ['<h4>', 'Heading 4 &lt;h4&gt;'],
     ['<h5>', 'Heading 5 &lt;h5&gt;'],
     ['<h6>', 'Heading 6 &lt;h6&gt;'],
+    ['<p>',  'Paragraph'],
+    ['<blockquote>', 'Blockquote &lt;blockquote&gt;']
     ['<pre>', 'Formatted &lt;pre&gt;']
     ]
 

@@ -122,7 +122,7 @@ describe('Midas.Toolbar', function() {
     it('should fire at least one event when a button is clicked', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
-      jasmine.simulate.click($$('.midas-button-orderedlist')[0]);
+      jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
       expect(this.spy.callCount).toBeGreaterThan(0);
     });
 

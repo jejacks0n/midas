@@ -63,7 +63,7 @@ describe('Midas', function () {
   it('should assign all editable regions to member variables', function() {
     this.midas = new Midas();
 
-    expect(this.midas.regions.length).toEqual(2);
+    expect(this.midas.regions.length).toEqual($$('.editable').length);
     expect(this.midas.regionElements).toContain($('region1'));
     expect(this.midas.regionElements).toContain($('region2'));
   });
@@ -99,15 +99,20 @@ describe('Midas', function () {
       midas3 = null;
     });
 
-    // I'm not really sure how to test these.. most of the other tests will
-    // be broken if these two fail in a given browser, because most of the
-    // features require a level of support in the browser.
-    it('should return that it knows what browser is being used', function() {
-      expect(Midas.agent()).not.toEqual(false);
-    });
+    describe('for detecting the browser', function () {
 
-    it('should detect if the browser is capible of editing', function() {
-      expect(Midas.agentIsCapable()).toEqual(true);
+      // I'm not really sure how to test these.. most of the other tests will
+      // be broken if these two fail in a given browser, because most of the
+      // features require a level of support in the browser.
+
+      it('should return that it knows what browser is being used', function() {
+        expect(Midas.agent()).not.toEqual(false);
+      });
+
+      it('should detect if the browser is capible of editing', function() {
+        expect(Midas.agentIsCapable()).toEqual(true);
+      });
+
     });
 
   });
@@ -141,7 +146,12 @@ describe('Midas', function () {
 
         expect(Ajax.Request).wasCalledWith('/peanuts', {
           method: 'put',
-          parameters: {_method: 'put', region1: 'region1', region2: 'region2'}
+          parameters: {
+            _method: 'put',
+            region1: 'region1',
+            region2: 'region2',
+            region4: $('region4').innerHTML.replace(/^\s+|\s+$/g, "")
+          }
         });
       });
 
@@ -158,7 +168,11 @@ describe('Midas', function () {
 
         expect(Ajax.Request).wasCalledWith('/oranges', {
           method: 'post',
-          parameters: {region1: 'region1', region2: 'region2'}
+          parameters: {
+            region1: 'region1',
+            region2: 'region2',
+            region4: $('region4').innerHTML.replace(/^\s+|\s+$/g, "")
+          }
         });
       });
 
@@ -168,11 +182,12 @@ describe('Midas', function () {
 
   describe('events that are observed', function () {
 
-    // focus() doesn't seem to work well in ci.. works fine in browser though.
-    // I tried runs, waits, and changing the element that was being observed /
-    // fired on, but no luck...using click instead of focus now.
-
     it('should know which region has focus', function() {
+
+      // focus() doesn't seem to work well in ci.. works fine in browser though.
+      // I tried runs, waits, and changing the element that was being observed /
+      // fired on, but no luck...using click instead of focus for now.
+
       this.midas = new Midas();
 
       jasmine.simulate.click(this.midas.regions[1].element);
@@ -187,7 +202,7 @@ describe('Midas', function () {
       var spy1 = spyOn(this.midas.activeRegion, 'handleAction');
       var spy2 = spyOn(this.midas, 'handleAction');
 
-      jasmine.simulate.click($$('.midas-button-orderedlist')[0]);
+      jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
       expect(spy1.callCount).toEqual(1);
       expect(spy2.callCount).toEqual(1);
     });
