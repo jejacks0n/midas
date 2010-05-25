@@ -7,15 +7,13 @@
   <meta content='no' http-equiv='imagetoolbar' />
 
   <script src="/javascripts/prototype.js" type="text/javascript"></script>
-  <!--<script src="/javascripts/midas.min.js" type="text/javascript"></script>-->
 
+  <script src="/javascripts/midas/native_extensions.js" type="text/javascript"></script>
   <script src="/javascripts/midas/midas.js" type="text/javascript"></script>
   <script src="/javascripts/midas/region.js" type="text/javascript"></script>
   <script src="/javascripts/midas/toolbar.js" type="text/javascript"></script>
   <script src="/javascripts/midas/dialog.js" type="text/javascript"></script>
   <script src="/javascripts/midas/config.js" type="text/javascript"></script>
-
-  <script src="/__spec__/helpers/event_simulation.js" type="text/javascript"></script>
 
   <link rel="stylesheet" href="/stylesheets/midas.css"/>
   <style type="text/css">
@@ -31,14 +29,25 @@
       }
   </style>
 </head>
-<body onload="Midas.debugMode = true; midas = new Midas();">
+<body onload="Midas.debugMode = false; midas = new Midas();">
 
   <div id="dev_toolbar">
-    <a onclick="midas.save()">Save</a>
+    <a onclick="console.debug(midas.regions[0].selections())">debug</a>
   </div>
 
+  <pre>
+    TODO:
+    remove formatting should work on more than one range (select three cells of the table for example), so we'll have to make our own work better.
+    inserthr was behaving a little odd for me -- I was able to get it to replace the editable region with the hr.
+    indent and outdent -- sometimes outdent isn't working as expected???
+    page break should get styled.
+    cut copy paste buttons should be marked as 'unsupported' if it's not supported.
+  </pre>
+  <hr/>
+
   <div id="region1" class="editable">
-    Lorem Ipsum....
+    Lorem Ip<span>s</span>um....
+    <div style="border:1px solid green">te<span>s</span>ting</div>
     <table>
       <thead>
         <tr>
