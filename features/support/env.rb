@@ -2,6 +2,8 @@ require "rubygems"
 require "bundler"
 Bundler.require
 
+require 'rack'
+
 require 'cucumber/formatter/unicode'
 require 'capybara/dsl'
 

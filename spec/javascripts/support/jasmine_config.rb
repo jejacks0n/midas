@@ -1,11 +1,11 @@
 module Jasmine
   class Config
 
+    alias :original_js_files :js_files
     def js_files(spec_filter)
       generate_fixtures
       original_js_files spec_filter
     end
-    alias :original_js_files :js_files
 
     def generate_fixtures
       FileUtils.cd File.join(spec_dir, 'fixtures') do
