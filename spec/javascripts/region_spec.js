@@ -114,16 +114,7 @@ describe('Midas.Region', function() {
   describe('actions and behaviors that are handled', function() {
 
     beforeEach(function() {
-//      Midas.Config.behaviors = {
-//        bagel:               'havarti',
-//        horizontalrule:      'insertHorizontalRule',
-//        forecolor:           '<span style="color:$2">$1</span>',
-//        bold:                function(action, fragment) {
-//                                return '<span style="font-style:italic">' + fragment + '</span>'
-//                             }
-//      };
       this.region = new Midas.Region('region1');
-      this.browser = Prototype.Browser;
     });
 
     it('should fall back to the standard execCommand', function() {
@@ -143,34 +134,60 @@ describe('Midas.Region', function() {
 
     describe('when a behavior is configured', function() {
 
-//    overline
-//    horizontalrule
-//    pagebreak
+      beforeEach(function() {
+        this.oldBehaviors = Midas.Config.behaviors;
+        Midas.Config.behaviors = {
+          bagel:          {havati: 'lettuce'},
+          bold:           {execCommand: 'italic'},
+          underline:      {execCommand: ['insertHTML', '<div>peanut<div>']},
+          horizontalrule: {insertElement: function() {
+                            return new Element('hr');
+                          }},
+          pagebreak:      {insertHTML: function() {
+                            return '<div>walnut</div>';
+                          }}
+        };
+      });
 
-//      it('it should handle execCommand actions', function() {
-//        var spy = spyOn(document, 'execCommand').andCallThrough();
-//        this.region.handleAction('horizontalrule');
-//
-//        expect(spy).wasCalledWith('inserthorizontalrule', false, null);
-//      });
-//
-//      it('should wrap document fragments within a node', function() {
-//      });
-//
-//      it('should call functions', function() {
-//        var spy = spyOn(Midas.Config.behaviors, 'bold');
-//        this.region.handleAction('bold');
-//
-//        expect(spy).wasCalledWith('bold');
-//      });
-//
-//      it('should throw an exception when the behavior is unknown', function() {
-//        try {
-//          this.region.handleAction('bagel');
-//        } catch(e) {
-//          expect(e.toString()).toEqual('Unknown action "havarti"')
-//        }
-//      });
+      afterEach(function() {
+        Midas.Config.behaviors = this.oldBehaviors;
+      });
+
+      it('should handle execCommand actions', function() {
+        var spy = spyOn(this.region, 'execCommand').andCallThrough();
+        this.region.handleAction('bold');
+
+        expect(spy).wasCalledWith('italic', undefined);
+      });
+
+      it('should handle execCommand actions with array', function() {
+        var spy = spyOn(this.region, 'execCommand').andCallThrough();
+        this.region.handleAction('underline');
+
+        expect(spy).wasCalledWith('insertHTML', '<div>peanut<div>');
+      });
+
+      it('should handle insertElement actions', function() {
+        var spy = spyOn(this.region.handle, 'insertElement').andCallThrough();
+        this.region.handleAction('horizontalrule');
+
+        expect(spy).wasCalledWith(Midas.Config.behaviors['horizontalrule']['insertElement']);
+      });
+
+      it('should handle insertHTML actions', function() {
+        var spy = spyOn(this.region.handle, 'insertHTML').andCallThrough();
+        this.region.handleAction('pagebreak');
+
+        expect(spy).wasCalledWith(Midas.Config.behaviors['pagebreak']['insertHTML']);
+      });
+
+      it('should throw an exception when the behavior is unknown', function() {
+        try {
+          this.region.handleAction('bagel');
+        } catch(e) {
+          expect(e.toString()).toEqual('Unknown behavior method "havati"');
+        }
+      });
 
     });
 
@@ -182,9 +199,9 @@ describe('Midas.Region', function() {
         this.region.updateSelections();
         this.region.handleAction('indent');
 
-        if (this.browser.WebKit) {
+        if (jasmine.browser.WebKit) {
           expect($('region4').down('blockquote').getStyle('margin-left')).toEqual('40px');
-        } else if (this.browser.Gecko) {
+        } else {
           expect($('region4').down('#div1').getStyle('margin-left')).toEqual('40px');
         }
       });
@@ -195,9 +212,9 @@ describe('Midas.Region', function() {
         this.region.updateSelections();
         this.region.handleAction('removeformatting');
 
-        if (this.browser.WebKit) {
+        if (jasmine.browser.WebKit) {
           expect($('region4').down('#div3').innerHTML).toEqual('there is no html here<br>');
-        } else if (this.browser.Gecko) {
+        } else {
           expect($('region4').down('#div2').innerHTML).toEqual('there is no html here');
         }
       });
@@ -208,76 +225,151 @@ describe('Midas.Region', function() {
 
       beforeEach(function() {
         this.region = new Midas.Region('region4');
-        this.div = $('region4').down('#div1');
+        this.div = $('region4').down('#action');
         jasmine.simulate.selection(this.div);
         this.region.updateSelections();
       });
 
-      var actions = []; //$w('bold italic underline strikethrough subscript superscript justifyleft justifycenter justifyright justifyfull insertorderedlist insertunorderedlist');
+      var actions = $w('bold italic underline strikethrough subscript superscript justifyleft justifycenter justifyright justifyfull insertorderedlist insertunorderedlist');
       actions.each(function(action) {
         it('should handle ' + action, function() {
           this.region.handleAction(action);
 
-          var resultDiv = $('region4').down('span');
-          if (!resultDiv) resultDiv = $('region4').down('#div4');
+          var resultDiv = $('region4').down('#action');
+
+          // based on the nature of how the browsers decide to implement each "commands"
+          // functionality, we have to test all the supported browsers slightly differently.
+          // this highlights the fact that we should be normalizing this behavior in our own
+          // code (if performance allows).
 
           switch (action) {
           case 'bold':
-            expect(resultDiv.getStyle('font-weight')).toEqual('bold');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('font-weight')).toEqual('bold');
+            }
             break;
           case 'italic':
-            expect(resultDiv.getStyle('font-style')).toEqual('italic');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('font-style')).toEqual('italic');
+            }
             break;
           case 'underline':
-            expect(resultDiv.getStyle('text-decoration')).toEqual('underline');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-decoration')).toEqual('underline');
+            }
             break;
           case 'strikethrough':
-            expect(this.resultDiv.getStyle('text-decoration')).toEqual('line-through');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-decoration')).toEqual('line-through');
+            }
             break;
           case 'subscript':
-            expect(this.resultDiv.innerHTML).toEqual('<sub>div1 in region4</sub>');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
+            }
             break;
           case 'superscript':
-            expect(this.resultDiv.innerHTML).toEqual('<sup>div1 in region4</sup>');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
+            }
             break;
           case 'justifyleft':
-            expect(this.resultDiv.getStyle('text-align')).toEqual('left');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-align')).toEqual('left');
+            }
             break;
           case 'justifycenter':
-            expect(this.resultDiv.getStyle('text-align')).toEqual('center');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-align')).toEqual('center');
+            }
             break;
           case 'justifyright':
-            expect(this.resultDiv.getStyle('text-align')).toEqual('right');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-align')).toEqual('right');
+            }
             break;
           case 'justifyfull':
-            expect(this.resultDiv.getStyle('text-align')).toEqual('justify');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.getStyle('text-align')).toEqual('justify');
+            }
             break;
           case 'insertorderedlist':
-            expect(this.resultDiv.innerHTML).toEqual('<ol><li>div1 in region4</li></ol>');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.innerHTML).toEqual('<ol><li>action in region4</li></ol>');
+            }
             break;
           case 'insertunorderedlist':
-            expect(this.resultDiv.innerHTML).toEqual('<ul><li>div1 in region4</li></ul>');
+            if (jasmine.browser.WebKit) {
+              // TODO: write test
+            } else {
+              expect(resultDiv.innerHTML).toEqual('<ul><li>action in region4</li></ul>');
+            }
             break;
           }
         });
 
       }.bind(this));
 
-      it('should handle undo', function() {
-      });
+      it('should handle undo and redo', function() {
+        this.div = $('region4').down('#action');
+        jasmine.simulate.selection(this.div.childNodes[0]);
+        this.region.updateSelections();
+        jasmine.simulate.keypress(this.div, {charCode: 'a'.charCodeAt(0)});
 
-      it('should handle redo', function() {
+        if (jasmine.browser.WebKit) {
+          // can't get this working in webkit, however, it does in fact work
+        } else {
+          expect(this.div.innerHTML).toEqual('a');
+
+          this.region.handleAction('undo');
+
+          expect(this.div.innerHTML).toEqual('action in region4');
+
+          this.region.handleAction('redo');
+
+          expect(this.div.innerHTML).toEqual('a');
+        }
       });
 
       it('should handle outdent', function() {
-//        this.region.handleAction('indent');
-//        this.region.handleAction('indent');
-//
-//        expect($('region4').down('#div1').getStyle('margin-left')).toEqual('80px');
-//
-//        this.region.handleAction('outdent');
-//
-//        expect($('region4').down('#div1').getStyle('margin-left')).toEqual('40px');
+        this.region.handleAction('indent');
+        this.region.handleAction('indent');
+
+        if (jasmine.browser.WebKit) {
+          // TODO: write test
+        } else {
+          expect(this.div.getStyle('margin-left')).toEqual('80px');
+        }
+
+        this.region.handleAction('outdent');
+
+        if (jasmine.browser.WebKit) {
+          // TODO: write test
+        } else {
+          expect(this.div.getStyle('margin-left')).toEqual('40px');
+        }
       });
 
     });
@@ -295,7 +387,7 @@ describe('Midas.Region', function() {
     it('should fire an event when it gets focus', function() {
       this.region = new Midas.Region('region1');
 
-      // this doesn't work in ci, but it should
+      // this doesn't work in ci, but it seems like it should
       //jasmine.simulate.focus(this.region.element);
 
       jasmine.simulate.click(this.region.element);
