@@ -127,7 +127,7 @@ Midas.Config = {
    *
    * Behavior Methods, and expected arguments (arguments can be provided in an array when there
    * is more than one expected):
-   *   actAs: a string of the action to take
+   *   execCommand: a string of the action to take, or an array [action to take, argument]
    *   insertElement: a callback function that returns an html node object
    *   insertHTML: a callback function that returns a string
    *   ...

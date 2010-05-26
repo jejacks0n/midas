@@ -180,6 +180,10 @@ Midas.Region = Class.create({
       this.execCommand('insertHTML', callback.call(this))
     },
 
+    execCommand: function(action, argument) {
+      this.execCommand(action, argument);
+    },
+
     classname: function(classname) {
       this.selections.each(function(selection) {
         var fragment = selection.cloneContents();
