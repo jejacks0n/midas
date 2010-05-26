@@ -102,8 +102,8 @@ Midas.Config = {
         sep:                 '-'
         },
       list:                  {
-        insertorderedlist:   ['Numbered List', '', ['context']],
         insertunorderedlist: ['Unordered List', '', ['context']],
+        insertorderedlist:   ['Numbered List', '', ['context']],
         sep:                 '-'
         },
       indent:                {
