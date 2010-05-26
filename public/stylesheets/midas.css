@@ -1,3 +1,12 @@
+.midas-page-break {
+  height: 5px;
+  background: #EEE;
+  border: 1px dotted #999;
+  border-width: 1px 0;
+  margin: 2px 0;
+  }
+
+
 .editable {
   outline: 1px dotted #F00;
   width: 200px;
