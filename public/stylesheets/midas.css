@@ -5,11 +5,6 @@
   border-width: 1px 0;
   margin: 2px 0;
   }
-
-.editable {
+.midas-region {
   outline: 1px dotted #F00;
-  width: 200px;
-  height: 200px;
-  float: left;
-  overflow: hidden;
   }

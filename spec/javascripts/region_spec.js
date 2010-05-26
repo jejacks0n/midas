@@ -17,6 +17,7 @@ describe('Midas.Region', function() {
     this.region = new Midas.Region('region1');
 
     expect($('region1').contentEditable).toEqual('true');
+    expect($('region1').hasClassName('midas-region')).toEqual(true);
   });
 
   it('should make an empty region contain a &nbsp;, and reset that on focus', function() {
@@ -63,6 +64,7 @@ describe('Midas.Region', function() {
     this.region.destroy();
 
     expect($('region1').contentEditable).toEqual('false');
+    expect($('region1').hasClassName('midas-region')).toEqual(false);
   });
 
   describe('behave according to options', function() {

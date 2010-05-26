@@ -25,10 +25,12 @@ Midas.Region = Class.create({
   },
 
   makeEditable: function() {
+    this.element.addClassName('midas-region');
+
     if (this.element.innerHTML.replace(/^\s+|\s+$/g, "") == '') {
       this.setContents('&nbsp;')
     }
-
+    
     if (this.options['inline']) {
       this.element.setStyle({height: 'auto', minHeight: '20px'});
     } else {
@@ -39,7 +41,6 @@ Midas.Region = Class.create({
   },
 
   setupObservers: function() {
-    // midas should be able to keep track of what region is focused
     this.element.observe('focus', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
       if (this.getContents() == '&nbsp;') this.setContents('&nbsp;');
@@ -128,6 +129,7 @@ Midas.Region = Class.create({
 
   destroy: function() {
     this.element.contentEditable = 'false';
+    this.element.removeClassName('midas-region');
   },
 
   handleAction: function(action, spec, event, toolbar) {
