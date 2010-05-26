@@ -472,6 +472,16 @@ jasmine.simulate = {
   },
 
   /**
+   * Emulates pressing the tab button.
+   *
+   * @param {HTMLElement} target The element to press tab in.
+   * @static
+   */
+  tab: function(target) {
+    this.keypress(target, {keyCode: 9});
+  },
+
+  /**
    * Executes a focus event
    * -- not simulated, but it seems like the right place to put it.
    *

@@ -50,6 +50,19 @@ Midas.Region = Class.create({
     }.bind(this));
     this.element.observe('keypress', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
+
+      if (event.keyCode == 9) {
+        this.updateSelections();
+        this.selections.each(function(selection) {
+          var container = selection.commonAncestorContainer;
+          if (container.nodeType == 3) container = container.parentNode;
+          if (container.tagName == 'LI' || container.up('li')) {
+            event.stop();
+            this.handleAction('indent');
+          }
+        }.bind(this));
+      }
+
     }.bind(this));
 
     // selection tracking
