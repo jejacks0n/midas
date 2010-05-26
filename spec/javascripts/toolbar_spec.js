@@ -43,14 +43,14 @@ describe('Midas.Toolbar', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
     expect($('toolbar').innerHTML).toContain('Save this page');
-    expect($('toolbar').innerHTML).toContain('class="flex-spacer"');
+    expect($('toolbar').innerHTML).toContain('class="midas-flex-separator"');
   });
 
   it('should make buttons and button groups', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
     
-    expect($('toolbar').select('.group').length).toBeGreaterThan(2);
-    expect($('toolbar').innerHTML).toContain('class="group"');
+    expect($('toolbar').select('.midas-group').length).toBeGreaterThan(2);
+    expect($('toolbar').innerHTML).toContain('class="midas-group"');
     expect(this.toolbar.buttons['preview']['spec']).
             toEqual(Midas.Config.toolbars['actions']['preview']);
   });
@@ -58,9 +58,9 @@ describe('Midas.Toolbar', function() {
   it('should make separators', function() {
     this.toolbar = new Midas.Toolbar();
 
-    expect(this.toolbar.makeSeparator('-').getAttribute('class')).toEqual('line-spacer');
-    expect(this.toolbar.makeSeparator('*').getAttribute('class')).toEqual('flex-spacer');
-    expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('spacer');
+    expect(this.toolbar.makeSeparator('-').getAttribute('class')).toEqual('midas-line-separator');
+    expect(this.toolbar.makeSeparator('*').getAttribute('class')).toEqual('midas-flex-separator');
+    expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
   it('should destroy', function() {
@@ -83,7 +83,7 @@ describe('Midas.Toolbar', function() {
     it('should handle regular buttons', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
       
-      jasmine.simulate.click(this.toolbar.buttons['cut'].element);
+      jasmine.simulate.click(this.toolbar.buttons['bold'].element);
       expect(this.spy.callCount).toEqual(1);
     });
 

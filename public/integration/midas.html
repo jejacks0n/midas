@@ -21,13 +21,18 @@
       width: 200px;
       height: 200px;
       float: left;
-    }
+      }
+    #toolbar {
+      height: 100px;
+      }
   </style>
 </head>
-<body onload="Midas.debugMode = false; midas = new Midas();">
+<body onload="Midas.debugMode = false; midas = new Midas({}, {appendTo: 'toolbar'});">
+
+  <div id="toolbar"></div>
 
   <div id="region1" class="editable">
-    Lorem Ip<span>s</span>um....
+    Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
     <div style="border:1px solid green">te<span>s</span>ting</div>
     <table>
       <thead>

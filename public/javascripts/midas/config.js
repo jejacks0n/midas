@@ -1,5 +1,9 @@
 Midas.Config = {
 
+  /* The stylesheet to load for the skin of the toolbar/editable regions.
+   */
+  stylesheet: '/stylesheets/midas.css',
+
   /* Toolbars
    *
    * Any object you put in here will create a new toolbar.
@@ -39,6 +43,12 @@ Midas.Config = {
    *
    * The save action is special, in that it's handled by Midas directly, all other actions are
    * handled by Midas.Region.
+   *
+   * Separators are any "button" that's not an array, and are expected to be a string.  You can use
+   * three different separator styles: line, spacer, and flex spacer.
+   * '-' = line
+   * ' ' = spacer
+   * '*' = flex spacer
    */
   toolbars: {
     actions: {
@@ -52,24 +62,25 @@ Midas.Config = {
       insertmedia:           ['Media', 'Insert media', ['dialog', '/midas/media']],
       inserttable:           ['Table', 'Insert a table', ['dialog', '/midas/table']],
       insertobject:          ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
-      insertentity:          ['Characters', 'Insert special characters', ['dialog', '/midas/character']],
-      inspector:             ['Inspector', 'Open the element inspector', ['panel', '/midas/inspector']],
+      insertcharacter:       ['Character', 'Insert special characters', ['dialog', '/midas/character']],
+      inspectorpanel:        ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector']],
       sep3:                  '*',
-      notes:                 ['Notes', 'Open the page notes', ['panel', '/midas/notes']]
+      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes']],
+      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history']]
       },
-    buttons: {
+    htmleditor: {
       style:                 ['Style', '', ['select', function() { return Midas.Config.styles }]],
       formatblock:           ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
       sep1:                  '-',
       backcolor:             ['Background Color', '', ['palette', '/midas/backcolor'], ['context']],
       forecolor:             ['Text Color', '', ['palette', '/midas/forecolor'], ['context']],
       sep2:                  '-',
-      clipboard:             {
-        cut:                 ['Cut', ''], // this button will only show if the browser can execute it
-        copy:                ['Copy', ''], // this button will only show if the browser can execute it
-        paste:               ['Paste', ''], // this button will only show if the browser can execute it
-        sep:                 '-'
-        },
+//      clipboard:             { // these buttons don't really work reliably in any browser for security reasons
+//        cut:                 ['Cut', ''],
+//        copy:                ['Copy', ''],
+//        paste:               ['Paste', ''],
+//        sep:                 '-'
+//        },
       decoration:            {
         bold:                ['Bold', '', ['context']],
         italic:              ['Italicize', '', ['context']],
@@ -100,17 +111,28 @@ Midas.Config = {
         indent:              ['Increase Indentation', ''],
         sep:                 '-'
         },
+      table:                 {
+        insertrowbefore:     ['Insert Row', 'Insert a table row before'],
+        insertrowafter:      ['Insert Row', 'Insert a table row after'],
+        deleterow:           ['Delete Row', 'Delete this table row'],
+        insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
+        insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
+        deletecolumn:        ['Delete Column', 'Delete this table column'],
+        sep:                 '-'
+        },
       breaks:                {
         horizontalrule:      ['Horizontal Rule', ''],
         pagebreak:           ['Page Break (printing)', ''], // style="page-break-after:always"
         sep:                 '-'
         },
       removeformatting:      ['Remove Formatting', ''],
-      html:                  ['Edit HTML', '', ['dialog', '/midas/html'], ['mode']]
+      html:                  ['Edit HTML', '', ['dialog', '/midas/html']]
       }
     },
 
-  /* Behaviors are used to change the default behaviors of the editor when a given button is
+  /* Behaviors
+   *
+   * Behaviors are used to change the default behaviors of the editor when a given button is
    * clicked.  For example, we prefer to add HR tags using an HR wrapped within a div with a
    * classname of hr, which allows for more flexible styling.  To add your own complex
    * behaviors just prototype them onto Midas.Region.handle.

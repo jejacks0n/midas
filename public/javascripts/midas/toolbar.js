@@ -20,6 +20,7 @@ Midas.Toolbar = Class.create({
 
   build: function() {
     this.element = new Element('div', {id: this.options['id'] || this.generateId()}).addClassName('midas-toolbar');
+    this.element.appendChild(new Element('link', {rel: 'stylesheet', href: this.config.stylesheet}));
 
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {
@@ -69,7 +70,6 @@ Midas.Toolbar = Class.create({
           });
         }.bind(this));
       }.bind(this));
-
 
       types.each(function(buttonType) {
         var type = buttonType[0];
@@ -130,7 +130,7 @@ Midas.Toolbar = Class.create({
   },
 
   makeButtonGroup: function(group) {
-    var element = new Element('div').addClassName('group');
+    var element = new Element('div').addClassName('midas-group');
     for (var button in group) {
       element.appendChild(this.makeButton(button, group[button]));
     }
@@ -138,7 +138,7 @@ Midas.Toolbar = Class.create({
   },
 
   makeSeparator: function(button) {
-    return new Element('span').addClassName(button == '*' ? 'flex-spacer' : button == '-' ? 'line-spacer' : 'spacer');
+    return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
   },
 
   destroy: function() {
