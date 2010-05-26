@@ -155,16 +155,11 @@ Midas.Config = {
    *   ...
    */
   behaviors: {
-    horizontalrule:      {insertElement: function() {
-                           return new Element('div', {
-                             'class': 'hr'
-                           }).update('<hr/>');
+    horizontalrule:      {insertHTML: function() {
+                            return '<div class="hr"><hr/></div>';
                          }},
-    pagebreak:           {insertElement: function() {
-                           return new Element('div', {
-                             'class': 'midas-page-break',
-                             style: 'page-break-after:always'
-                           });
+    pagebreak:           {insertHTML: function() {
+                            return '<div class="midas-page-break" style="page-break-after:always"></div>';
                          }}
     
 //    bold:                {classname: 'bold'},
