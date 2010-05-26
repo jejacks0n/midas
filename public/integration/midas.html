@@ -17,33 +17,9 @@
 
   <link rel="stylesheet" href="/stylesheets/midas.css"/>
   <style type="text/css">
-    #dev_toolbar {
-      margin-bottom: 30px;
-      }
-    #dev_toolbar a {
-      border: 1px solid green;
-      background: #333;
-      color: #FFF;
-      display: inline-block;
-      padding: 2px 10px;
-      }
   </style>
 </head>
 <body onload="Midas.debugMode = false; midas = new Midas();">
-
-  <div id="dev_toolbar">
-    <a onclick="console.debug(midas.regions[0].selections())">debug</a>
-  </div>
-
-  <pre>
-    TODO:
-    remove formatting should work on more than one range (select three cells of the table for example), so we'll have to make our own work better.
-    inserthr was behaving a little odd for me -- I was able to get it to replace the editable region with the hr.
-    indent and outdent -- sometimes outdent isn't working as expected???
-    page break should get styled.
-    cut copy paste buttons should be marked as 'unsupported' if it's not supported.
-  </pre>
-  <hr/>
 
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....
@@ -68,12 +44,7 @@
     </table>
   </div>
 
-  <div id="region2" class="editable">
-  </div>
-
-  <div id="region3" class="not-editable">
-    Not editable
-  </div>
+  <div id="region2" class="editable"></div>
 
 </body>
 </html>

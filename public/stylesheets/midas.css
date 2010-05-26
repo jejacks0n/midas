@@ -6,17 +6,10 @@
   margin: 2px 0;
   }
 
-
 .editable {
   outline: 1px dotted #F00;
   width: 200px;
   height: 200px;
   float: left;
   overflow: hidden;
-  }
-.not-editable {
-  outline: 1px solid #999;
-  width: 200px;
-  height: 200px;
-  float: left;
   }
