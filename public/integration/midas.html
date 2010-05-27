@@ -5,17 +5,17 @@
   <meta content='text/html; charset=UTF-8' http-equiv='content-type' />
   <meta content='en' http-equiv='content-language' />
   <meta content='no' http-equiv='imagetoolbar' />
+	
+  <script src="../javascripts/prototype.js" type="text/javascript"></script>
 
-  <script src="/javascripts/prototype.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/native_extensions.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/midas.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/region.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/toolbar.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/dialog.js" type="text/javascript"></script>
+  <script src="../javascripts/midas/config.js" type="text/javascript"></script>
 
-  <script src="/javascripts/midas/native_extensions.js" type="text/javascript"></script>
-  <script src="/javascripts/midas/midas.js" type="text/javascript"></script>
-  <script src="/javascripts/midas/region.js" type="text/javascript"></script>
-  <script src="/javascripts/midas/toolbar.js" type="text/javascript"></script>
-  <script src="/javascripts/midas/dialog.js" type="text/javascript"></script>
-  <script src="/javascripts/midas/config.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="/stylesheets/midas.css"/>
+  <link rel="stylesheet" href="../stylesheets/midas.css"/>
   <style type="text/css">
     .editable {
       width: 200px;
@@ -53,8 +53,31 @@
       </tbody>
     </table>
   </div>
+	
+  <div id="region2" class="editable">
 
-  <div id="region2" class="editable"></div>
+  </div>
+	
+	<!-- testing to make sure bottom bar is fixed -->
+	<div style='height: 2300px; clear: left;'>
+		tall div 
+	</div>
+
+<!-- we will eventually produce this with JS and attach it to a #statusbar element -->
+<div class='midas-status-bar'>
+	<span>
+		<strong>Currently Editing:</strong>
+		Region 1
+	</span>
+	<span>		
+		<strong>Path:</strong>
+		p &raquo; img
+	</span>	
+	<span>
+		<strong>Words <!-- in Region 1 -->:</strong>
+		78
+	</span>
+</div>
 
 </body>
 </html>

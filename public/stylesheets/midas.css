@@ -282,3 +282,20 @@
 .midas-htmleditorbar .midas-button-html.active						{ background-position: -588px -18px }
 .midas-htmleditorbar .midas-button-html.disabled,        
 .disabled .midas-button-html							            { background-position: -588px -36px !important }
+
+
+/* Status bar
+ *----------------------------------------------------------------------------*/
+.midas-status-bar {
+	padding: 5px 10px;
+	background-color: #ebebeb;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	font-family: Helvetica, Tahoma, Arial, sans-serif;
+	font-size: 8.5pt;
+	}
+.midas-status-bar span {
+		margin-right: 25px;
+	}
