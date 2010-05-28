@@ -169,13 +169,6 @@ describe('Midas.Region', function() {
         expect(spy).wasCalledWith('insertHTML', '<div>peanut<div>');
       });
 
-      it('should handle insertElement actions', function() {
-        var spy = spyOn(this.region.handle, 'insertElement').andCallThrough();
-        this.region.handleAction('horizontalrule');
-
-        expect(spy).wasCalledWith(Midas.Config.behaviors['horizontalrule']['insertElement']);
-      });
-
       it('should handle insertHTML actions', function() {
         var spy = spyOn(this.region.handle, 'insertHTML').andCallThrough();
         this.region.handleAction('pagebreak');
@@ -202,9 +195,10 @@ describe('Midas.Region', function() {
         this.region.handleAction('indent');
 
         if (jasmine.browser.WebKit) {
-          expect($('region4').down('blockquote').getStyle('margin-left')).toEqual('40px');
-        } else {
-          expect($('region4').down('#div1').getStyle('margin-left')).toEqual('40px');
+          console.log($('region4').innerHTML);
+          expect($('region4').select('blockquote').length).toEqual(1);
+        } else if(jasmine.browser.Gecko) {
+          expect($('region4').down('#div1').up().tagName).toEqual('BLOCKQUOTE');
         }
       });
 
@@ -216,7 +210,7 @@ describe('Midas.Region', function() {
 
         if (jasmine.browser.WebKit) {
           expect($('region4').down('#div3').innerHTML).toEqual('there is no html here<br>');
-        } else {
+        } else if(jasmine.browser.Gecko) {
           expect($('region4').down('#div2').innerHTML).toEqual('there is no html here');
         }
       });
@@ -235,9 +229,9 @@ describe('Midas.Region', function() {
       var actions = $w('bold italic underline strikethrough subscript superscript justifyleft justifycenter justifyright justifyfull insertorderedlist insertunorderedlist');
       actions.each(function(action) {
         it('should handle ' + action, function() {
-          this.region.handleAction(action);
-
           var resultDiv = $('region4').down('#action');
+
+          this.region.handleAction(action);
 
           // based on the nature of how the browsers decide to implement each "commands"
           // functionality, we have to test all the supported browsers slightly differently.
@@ -247,85 +241,85 @@ describe('Midas.Region', function() {
           switch (action) {
           case 'bold':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
-              expect(resultDiv.getStyle('font-weight')).toEqual('bold');
+              expect(resultDiv.select('b').length).toEqual(1);
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.select('b').length).toEqual(1);
             }
             break;
           case 'italic':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
-              expect(resultDiv.getStyle('font-style')).toEqual('italic');
+              expect(resultDiv.select('i').length).toEqual(1);
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.select('i').length).toEqual(1);
             }
             break;
           case 'underline':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
-              expect(resultDiv.getStyle('text-decoration')).toEqual('underline');
+              expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('underline');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.select('u').length).toEqual(1);
             }
             break;
           case 'strikethrough':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
-              expect(resultDiv.getStyle('text-decoration')).toEqual('line-through');
+              expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('line-through');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.select('strike').length).toEqual(1);
             }
             break;
           case 'subscript':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
+              expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
+            } else if(jasmine.browser.Gecko) {
               expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
             }
             break;
           case 'superscript':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
+              expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
+            } else if(jasmine.browser.Gecko) {
               expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
             }
             break;
           case 'justifyleft':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
               expect(resultDiv.getStyle('text-align')).toEqual('left');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.getAttribute('align')).toEqual('left');
             }
             break;
           case 'justifycenter':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
               expect(resultDiv.getStyle('text-align')).toEqual('center');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.getAttribute('align')).toEqual('center');
             }
             break;
           case 'justifyright':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
               expect(resultDiv.getStyle('text-align')).toEqual('right');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.getAttribute('align')).toEqual('right');
             }
             break;
           case 'justifyfull':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
               expect(resultDiv.getStyle('text-align')).toEqual('justify');
+            } else if(jasmine.browser.Gecko) {
+              expect(resultDiv.getAttribute('align')).toEqual('justify');
             }
             break;
           case 'insertorderedlist':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
+              expect(resultDiv.innerHTML).toEqual('<ol><li>action in region4<br></li></ol>');
+            } else if(jasmine.browser.Gecko) {
               expect(resultDiv.innerHTML).toEqual('<ol><li>action in region4</li></ol>');
             }
             break;
           case 'insertunorderedlist':
             if (jasmine.browser.WebKit) {
-              // TODO: write test
-            } else {
+              expect(resultDiv.innerHTML).toEqual('<ul><li>action in region4<br></li></ul>');
+            } else if(jasmine.browser.Gecko) {
               expect(resultDiv.innerHTML).toEqual('<ul><li>action in region4</li></ul>');
             }
             break;
@@ -342,7 +336,7 @@ describe('Midas.Region', function() {
 
         if (jasmine.browser.WebKit) {
           // can't get this working in webkit, however, it does in fact work
-        } else {
+        } else if(jasmine.browser.Gecko) {
           expect(this.div.innerHTML).toEqual('a');
 
           this.region.handleAction('undo');
@@ -360,17 +354,19 @@ describe('Midas.Region', function() {
         this.region.handleAction('indent');
 
         if (jasmine.browser.WebKit) {
-          // TODO: write test
+          expect(this.region.element.select('blockquote').length).toEqual(2);
         } else {
-          expect(this.div.getStyle('margin-left')).toEqual('80px');
+          expect(this.div.up().tagName).toEqual('BLOCKQUOTE');
+          expect(this.div.up().up().tagName).toEqual('BLOCKQUOTE');
         }
 
         this.region.handleAction('outdent');
 
         if (jasmine.browser.WebKit) {
-          // TODO: write test
+          expect(this.region.element.select('blockquote').length).toEqual(1);
         } else {
-          expect(this.div.getStyle('margin-left')).toEqual('40px');
+          expect(this.div.up().tagName).toEqual('BLOCKQUOTE');
+          expect(this.div.up().up().tagName).not.toEqual('BLOCKQUOTE');
         }
       });
 

@@ -17,6 +17,7 @@ src_files:
   - javascripts/midas/midas.js
   - javascripts/midas/region.js
   - javascripts/midas/toolbar.js
+  - javascripts/midas/statusbar.js
   - javascripts/midas/dialog.js
   - javascripts/midas/config.js
 

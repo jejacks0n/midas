@@ -75,16 +75,10 @@ Midas.Config = {
       backcolor:             ['Background Color', '', ['palette', '/midas/backcolor'], ['context']],
       forecolor:             ['Text Color', '', ['palette', '/midas/forecolor'], ['context']],
       sep2:                  '-',
-//      clipboard:             { // these buttons don't really work reliably in any browser for security reasons
-//        cut:                 ['Cut', ''],
-//        copy:                ['Copy', ''],
-//        paste:               ['Paste', ''],
-//        sep:                 '-'
-//        },
       decoration:            {
         bold:                ['Bold', '', ['context']],
         italic:              ['Italicize', '', ['context']],
-        overline:            ['Overline', '', ['context']],
+        //overline:            ['Overline', '', ['context']],
         strikethrough:       ['Strikethrough', '', ['context']],
         underline:           ['Underline', '', ['context']],
         sep:                 '-'
@@ -111,18 +105,18 @@ Midas.Config = {
         indent:              ['Increase Indentation', ''],
         sep:                 '-'
         },
-      table:                 {
-        insertrowbefore:     ['Insert Row', 'Insert a table row before'],
-        insertrowafter:      ['Insert Row', 'Insert a table row after'],
-        deleterow:           ['Delete Row', 'Delete this table row'],
-        insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
-        insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
-        deletecolumn:        ['Delete Column', 'Delete this table column'],
-        sep:                 '-'
-        },
+      //table:                 {
+      //  insertrowbefore:     ['Insert Row', 'Insert a table row before'],
+      //  insertrowafter:      ['Insert Row', 'Insert a table row after'],
+      //  deleterow:           ['Delete Row', 'Delete this table row'],
+      //  insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
+      //  insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
+      //  deletecolumn:        ['Delete Column', 'Delete this table column'],
+      //  sep:                 '-'
+      //  },
       breaks:                {
         horizontalrule:      ['Horizontal Rule', ''],
-        pagebreak:           ['Page Break (printing)', ''], // style="page-break-after:always"
+        //pagebreak:           ['Page Break (printing)', ''],
         sep:                 '-'
         },
       removeformatting:      ['Remove Formatting', ''],
@@ -150,7 +144,6 @@ Midas.Config = {
    * Behavior Methods, and expected arguments (arguments can be provided in an array when there
    * is more than one expected):
    *   execCommand: a string of the action to take, or an array [action to take, argument]
-   *   insertElement: a callback function that returns an html node object
    *   insertHTML: a callback function that returns a string
    *   ...
    */
@@ -159,11 +152,8 @@ Midas.Config = {
                             return '<div class="hr"><hr/></div>';
                          }},
     pagebreak:           {insertHTML: function() {
-                            return '<div class="midas-page-break" style="page-break-after:always"></div>';
+                            return '<div class="midas-page-break" style="page-break-after:always"><em>&nbsp;</em></div>';
                          }}
-    
-//    bold:                {classname: 'bold'},
-//    overline:            {style: {'text-decoration': 'overline'}}
     },
 
   /* CSS Classes that can be inserted using the toolbar

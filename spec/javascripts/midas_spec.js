@@ -191,10 +191,10 @@ describe('Midas', function () {
       this.midas = new Midas();
 
       jasmine.simulate.click(this.midas.regions[1].element);
-      expect(this.midas.activeRegion).toEqual(this.midas.regions[1]);
+      expect(this.midas.activeRegion.name).toEqual(this.midas.regions[1].name);
 
       jasmine.simulate.click(this.midas.regions[0].element);
-      expect(this.midas.activeRegion).toEqual(this.midas.regions[0]);
+      expect(this.midas.activeRegion.name).toEqual(this.midas.regions[0].name);
     });
 
     it('should handle and pass any button clicks to the active region', function() {

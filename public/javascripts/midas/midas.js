@@ -8,7 +8,7 @@ var Midas = Class.create({
   },
   actionsToHandle: ['save'],
 
-  initialize: function(options, toolbarOptions, regionOptions) {
+  initialize: function(options, toolbarOptions, regionOptions, statusbarOptions) {
     if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features');
 
     Midas.registerInstance(this);
@@ -19,7 +19,11 @@ var Midas = Class.create({
     
     toolbarOptions = toolbarOptions || {};
     Object.extend(toolbarOptions, {configuration: this.options['configuration']});
-    this.toolbar = new Midas.Toolbar(toolbarOptions, this._id);
+    this.toolbar = new Midas.Toolbar(toolbarOptions);
+
+    statusbarOptions = statusbarOptions || {};
+    Object.extend(statusbarOptions, {configuration: this.options['configuration']});
+    this.statusbar = new Midas.Statusbar(statusbarOptions);
 
     regionOptions = regionOptions || {};
     Object.extend(regionOptions, {configuration: this.options['configuration']});
@@ -45,6 +49,7 @@ var Midas = Class.create({
 
       var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
       if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+      this.statusbar.update(this.activeRegion, e);
     }.bindAsEventListener(this));
 
     Event.observe(document, 'midas:mode', function(e) {
@@ -60,9 +65,8 @@ var Midas = Class.create({
       var a = e.memo;
       //{region: this, name: this.name, event: event}
 
-      if (this.regions.indexOf(a['region']) < 0) return;
-
-      this.setActiveRegion(a['region']);
+      if (this.regions.indexOf(a['region']) >= 0) this.setActiveRegion(a['region']);
+      this.statusbar.update(this.activeRegion, e);
     }.bindAsEventListener(this));
   },
 
@@ -107,10 +111,12 @@ var Midas = Class.create({
 
   destroy: function() {
     this.toolbar.destroy();
+    this.statusbar.destroy();
     this.regions.each(function(region) {
       region.destroy();
     });
     this.toolbar = null;
+    this.statusbar = null;
     this.regions = [];
     Midas.unregisterInstance(this);
   }
