@@ -41,32 +41,40 @@ var Midas = Class.create({
   },
 
   setupObservers: function() {
+
+    //{action: action, spec: buttonSpec, event: event, toolbar: this}
     Event.observe(document, 'midas:button', function(e) {
       var a = e.memo;
-      //{action: action, spec: buttonSpec, event: event, toolbar: this}
 
       if (this.toolbar != a['toolbar']) return;
 
-      var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-      if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-      this.statusbar.update(this.activeRegion, e);
+      Midas.filterCall(function() {
+        var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+        if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+        this.statusbar.update(this.activeRegion, e);
+        this.toolbar.setActiveButtons(this.activeRegion);
+      }.bind(this));
+
     }.bindAsEventListener(this));
 
+    //{mode: mode, toolbar: this}
     Event.observe(document, 'midas:mode', function(e) {
       var a = e.memo;
-      //{mode: mode, toolbar: this}
 
       if (this.toolbar != a['toolbar']) return;
       
       this.handleMode(a['mode'], a['toolbar']);
     }.bindAsEventListener(this));
 
+    //{region: this, name: this.name, event: event}
     Event.observe(document, 'midas:region', function(e) {
       var a = e.memo;
-      //{region: this, name: this.name, event: event}
 
-      if (this.regions.indexOf(a['region']) >= 0) this.setActiveRegion(a['region']);
-      this.statusbar.update(this.activeRegion, e);
+      Midas.filterCall(function() {
+        if (this.regions.indexOf(a['region']) >= 0) this.setActiveRegion(a['region']);
+        this.statusbar.update(this.activeRegion, e);
+      }.bind(this));
+
     }.bindAsEventListener(this));
   },
 
@@ -128,6 +136,22 @@ Object.extend(Midas, {
   instances: [],
   agentId: null,
   debugMode: false,
+  fireEvent: {},
+  filteredCalls: {},
+
+  filterCall: function(callback) {
+    var hash = escape(callback.toString());
+    var time = new Date().valueOf();
+    if (this.filteredCalls[hash]) {
+      if (this.filteredCalls[hash] + 50 < time) {
+        callback();
+        this.filteredCalls[hash] = time;
+      }
+    } else {
+      callback();
+      this.filteredCalls[hash] = time;
+    }
+  },
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -171,7 +195,8 @@ Object.extend(Midas, {
     if (Midas.debugMode && console && console.info) {
       console.info(['Midas.fire', event, memo]);
     }
-    Event.fire(document, event, memo);
+
+    Event.fire(document, event, memo); Midas.fireEvent[event] = null;
   }
 });
 

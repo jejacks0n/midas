@@ -25,9 +25,11 @@ Midas.Config = {
    *     an array
    *     a function that returns an array
    *   'context' will call a callback function, expects the action to be:
-   *     a function that returns a boolean to highlight the button or not (examples below)
+   *     a function that returns a boolean to highlight the button or not
    *     note: if a function isn't provided, the key will be passed to the
-   *           contextHandler (eg. backcolor, bold, etc.)
+   *           contextHandler (eg. backcolor, bold, etc.), in which case a
+   *           default context will be used (there are several defined in
+   *           Midas.Toolbar.contexts).
    *   'mode' will toggle a given mode in the editor, expects the action to be:
    *     a string, denoting the name of the mode
    *     note: if a string isn't provided, the key will be passed to the
@@ -116,7 +118,6 @@ Midas.Config = {
       //  },
       breaks:                {
         horizontalrule:      ['Horizontal Rule', ''],
-        //pagebreak:           ['Page Break (printing)', ''],
         sep:                 '-'
         },
       removeformatting:      ['Remove Formatting', ''],
@@ -150,9 +151,6 @@ Midas.Config = {
   behaviors: {
     horizontalrule:      {insertHTML: function() {
                             return '<div class="hr"><hr/></div>';
-                         }},
-    pagebreak:           {insertHTML: function() {
-                            return '<div class="midas-page-break" style="page-break-after:always"><em>&nbsp;</em></div>';
                          }}
     },
 

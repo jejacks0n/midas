@@ -16,6 +16,7 @@ Midas.Toolbar = Class.create({
     this.config = this.options['configuration'];
 
     this.build();
+    this.setupObservers();
   },
 
   build: function() {
@@ -33,7 +34,16 @@ Midas.Toolbar = Class.create({
       }
     }
     
-    ($(this.options['appendTo']) || document.body).appendChild(this.element);
+    ($(this.options['appendTo']) || document.body).appendChild(this.element);    
+  },
+
+  setupObservers: function() {
+    Event.observe(document, 'midas:region', function(e) {
+      var a = e.memo;
+      //{region: this, name: this.name, event: event}
+
+      this.setActiveButtons(a['region']);
+    }.bindAsEventListener(this));
   },
 
   generateId: function() {
@@ -58,17 +68,15 @@ Midas.Toolbar = Class.create({
       element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
       element.update('<em>' + buttonSpec[0] + '</em>');
       element.addClassName('midas-button-' + action.replace('_', '-'));
-      $w('click dblclick').each(function(eventType) {
-        element.observe(eventType, function(event) {
-          event.stop();
-          element.blur();
-          Midas.fire('button', {
-            action: action,
-            spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
-            event: event,
-            toolbar: this
-          });
-        }.bind(this));
+      element.observe('click', function(event) {
+        event.stop();
+        element.blur();
+        Midas.fire('button', {
+          action: action,
+          spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
+          event: event,
+          toolbar: this
+        });
       }.bind(this));
 
       types.each(function(buttonType) {
@@ -141,8 +149,83 @@ Midas.Toolbar = Class.create({
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
   },
 
+  setActiveButtons: function(region) {
+    var selection = window.getSelection();
+    var range = selection.getRangeAt(0);
+    if (!range) return;
+
+    var node = range.commonAncestorContainer;
+    node = node.nodeType == 3 ? Element.up(node) : node;
+
+    var length = this.contexts.length;
+    for (var i = 0; i < length; ++i) {
+      var context = this.contexts[i];
+
+      var callback;
+      if (typeof(context['callback']) == 'function') {
+        callback = context['callback'];
+      } else {
+        callback = Midas.Toolbar.contexts[context['callback']];
+      }
+
+      if (typeof(callback) == 'function') {
+        if (callback.call(this, node, region)) {
+          context['element'].addClassName('active');
+        } else {
+          context['element'].removeClassName('active');
+        }
+      }
+    }
+  },
+
   destroy: function() {
     this.element.remove();
   }
 });
 
+// Midas.Toolbar static methods
+Object.extend(Midas.Toolbar, {
+  contexts: {
+    bold:                function(node) {
+                           var weight = Element.getStyle(node, 'font-weight');
+                           return weight == 'bold' || weight > 400;
+                         },
+    italic:              function(node) {
+                           return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
+                         },
+    strikethrough:       function(node) {
+                           return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
+                         },
+    underline:           function(node) {
+                           return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
+                         },
+    subscript:           function(node) {
+                           return node.nodeName == 'SUB' || node.up('sub');
+                         },
+    superscript:         function(node) {
+                           return node.nodeName == 'SUP' || node.up('sup');
+                         },
+    justifyleft:         function(node) {
+                           return Element.getStyle(node, 'text-align').indexOf('left') > -1;
+                         },
+    justifycenter:       function(node) {
+                           return Element.getStyle(node, 'text-align').indexOf('center') > -1;
+                         },
+    justifyright:        function(node) {
+                           return Element.getStyle(node, 'text-align').indexOf('right') > -1;
+                         },
+    justifyfull:         function(node) {
+                           return Element.getStyle(node, 'text-align').indexOf('justify') > -1;
+                         },
+    insertorderedlist:   function(node, region) {
+                           if (node.nodeName == 'OL') return true;
+                           var ol = Element.up(node, 'ol');
+                           return (ol) ? ol.descendantOf(region.element) : false;
+                         },
+    insertunorderedlist: function(node, region) {
+                           if (node.nodeName == 'ul') return true;
+                           var ul = Element.up(node, 'ul');
+                           return (ul) ? ul.descendantOf(region.element) : false;
+                         }
+  }
+});

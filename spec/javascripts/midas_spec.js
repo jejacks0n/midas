@@ -99,6 +99,22 @@ describe('Midas', function () {
       midas3 = null;
     });
 
+    it('should handle filtering calls from events', function() {
+      runs(function() {
+        this.callCount = 0;
+        this.spyFunction = function() { this.callCount += 1 }.bind(this);
+        Midas.filterCall(this.spyFunction);
+        Midas.filterCall(this.spyFunction);
+      });
+
+      waits(100);
+
+      runs(function() {
+        Midas.filterCall(this.spyFunction);
+        expect(this.callCount).toEqual(2);
+      });
+    });
+
     describe('for detecting the browser', function () {
 
       // I'm not really sure how to test these.. most of the other tests will
