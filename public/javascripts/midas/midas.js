@@ -35,7 +35,9 @@ var Midas = Class.create({
       index++;
     }.bind(this));
 
-    this.activeRegion = this.regions[0] ? this.regions[0] : null;
+    if (this.regions[0]) {
+      this.regions[0].element.focus();
+    }
 
     this.setupObservers();
   },
@@ -44,6 +46,8 @@ var Midas = Class.create({
 
     //{action: action, spec: buttonSpec, event: event, toolbar: this}
     Event.observe(document, 'midas:button', function(e) {
+      if (!this.activeRegion) return;
+
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
@@ -72,10 +76,18 @@ var Midas = Class.create({
 
       Midas.filterCall(function() {
         if (this.regions.indexOf(a['region']) >= 0) this.setActiveRegion(a['region']);
-        this.statusbar.update(this.activeRegion, e);
+        this.statusbar.update(this.activeRegion, a['event']);
       }.bind(this));
 
     }.bindAsEventListener(this));
+
+    //{region: this, name: this.name, event: event}
+    Event.observe(document, 'midas:region:blur', function(e) {
+      var a = e.memo;
+
+      if (this.activeRegion == a['region']) this.setActiveRegion(null);
+    }.bindAsEventListener(this));
+
   },
 
   setActiveRegion: function(region) {

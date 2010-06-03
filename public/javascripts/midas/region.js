@@ -48,6 +48,10 @@ Midas.Region = Class.create({
       Midas.fire('region', {region: this, name: this.name, event: event});
       if (this.getContents() == '&nbsp;') this.setContents('&nbsp;');
     }.bind(this));
+    this.element.observe('blur', function(event) {
+      Midas.fire('region:blur', {region: this, name: this.name, event: event});
+    }.bind(this));
+
     this.element.observe('click', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
       if (this.getContents() == '&nbsp;') this.setContents('&nbsp;');
@@ -55,10 +59,10 @@ Midas.Region = Class.create({
     this.element.observe('mouseup', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
     }.bind(this));
+
     this.element.observe('keyup', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
     });
-
     this.element.observe('keypress', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
 
