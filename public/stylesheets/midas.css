@@ -49,6 +49,8 @@
   font-family: Helvetica, Tahoma, Arial, sans-serif;
   }
 .midas-actionsbar a em {
+  display: block;
+  margin: 0 -5px;
   font-style: normal;
   color: #222;
   font-size: 8.5pt;
@@ -324,6 +326,16 @@
 .midas-statusbar span {
   margin-right: 25px;
   }
-.midas-statusbar span a {
 
+
+/* Palettes
+ *----------------------------------------------------------------------------*/
+.midas-palette {
+  background: #E2E1E2;
+  border: 1px solid #727272;
+  margin-top: -1px;
+  position: absolute;
+	-moz-box-shadow: 1px 1px 4px #000;
+	-webkit-box-shadow: 1px 1px 4px #000;
+	box-shadow: 1px 1px 4px #000;
   }

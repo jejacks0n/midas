@@ -3,6 +3,7 @@ Midas.Toolbar = Class.create({
   version: 0.2,
   contexts: [],
   buttons: {},
+  palettes: [],
   options: {
     appendTo: null,
     configuration: null
@@ -16,6 +17,7 @@ Midas.Toolbar = Class.create({
     this.config = this.options['configuration'];
 
     this.build();
+    this.setupObservers();
   },
 
   build: function() {
@@ -34,6 +36,15 @@ Midas.Toolbar = Class.create({
     }
     
     ($(this.options['appendTo']) || document.body).appendChild(this.element);    
+  },
+
+  setupObservers: function() {
+    Event.observe(document, 'mouseup', function(e) {
+      var element = Event.element(e);
+      this.palettes.each(function(palette) {
+        if (element != palette.element || element.descendantOf(palette.element)) palette.hide();
+      }.bind(this));
+    }.bind(this))
   },
 
   generateId: function() {
@@ -102,10 +113,7 @@ Midas.Toolbar = Class.create({
             break;
           case 'palette':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
-            element.observe('click', function() {
-              var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-              alert('this would open a palette with the url: ' + url);
-            }.bind(this));
+            this.palettes.push(new Midas.Palette(element, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           case 'select':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
@@ -170,8 +178,19 @@ Midas.Toolbar = Class.create({
     }
   },
 
+  unsetActiveButtons: function() {
+    this.element.select('.active').each(function(button) {
+      button.removeClassName('active');
+    });
+  },
+
   destroy: function() {
+    this.palettes.each(function(palette) {
+      palette.destroy();
+    });
+    this.palettes = [];
     this.element.remove();
+    this.element = null;
   }
 });
 

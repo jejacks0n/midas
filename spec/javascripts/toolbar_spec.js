@@ -65,12 +65,23 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
+  it('should keep track of palettes that is has', function() {
+
+  });
+
+  it('should hide all palettes when anything besides a palette is clicked', function() {
+
+  });
+
+  it ('should inactivate any active buttons', function() {
+
+  });
+  
   it('should destroy', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
 
-    expect(this.toolbar.element).not.toBeFalsy();
-    expect($(this.toolbar.element.getAttribute('id'))).toBeFalsy(null);
+    expect(this.toolbar.element).toBeFalsy();
     expect($$('.midas-toolbar').length).toEqual(0);
   });
 

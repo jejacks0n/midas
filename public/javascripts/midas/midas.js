@@ -43,12 +43,13 @@ var Midas = Class.create({
   setupObservers: function() {
     Event.observe(document, 'mouseup', function(e) {
       var element = Event.element(e);
-      if (element.descendantOf(this.toolbar.element)) return;
+      if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
       for (var i = 0; i < this.regions.length; ++i) {
         if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
       }
 
       this.setActiveRegion(null);
+      if (this.toolbar) this.toolbar.unsetActiveButtons();
     }.bind(this));
 
     //{action: action, spec: buttonSpec, event: event, toolbar: this}
@@ -62,9 +63,7 @@ var Midas = Class.create({
         var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
         if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
         if (this.statusbar) this.statusbar.update(this.activeRegion, e);
-        if (this.toolbar) {
-          this.toolbar.setActiveButtons(this.regions, this.activeRegion);
-        }
+        if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
       }.bind(this));
     }.bindAsEventListener(this));
 

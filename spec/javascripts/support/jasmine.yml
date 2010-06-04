@@ -19,6 +19,7 @@ src_files:
   - javascripts/midas/toolbar.js
   - javascripts/midas/statusbar.js
   - javascripts/midas/dialog.js
+  - javascripts/midas/palette.js
   - javascripts/midas/config.js
 
 # stylesheets
