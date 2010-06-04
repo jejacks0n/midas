@@ -107,11 +107,9 @@ describe('Midas.Region', function() {
       jasmine.simulate.tab(this.region.element);
 
       expect($('div6').innerHTML).toEqual("<span>this isn't in a li</span>");
-
     });
 
   });
-
 
   describe('actions and behaviors that are handled', function() {
 
