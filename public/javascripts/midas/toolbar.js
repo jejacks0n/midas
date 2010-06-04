@@ -149,12 +149,6 @@ Midas.Toolbar = Class.create({
     node = node.nodeType == 3 ? Element.up(node) : node;
     if (!node) return;
 
-//    var focusCount = 0;
-//    for (var count = 0; count < regions.length; ++count) {
-//      if (regions[count].focused) focusCount++;
-//    }
-//    if (!focusCount) return;
-
     var length = this.contexts.length;
     for (var i = 0; i < length; ++i) {
       var context = this.contexts[i];
