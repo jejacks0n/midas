@@ -155,9 +155,6 @@ Object.extend(Midas, {
   filteredCalls: {},
 
   filterCall: function(callback) {
-    callback();
-    return;
-    
     var hash = escape(callback.toString());
     var time = new Date().valueOf();
     if (this.filteredCalls[hash]) {

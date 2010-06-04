@@ -38,4 +38,25 @@ describe('Midas.Statusbar', function() {
     expect($$('.midas-statusbar').length).toEqual(0);
   });
 
+  describe('panels that are default', function() {
+
+    it('should display a path', function() {
+      runs(function() {
+        this.statusbar = new Midas.Statusbar({appendTo: 'statusbar'});
+
+        var span = $('div5').down('span');
+        console.debug(span);
+        jasmine.simulate.selection(span);
+        this.statusbar.update({element: $('region4')}, {});
+      });
+
+      waits(10);
+
+      runs(function() {
+        expect(this.statusbar.element.innerHTML).toMatch(/<a>div<\/a> .* <a>ul<\/a> .* <a>li<\/a>/);
+      });
+    });
+
+  });
+
 });
