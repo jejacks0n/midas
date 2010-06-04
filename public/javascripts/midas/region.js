@@ -54,14 +54,14 @@ Midas.Region = Class.create({
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
     this.element.observe('mouseup', function(event) {
-      Midas.fire('region', {region: this, name: this.name, event: event});
+      Midas.fire('region:update', {region: this, name: this.name, event: event});
     }.bind(this));
 
     this.element.observe('keyup', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
     }.bind(this));
     this.element.observe('keypress', function(event) {
-      Midas.fire('region', {region: this, name: this.name, event: event});
+      Midas.fire('region:update', {region: this, name: this.name, event: event});
 
       switch(event.keyCode) {
         case 9: // tab
@@ -119,7 +119,7 @@ Midas.Region = Class.create({
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
     var supported = document.execCommand('styleWithCSS', false, false);
-    document.execCommand('enableInlineTableEditing', false, false);
+    //document.execCommand('enableInlineTableEditing', false, false);
     var handled = document.execCommand(action, false, argument);
     if (!handled && supported) throw('Unknown action "' + action + '"');
   },

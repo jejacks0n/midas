@@ -59,12 +59,10 @@ var Midas = Class.create({
 
       if (this.toolbar != a['toolbar']) return;
 
-      Midas.filterCall(function() {
-        var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-        if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-        if (this.statusbar) this.statusbar.update(this.activeRegion, e);
-        if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
-      }.bind(this));
+      var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+      if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+      if (this.statusbar) this.statusbar.update(this.activeRegion, e);
+      if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
     }.bindAsEventListener(this));
 
     //{mode: mode, toolbar: this}
@@ -83,12 +81,20 @@ var Midas = Class.create({
       var a = e.memo;
       if (this.regions.indexOf(a['region']) < 0) return;
 
-      Midas.filterCall(function() {
-        this.setActiveRegion(a['region']);
-        if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
-        if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
-      }.bind(this));
+      this.setActiveRegion(a['region']);
     }.bindAsEventListener(this));
+
+    //{region: this, name: this.name, event: event}
+    Event.observe(document, 'midas:region:update', function(e) {
+      var a = e.memo;
+
+      Midas.fire('region', e.memo);
+
+      if (this.regions.indexOf(a['region']) < 0) return;
+      
+      if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
+      if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+    }.bind(this));
   },
 
   setActiveRegion: function(region) {
@@ -149,21 +155,6 @@ Object.extend(Midas, {
   instances: [],
   agentId: null,
   debugMode: false,
-  filteredCalls: {},
-
-  filterCall: function(callback) {
-    var hash = escape(callback.toString());
-    var time = new Date().valueOf();
-    if (this.filteredCalls[hash]) {
-      if (this.filteredCalls[hash] + 50 < time) {
-        callback();
-        this.filteredCalls[hash] = time;
-      }
-    } else {
-      callback();
-      this.filteredCalls[hash] = time;
-    }
-  },
 
   registerInstance: function(instance) {
     this.instances.push(instance);
