@@ -26,14 +26,15 @@ describe('Midas.Region', function() {
     // firefox doesn't like to give focus to a complely blank contentEditable region, so
     // we put a &nbsp; inside empty ones, and then reset it on focus/click, so you don't
     // really see the &nbsp;
+    if (jasmine.browser.Gecko) {
+      this.region = new Midas.Region('region3');
 
-    this.region = new Midas.Region('region3');
+      expect($('region3').innerHTML).toEqual('&nbsp;');
 
-    expect($('region3').innerHTML).toEqual('&nbsp;');
+      jasmine.simulate.click(this.region.element);
 
-    jasmine.simulate.click(this.region.element);
-
-    expect($('region3').innerHTML).toEqual('&nbsp;');
+      expect($('region3').innerHTML).toEqual('&nbsp;');
+    }
   });
 
   it('should accept options in the constructor', function() {

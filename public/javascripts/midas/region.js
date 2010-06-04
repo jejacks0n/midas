@@ -27,7 +27,7 @@ Midas.Region = Class.create({
   makeEditable: function() {
     this.element.addClassName('midas-region');
 
-    if (this.element.innerHTML.replace(/^\s+|\s+$/g, "") == '') {
+    if (this.element.innerHTML.replace(/^\s+|\s+$/g, "") == '' && Prototype.Browser.Gecko) {
       this.setContents('&nbsp;')
     }
     
@@ -46,11 +46,12 @@ Midas.Region = Class.create({
   setupObservers: function() {
     this.element.observe('focus', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
+      if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
 
     this.element.observe('click', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
-      if (this.getContents() == '&nbsp;') this.setContents('&nbsp;');
+      if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
     this.element.observe('mouseup', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
