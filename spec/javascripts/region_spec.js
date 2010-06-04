@@ -242,28 +242,32 @@ describe('Midas.Region', function() {
           case 'bold':
             if (jasmine.browser.WebKit) {
               expect(resultDiv.select('b').length).toEqual(1);
-            } else if(jasmine.browser.Gecko) {
+            } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('b').length).toEqual(1);
             }
             break;
           case 'italic':
             if (jasmine.browser.WebKit) {
               expect(resultDiv.select('i').length).toEqual(1);
-            } else if(jasmine.browser.Gecko) {
+            } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('i').length).toEqual(1);
             }
             break;
           case 'underline':
-            if (jasmine.browser.WebKit) {
+            if (jasmine.browser.AppleWebKit) {
               expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('underline');
-            } else if(jasmine.browser.Gecko) {
+            } else if (jasmine.browser.ChromeWebKit) {
+              expect(resultDiv.select('u').length).toEqual(1);
+            } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('u').length).toEqual(1);
             }
             break;
           case 'strikethrough':
-            if (jasmine.browser.WebKit) {
+            if (jasmine.browser.AppleWebKit) {
               expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('line-through');
-            } else if(jasmine.browser.Gecko) {
+            } else if (jasmine.browser.ChromeWebKit) {
+              expect(resultDiv.select('s').length).toEqual(1);
+            } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('strike').length).toEqual(1);
             }
             break;
@@ -334,7 +338,7 @@ describe('Midas.Region', function() {
         this.region.updateSelections();
         jasmine.simulate.keypress(this.div, {charCode: 'a'.charCodeAt(0)});
 
-        if (jasmine.browser.WebKit) {
+        if (jasmine.browser.AppleWebKit) {
           // can't get this working in webkit, however, it does in fact work
         } else if(jasmine.browser.Gecko) {
           expect(this.div.innerHTML).toEqual('a');

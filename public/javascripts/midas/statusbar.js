@@ -44,8 +44,8 @@ Midas.Statusbar = Class.create({
     if (!event) return '<span><strong>Path:</strong></span>';
     
     var selection = window.getSelection();
+    if (!selection.rangeCount) return;
     var range = selection.getRangeAt(0);
-    if (!range) return;
 
     var path = '';
     var node = range.commonAncestorContainer;

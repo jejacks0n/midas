@@ -198,37 +198,83 @@ describe('Midas', function () {
 
   describe('events that are observed', function () {
 
+    it('should understand context and highlight buttons', function() {
+      runs(function() {
+        this.midas = new Midas();
+        this.midas.regions[0].focused = true;
+
+        var span = $('div6').down('span');
+        jasmine.simulate.selection(span);
+
+        Event.fire(document, 'midas:region', {region: this.midas.regions[0], name: 'name', event: {}});
+        expect(this.midas.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(true);
+      });
+
+      waits(100);
+
+      runs(function() {
+        var em = $('div3').down('em');
+        jasmine.simulate.selection(em);
+
+        Event.fire(document, 'midas:region', {region: this.midas.regions[0], name: 'name', event: {}});
+
+        expect(this.midas.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(false);
+        expect(this.midas.toolbar.element.down('.midas-button-italic').hasClassName('active')).toEqual(true);
+      });
+    });
+
     it('should know which region has focus', function() {
 
       // focus() doesn't seem to work well in ci.. works fine in browser though.
       // I tried runs, waits, and changing the element that was being observed /
       // fired on, but no luck...using click instead of focus for now.
 
-      this.midas = new Midas();
+      runs(function() {
+        this.midas = new Midas();
 
-      jasmine.simulate.click(this.midas.regions[1].element);
-      expect(this.midas.activeRegion.name).toEqual(this.midas.regions[1].name);
+        jasmine.simulate.click(this.midas.regions[1].element);
+        expect(this.midas.activeRegion.name).toEqual(this.midas.regions[1].name);
+      });
 
-      jasmine.simulate.click(this.midas.regions[0].element);
-      expect(this.midas.activeRegion.name).toEqual(this.midas.regions[0].name);
+      waits(100);
+
+      runs(function() {
+        jasmine.simulate.click(this.midas.regions[1].element);
+        expect(this.midas.activeRegion.name).toEqual(this.midas.regions[1].name);
+      });
+
+      waits(100);
     });
 
     it('should handle and pass any button clicks to the active region', function() {
-      this.midas = new Midas();
-      var spy1 = spyOn(this.midas.activeRegion, 'handleAction');
-      var spy2 = spyOn(this.midas, 'handleAction');
+      runs(function() {
+        this.midas = new Midas();
 
-      jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
-      expect(spy1.callCount).toEqual(1);
-      expect(spy2.callCount).toEqual(1);
+        this.midas.activeRegion = this.midas.regions[0];
+
+        var spy1 = spyOn(this.midas.activeRegion, 'handleAction');
+        var spy2 = spyOn(this.midas, 'handleAction');
+
+        jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
+        expect(spy1.callCount).toEqual(1);
+        expect(spy2.callCount).toEqual(1);
+      });
+
+      waits(100);
     });
 
     it('should handle switching modes', function() {
-      this.midas = new Midas();
-      var spy = spyOn(this.midas, 'handleMode');
+      runs(function() {
+        this.midas = new Midas();
+        this.midas.activeRegion = this.midas.regions[0];
 
-      jasmine.simulate.click($$('.midas-button-preview')[0]);
-      expect(spy.callCount).toEqual(1);
+        var spy = spyOn(this.midas, 'handleMode').andCallThrough();
+
+        jasmine.simulate.click($$('.midas-button-preview')[0]);
+        expect(spy.callCount).toEqual(1);
+      });
+
+      waits(100);
     });
 
   });

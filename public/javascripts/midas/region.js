@@ -46,10 +46,6 @@ Midas.Region = Class.create({
   setupObservers: function() {
     this.element.observe('focus', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
-      if (this.getContents() == '&nbsp;') this.setContents('&nbsp;');
-    }.bind(this));
-    this.element.observe('blur', function(event) {
-      Midas.fire('region:blur', {region: this, name: this.name, event: event});
     }.bind(this));
 
     this.element.observe('click', function(event) {
@@ -62,7 +58,7 @@ Midas.Region = Class.create({
 
     this.element.observe('keyup', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
-    });
+    }.bind(this));
     this.element.observe('keypress', function(event) {
       Midas.fire('region', {region: this, name: this.name, event: event});
 
@@ -147,6 +143,7 @@ Midas.Region = Class.create({
 
   destroy: function() {
     this.element.contentEditable = 'false';
+    this.element.blur();
     this.element.removeClassName('midas-region');
   },
 

@@ -35,19 +35,26 @@ var Midas = Class.create({
       index++;
     }.bind(this));
 
-    if (this.regions[0]) {
-      this.regions[0].element.focus();
-    }
+    if (this.regions[0]) this.setActiveRegion(this.regions[0]);
 
     this.setupObservers();
   },
 
   setupObservers: function() {
+    Event.observe(document, 'mouseup', function(e) {
+      var element = Event.element(e);
+      if (element.descendantOf(this.toolbar.element)) return;
+
+      for (var i = 0; i < this.regions.length; ++i) {
+        if (element.descendantOf(this.regions[i].element)) return;
+      }
+
+      this.setActiveRegion(null);
+    }.bind(this));
 
     //{action: action, spec: buttonSpec, event: event, toolbar: this}
     Event.observe(document, 'midas:button', function(e) {
       if (!this.activeRegion) return;
-
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
@@ -55,39 +62,36 @@ var Midas = Class.create({
       Midas.filterCall(function() {
         var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
         if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-        this.statusbar.update(this.activeRegion, e);
-        this.toolbar.setActiveButtons(this.activeRegion);
+        if (this.statusbar) this.statusbar.update(this.activeRegion, e);
+        if (this.toolbar) {
+          console.debug(4);
+          this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+        }
       }.bind(this));
-
     }.bindAsEventListener(this));
 
     //{mode: mode, toolbar: this}
     Event.observe(document, 'midas:mode', function(e) {
+      if (!this.activeRegion) return;
+
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
-      
+
       this.handleMode(a['mode'], a['toolbar']);
     }.bindAsEventListener(this));
 
     //{region: this, name: this.name, event: event}
     Event.observe(document, 'midas:region', function(e) {
       var a = e.memo;
+      if (this.regions.indexOf(a['region']) < 0) return;
 
       Midas.filterCall(function() {
-        if (this.regions.indexOf(a['region']) >= 0) this.setActiveRegion(a['region']);
-        this.statusbar.update(this.activeRegion, a['event']);
+        this.setActiveRegion(a['region']);
+        if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
+        if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
       }.bind(this));
-
     }.bindAsEventListener(this));
-
-    //{region: this, name: this.name, event: event}
-    Event.observe(document, 'midas:region:blur', function(e) {
-      var a = e.memo;
-
-      if (this.activeRegion == a['region']) this.setActiveRegion(null);
-    }.bindAsEventListener(this));
-
   },
 
   setActiveRegion: function(region) {
@@ -148,14 +152,16 @@ Object.extend(Midas, {
   instances: [],
   agentId: null,
   debugMode: false,
-  fireEvent: {},
   filteredCalls: {},
 
   filterCall: function(callback) {
+    callback();
+    return;
+    
     var hash = escape(callback.toString());
     var time = new Date().valueOf();
     if (this.filteredCalls[hash]) {
-      if (this.filteredCalls[hash] + 50 < time) {
+      if (this.filteredCalls[hash] + 10 < time) {
         callback();
         this.filteredCalls[hash] = time;
       }
@@ -208,7 +214,7 @@ Object.extend(Midas, {
       console.info(['Midas.fire', event, memo]);
     }
 
-    Event.fire(document, event, memo); Midas.fireEvent[event] = null;
+    Event.fire(document, event, memo);
   }
 });
 

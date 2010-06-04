@@ -16,7 +16,6 @@ Midas.Toolbar = Class.create({
     this.config = this.options['configuration'];
 
     this.build();
-    this.setupObservers();
   },
 
   build: function() {
@@ -35,15 +34,6 @@ Midas.Toolbar = Class.create({
     }
     
     ($(this.options['appendTo']) || document.body).appendChild(this.element);    
-  },
-
-  setupObservers: function() {
-    Event.observe(document, 'midas:region', function(e) {
-      var a = e.memo;
-      //{region: this, name: this.name, event: event}
-
-      this.setActiveButtons(a['region']);
-    }.bindAsEventListener(this));
   },
 
   generateId: function() {
@@ -149,13 +139,21 @@ Midas.Toolbar = Class.create({
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
   },
 
-  setActiveButtons: function(region) {
+  setActiveButtons: function(regions, activeRegion) {
     var selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
     var range = selection.getRangeAt(0);
-    if (!range) return;
 
     var node = range.commonAncestorContainer;
     node = node.nodeType == 3 ? Element.up(node) : node;
+    if (!node) return;
+
+//    var focusCount = 0;
+//    for (var count = 0; count < regions.length; ++count) {
+//      if (regions[count].focused) focusCount++;
+//    }
+//    if (!focusCount) return;
 
     var length = this.contexts.length;
     for (var i = 0; i < length; ++i) {
@@ -169,7 +167,7 @@ Midas.Toolbar = Class.create({
       }
 
       if (typeof(callback) == 'function') {
-        if (callback.call(this, node, region)) {
+        if (callback.call(this, node, activeRegion)) {
           context['element'].addClassName('active');
         } else {
           context['element'].removeClassName('active');
@@ -206,16 +204,16 @@ Object.extend(Midas.Toolbar, {
                            return node.nodeName == 'SUP' || node.up('sup');
                          },
     justifyleft:         function(node) {
-                           return Element.getStyle(node, 'text-align').indexOf('left') > -1;
+                           return (Element.getStyle(node, 'text-align') || '').indexOf('left') > -1;
                          },
     justifycenter:       function(node) {
-                           return Element.getStyle(node, 'text-align').indexOf('center') > -1;
+                           return (Element.getStyle(node, 'text-align') || '').indexOf('center') > -1;
                          },
     justifyright:        function(node) {
-                           return Element.getStyle(node, 'text-align').indexOf('right') > -1;
+                           return (Element.getStyle(node, 'text-align') || '').indexOf('right') > -1;
                          },
     justifyfull:         function(node) {
-                           return Element.getStyle(node, 'text-align').indexOf('justify') > -1;
+                           return (Element.getStyle(node, 'text-align') || '').indexOf('justify') > -1;
                          },
     insertorderedlist:   function(node, region) {
                            if (node.nodeName == 'OL') return true;

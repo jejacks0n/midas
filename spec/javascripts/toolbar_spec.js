@@ -65,39 +65,6 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
-  it('should observe the region', function() {
-    this.toolbar = new Midas.Toolbar();
-    var spy = spyOn(this.toolbar, 'setActiveButtons');
-
-    Event.fire(document, 'midas:region', {region: {element: $('div6')}, name: 'name', event: {}});
-
-    expect(spy.callCount).toEqual(1);
-  });
-
-  it('should understand context and highlight buttons', function() {
-    runs(function() {
-      this.toolbar = new Midas.Toolbar();
-
-      var span = $('div6').down('span');
-      jasmine.simulate.selection(span);
-
-      Event.fire(document, 'midas:region', {region: {element: $('div6')}, name: 'name', event: {}});
-      expect(this.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(true);
-    });
-
-    waits(200);
-
-    runs(function() {
-      var em = $('div3').down('em');
-      jasmine.simulate.selection(em);
-
-      Event.fire(document, 'midas:region', {region: {element: $('div3')}, name: 'name', event: {}});
-
-      expect(this.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(false);
-      expect(this.toolbar.element.down('.midas-button-italic').hasClassName('active')).toEqual(true);
-    });
-  });
-
   it('should destroy', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
