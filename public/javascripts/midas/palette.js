@@ -3,15 +3,19 @@ Midas.Palette = Class.create({
   version: 0.2,
   button: null,
   element: null,
+  setupFunction: null,
   options: {
     url: null,
     configuration: null
   },
 
-  initialize: function(button, options) {
+  initialize: function(button, name, toolbar, options) {
     if (!Midas.version) throw('Midas.Region requires Midas');
 
     this.button = button;
+    this.name = name;
+    this.toolbar = toolbar;
+    
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
     this.config = this.options['configuration'];
@@ -22,7 +26,7 @@ Midas.Palette = Class.create({
 
   build: function() {
     this.element = new Element('div', {'class': 'midas-palette', style: 'display:none;'});
-    document.body.appendChild(this.element);
+    this.toolbar.element.appendChild(this.element);
   },
 
   setupObservers: function() {
@@ -70,14 +74,30 @@ Midas.Palette = Class.create({
   },
 
   load: function(callback) {
-    this.loaded = true;
-    this.element.innerHTML = '<div style="width:150px;height:150px">some content here</div>';
-    if (callback) callback();
+    new Ajax.Request(this.options.url, {
+      method: 'get',
+      onSuccess: function(transport) {
+        this.loaded = true;
+        this.element.innerHTML = transport.responseText;
+        transport.responseText.evalScripts();
+
+        this.setupFunction = window['setup_' + this.name];
+        if (this.setupFunction) this.setupFunction.call(this);
+
+        if (callback) callback();
+      }.bind(this),
+      onFailure: function() {
+        alert('unable to get the palette contents');
+      }
+    });
+  },
+
+  execute: function(action, options) {
+    //Midas.fire('button', options);
   },
 
   destroy: function() {
     if (this.element) this.element.remove();
     this.element = null;
   }
-
 });

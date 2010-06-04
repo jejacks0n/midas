@@ -1,20 +1,20 @@
 <script type="text/javascript">
-  window['setup_backcolor'] = function() {
-    $('midas_backcolor_selector').select('div').each(function(div) {
+  window['setup_forecolor'] = function() {
+    $('midas_forecolor_selector').select('div').each(function(div) {
       var color = div.getStyle('background-color');
       Event.observe(div, 'click', function(event) {
         event.stop();
 
-        $('midas_backcolor_last_picked').setStyle('background-color:' + color);
+        $('midas_forecolor_last_picked').setStyle('background-color:' + color);
 
         this.button.setStyle('background-color:' + color);
-        this.execute('backcolor', {color: color});
+        this.execute('forecolor', {color: color});
       }.bind(this));
     }.bind(this));
   }
 </script>
 
-<div id="midas_backcolor_selector" class="midas-palette-content">
+<div id="midas_forecolor_selector" class="midas-palette-content">
 	<div style="background:#FFFFFF"></div>
 	<div style="background:#FFCCCC"></div>
 	<div style="background:#FFCC99"></div>
@@ -92,5 +92,5 @@
 	<div style="background:#330099"></div>
 	<div style="background:#330033"></div>
 
-	<div id="midas_backcolor_last_picked">Last&nbsp;Color&nbsp;Picked</div>
+	<div id="midas_forecolor_last_picked">Last&nbsp;Color&nbsp;Picked</div>
 </div>

@@ -113,7 +113,7 @@ Midas.Toolbar = Class.create({
             break;
           case 'palette':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
-            this.palettes.push(new Midas.Palette(element, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
+            this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           case 'select':
             if (!mixed) throw('Button "' + action + '" is missing arguments');

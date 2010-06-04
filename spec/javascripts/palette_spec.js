@@ -44,6 +44,10 @@ describe('Midas.Palette', function() {
 
   });
 
+  it('should call a setup function', function() {
+
+  });
+
   it('should destroy', function() {
     this.palette = new Midas.Palette($('palette_button'));
     this.palette.destroy();
