@@ -221,6 +221,8 @@ describe('Midas', function () {
         expect(this.midas.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(false);
         expect(this.midas.toolbar.element.down('.midas-button-italic').hasClassName('active')).toEqual(true);
       });
+
+      waits(100);
     });
 
     it('should know which region has focus', function() {
@@ -239,8 +241,8 @@ describe('Midas', function () {
       waits(100);
 
       runs(function() {
-        jasmine.simulate.click(this.midas.regions[1].element);
-        expect(this.midas.activeRegion.name).toEqual(this.midas.regions[1].name);
+        jasmine.simulate.click(this.midas.regions[0].element);
+        expect(this.midas.activeRegion.name).toEqual(this.midas.regions[0].name);
       });
 
       waits(100);

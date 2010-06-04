@@ -107,11 +107,9 @@ describe('Midas.Region', function() {
       jasmine.simulate.tab(this.region.element);
 
       expect($('div6').innerHTML).toEqual("<span>this isn't in a li</span>");
-
     });
 
   });
-
 
   describe('actions and behaviors that are handled', function() {
 
@@ -195,7 +193,6 @@ describe('Midas.Region', function() {
         this.region.handleAction('indent');
 
         if (jasmine.browser.WebKit) {
-          console.log($('region4').innerHTML);
           expect($('region4').select('blockquote').length).toEqual(1);
         } else if(jasmine.browser.Gecko) {
           expect($('region4').down('#div1').up().tagName).toEqual('BLOCKQUOTE');

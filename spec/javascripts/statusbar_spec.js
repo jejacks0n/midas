@@ -45,7 +45,6 @@ describe('Midas.Statusbar', function() {
         this.statusbar = new Midas.Statusbar({appendTo: 'statusbar'});
 
         var span = $('div5').down('span');
-        console.debug(span);
         jasmine.simulate.selection(span);
         this.statusbar.update({element: $('region4')}, {});
       });

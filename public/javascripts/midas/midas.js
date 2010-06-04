@@ -44,9 +44,8 @@ var Midas = Class.create({
     Event.observe(document, 'mouseup', function(e) {
       var element = Event.element(e);
       if (element.descendantOf(this.toolbar.element)) return;
-
       for (var i = 0; i < this.regions.length; ++i) {
-        if (element.descendantOf(this.regions[i].element)) return;
+        if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
       }
 
       this.setActiveRegion(null);
@@ -64,7 +63,6 @@ var Midas = Class.create({
         if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
         if (this.statusbar) this.statusbar.update(this.activeRegion, e);
         if (this.toolbar) {
-          console.debug(4);
           this.toolbar.setActiveButtons(this.regions, this.activeRegion);
         }
       }.bind(this));
@@ -158,7 +156,7 @@ Object.extend(Midas, {
     var hash = escape(callback.toString());
     var time = new Date().valueOf();
     if (this.filteredCalls[hash]) {
-      if (this.filteredCalls[hash] + 10 < time) {
+      if (this.filteredCalls[hash] + 50 < time) {
         callback();
         this.filteredCalls[hash] = time;
       }
@@ -207,11 +205,25 @@ Object.extend(Midas, {
 
   fire: function(event, memo) {
     event = 'midas:' + event;
-    if (Midas.debugMode && console && console.info) {
-      console.info(['Midas.fire', event, memo]);
-    }
+    Midas.trace('Midas.fire', event, memo);
 
     Event.fire(document, event, memo);
+  },
+
+  trace: function() {
+    var args = [];
+    for (var i = 0; i < arguments.length; ++i) args.push(arguments[i]);
+    if (Midas.debugMode && console) {
+      try {
+        console.debug(args);
+      } catch(e1) {
+        try {
+          console.info(args);
+        } catch(e2) {
+          try { console.log(args); } catch(e3) {}
+        }
+      }
+    }
   }
 });
 
