@@ -74,7 +74,7 @@ Midas.Config = {
       style:                 ['Style', '', ['select', function() { return Midas.Config.styles }]],
       formatblock:           ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
       sep1:                  '-',
-      backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
+      //backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
       forecolor:             ['Text Color', '', ['palette', '/midas/forecolor.html'], ['context']],
       sep2:                  '-',
       decoration:            {
