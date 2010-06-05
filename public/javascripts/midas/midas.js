@@ -37,7 +37,13 @@ var Midas = Class.create({
 
     if (this.regions[0]) this.setActiveRegion(this.regions[0]);
 
+    window.onbeforeunload = this.onBeforeUnload.bind(this);
+
     this.setupObservers();
+  },
+
+  onBeforeUnload: function() {
+    if (this.changed) return "You've made changes without saving them.  Are you sure you'd like to navigate away without saving them first?";
   },
 
   setupObservers: function() {
@@ -52,15 +58,16 @@ var Midas = Class.create({
       if (this.toolbar) this.toolbar.unsetActiveButtons();
     }.bind(this));
 
-    //{action: action, spec: buttonSpec, event: event, toolbar: this}
+    //{action: action, event: event, toolbar: this}
     Event.observe(document, 'midas:button', function(e) {
       if (!this.activeRegion) return;
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
+      this.changed = true;
 
-      var handled = this.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
-      if (!handled) this.activeRegion.handleAction(a['action'], a['spec'], a['event'], a['toolbar']);
+      var handled = this.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
+      if (!handled) this.activeRegion.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
       if (this.statusbar) this.statusbar.update(this.activeRegion, e);
       if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
     }.bindAsEventListener(this));
@@ -68,7 +75,6 @@ var Midas = Class.create({
     //{mode: mode, toolbar: this}
     Event.observe(document, 'midas:mode', function(e) {
       if (!this.activeRegion) return;
-
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
@@ -81,6 +87,7 @@ var Midas = Class.create({
       var a = e.memo;
       if (this.regions.indexOf(a['region']) < 0) return;
 
+      if (a['changed']) this.changed = true;
       this.setActiveRegion(a['region']);
     }.bindAsEventListener(this));
 
@@ -101,7 +108,9 @@ var Midas = Class.create({
     this.activeRegion = region; 
   },
 
-  handleAction: function(action, spec, event, toolbar) {
+  handleAction: function(action, event, toolbar, options) {
+    options = options || {};
+    
     if (this.actionsToHandle.indexOf(action) < 0) return false;
     if (Object.isFunction(this[action])) return this[action].apply(this, arguments);
 
@@ -130,7 +139,10 @@ var Midas = Class.create({
 
     new Ajax.Request(this.options.saveUrl, {
       method: method,
-      parameters: Object.extend(parameters, this.serialize())
+      parameters: Object.extend(parameters, this.serialize()),
+      onSuccess: function() {
+        this.changed = false;
+      }.bind(this)
     });
 
     return true;

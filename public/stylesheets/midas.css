@@ -343,6 +343,10 @@
 .midas-htmleditorbar .midas-button-backcolor {
   background-position: 0 -54px;
   }
+.midas-htmleditorbar .midas-button-forecolor {
+  background-color: #000;
+  }
+
 #midas_forecolor_selector,
 #midas_backcolor_selector {
   width: 170px;

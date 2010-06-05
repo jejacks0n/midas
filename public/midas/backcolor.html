@@ -1,14 +1,15 @@
 <script type="text/javascript">
   window['setup_backcolor'] = function() {
     $('midas_backcolor_selector').select('div').each(function(div) {
-      var color = div.getStyle('background-color');
       Event.observe(div, 'click', function(event) {
         event.stop();
+
+        var color = div.getStyle('background-color');
 
         $('midas_backcolor_last_picked').setStyle('background-color:' + color);
 
         this.button.setStyle('background-color:' + color);
-        this.execute('backcolor', {color: color});
+        this.execute('backcolor', {value: color.toHex()}, event);
       }.bind(this));
     }.bind(this));
   }

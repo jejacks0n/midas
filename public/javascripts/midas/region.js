@@ -58,7 +58,7 @@ Midas.Region = Class.create({
     }.bind(this));
 
     this.element.observe('keyup', function(event) {
-      Midas.fire('region', {region: this, name: this.name, event: event});
+      Midas.fire('region', {region: this, name: this.name, event: event, changed: true});
     }.bind(this));
     this.element.observe('keypress', function(event) {
       Midas.fire('region:update', {region: this, name: this.name, event: event});
@@ -118,6 +118,7 @@ Midas.Region = Class.create({
 
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
+    
     var supported = document.execCommand('styleWithCSS', false, false);
     //document.execCommand('enableInlineTableEditing', false, false);
     var handled = document.execCommand(action, false, argument);
@@ -134,7 +135,9 @@ Midas.Region = Class.create({
     this.element.removeClassName('midas-region');
   },
 
-  handleAction: function(action, spec, event, toolbar) {
+  handleAction: function(action, event, toolbar, options) {
+    options = options || {};
+    
     if (this.config['behaviors'][action]) {
       var behaviors = this.config['behaviors'][action];
 
@@ -164,7 +167,7 @@ Midas.Region = Class.create({
             return (this.selections[0]) ? this.selections[0].cloneContents().textContent : '';
           });
           break;
-        default: this.execCommand(action);
+        default: this.execCommand(action, options['value']);
       }
     }
   },

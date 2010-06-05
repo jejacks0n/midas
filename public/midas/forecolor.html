@@ -1,21 +1,22 @@
 <script type="text/javascript">
   window['setup_forecolor'] = function() {
     $('midas_forecolor_selector').select('div').each(function(div) {
-      var color = div.getStyle('background-color');
       Event.observe(div, 'click', function(event) {
         event.stop();
+
+        var color = div.getStyle('background-color');
 
         $('midas_forecolor_last_picked').setStyle('background-color:' + color);
 
         this.button.setStyle('background-color:' + color);
-        this.execute('forecolor', {color: color});
+        this.execute('forecolor', {value: color.toHex()}, event);
       }.bind(this));
     }.bind(this));
   }
 </script>
 
 <div id="midas_forecolor_selector" class="midas-palette-content">
-	<div style="background:#FFFFFF"></div>
+	<div style="background-color:#FFFFFF"></div>
 	<div style="background:#FFCCCC"></div>
 	<div style="background:#FFCC99"></div>
 	<div style="background:#FFFF99"></div>

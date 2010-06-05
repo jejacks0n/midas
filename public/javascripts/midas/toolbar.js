@@ -74,7 +74,6 @@ Midas.Toolbar = Class.create({
         element.blur();
         Midas.fire('button', {
           action: action,
-          spec: {label: buttonSpec[0], description: buttonSpec[1], types: types},
           event: event,
           toolbar: this
         });
@@ -197,6 +196,12 @@ Midas.Toolbar = Class.create({
 // Midas.Toolbar static methods
 Object.extend(Midas.Toolbar, {
   contexts: {
+    backcolor:           function(node) {
+                           this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
+                         },
+    forecolor:           function(node) {
+                           this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
+                         },
     bold:                function(node) {
                            var weight = Element.getStyle(node, 'font-weight');
                            return weight == 'bold' || weight > 400;
