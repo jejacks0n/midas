@@ -39,6 +39,9 @@ Midas.Toolbar = Class.create({
   },
 
   setupObservers: function() {
+    Event.observe(this.element, 'mousedown', function(e) {
+      e.stop();
+    }.bind(this));
     Event.observe(document, 'mouseup', function(e) {
       var element = Event.element(e);
       this.palettes.each(function(palette) {
