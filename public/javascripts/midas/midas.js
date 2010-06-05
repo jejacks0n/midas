@@ -215,7 +215,7 @@ Object.extend(Midas, {
   trace: function() {
     var args = [];
     for (var i = 0; i < arguments.length; ++i) args.push(arguments[i]);
-    if (Midas.debugMode && console) {
+    if (Midas.debugMode && typeof(console) != 'undefined') {
       try {
         console.debug(args);
       } catch(e1) {
