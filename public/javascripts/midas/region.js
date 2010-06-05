@@ -13,6 +13,7 @@ Midas.Region = Class.create({
 
     this.element = $(element);
     if (!this.element) throw('Unable to locate the element "' + element + '"');
+    this.sibling = this.element.previousSibling;
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
@@ -40,7 +41,7 @@ Midas.Region = Class.create({
     this.element.contentEditable = true;
     
     document.execCommand('styleWithCSS', false, false);
-    document.execCommand('enableInlineTableEditing', false, false);
+    //document.execCommand('enableInlineTableEditing', false, false);
   },
 
   setupObservers: function() {
@@ -120,8 +121,19 @@ Midas.Region = Class.create({
     argument = typeof(argument) == 'undefined' ? null : argument;
     
     var supported = document.execCommand('styleWithCSS', false, false);
-    //document.execCommand('enableInlineTableEditing', false, false);
-    var handled = document.execCommand(action, false, argument);
+    var handled;
+    try {
+      handled = document.execCommand(action, false, argument);
+    } catch(e) {
+      Midas.trace(e);
+
+      // Gecko does some interesting things when it fails on indent
+      if (action == 'indent') {
+        var sibling = this.element.previousSibling;
+        if (sibling != this.sibling) sibling.remove();
+      }
+      handled = true;
+    }
     if (!handled && supported) throw('Unknown action "' + action + '"');
   },
 
@@ -156,12 +168,6 @@ Midas.Region = Class.create({
       }
     } else {
       switch (action) {
-        case 'indent':
-          var div = new Element('div');
-          this.element.appendChild(div);
-          this.execCommand('indent');
-          this.element.removeChild(div);
-          break;
         case 'removeformatting':
           this.handle['insertHTML'].call(this, function() {
             return (this.selections[0]) ? this.selections[0].cloneContents().textContent : '';
