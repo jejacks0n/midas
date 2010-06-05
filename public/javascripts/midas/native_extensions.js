@@ -24,3 +24,16 @@ NodeList.prototype.equals = function(that) {
   
   return true;
 };
+
+Number.prototype.toHex = function() {
+  var result = this.toString(16).toUpperCase();
+  return result[1] ? result : "0" + result;
+};
+
+String.prototype.toHex = function() {
+  return this.replace(/rgb\((\d+)[\s|\,]?\s(\d+)[\s|\,]?\s(\d+)\)/gi,
+    function (a, b, c, d) {
+      return "#" + parseInt(b).toHex() + parseInt(c).toHex() + parseInt(d).toHex();
+    }
+  )
+};
