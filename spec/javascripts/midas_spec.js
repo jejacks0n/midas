@@ -148,15 +148,13 @@ describe('Midas', function () {
         });
         this.midas.save();
 
-        expect(Ajax.Request).wasCalledWith('/peanuts', {
-          method: 'put',
-          parameters: {
-            _method: 'put',
-            region1: 'region1',
-            region2: 'region2',
-            region4: $('region4').innerHTML.replace(/^\s+|\s+$/g, "")
-          }
-        });
+        var args = Ajax.Request.argsForCall[0];
+        expect(args[0]).toEqual('/peanuts');
+        expect(args[1]['method']).toEqual('put');
+        expect(args[1]['parameters']['_method']).toEqual('put');
+        expect(args[1]['parameters']['region1']).toEqual('region1');
+        expect(args[1]['parameters']['region2']).toEqual('region2');
+        expect(args[1]['parameters']['region4']).toEqual($('region4').innerHTML.replace(/^\s+|\s+$/g, ""));
       });
 
     });
@@ -170,14 +168,13 @@ describe('Midas', function () {
         });
         this.midas.save();
 
-        expect(Ajax.Request).wasCalledWith('/oranges', {
-          method: 'post',
-          parameters: {
-            region1: 'region1',
-            region2: 'region2',
-            region4: $('region4').innerHTML.replace(/^\s+|\s+$/g, "")
-          }
-        });
+        var args = Ajax.Request.argsForCall[0];
+        expect(args[0]).toEqual('/oranges');
+        expect(args[1]['method']).toEqual('post');
+        expect(args[1]['parameters']['_method']).toBeFalsy();
+        expect(args[1]['parameters']['region1']).toEqual('region1');
+        expect(args[1]['parameters']['region2']).toEqual('region2');
+        expect(args[1]['parameters']['region4']).toEqual($('region4').innerHTML.replace(/^\s+|\s+$/g, ""));
       });
 
     });

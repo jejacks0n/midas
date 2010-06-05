@@ -12,44 +12,44 @@ describe('Midas.Palette', function() {
   });
 
   it('should accept options in the constructor', function() {
-    this.palette = new Midas.Palette($('palette_button'), {lettuce: 'banana'});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')}, {lettuce: 'banana'});
 
     expect(this.palette.options['lettuce']).toEqual('banana');
   });
 
   it('should make a palette', function() {
-    this.palette = new Midas.Palette($('palette_button'));
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
     expect(this.palette.element).not.toBeFalsy();
     expect($$('.midas-palette').length).toEqual(1);
   });
 
-  it('should show when the button is clicked', function() {
+  stub('should show when the button is clicked', function() {
 
   });
 
-  it('should hide', function() {
+  stub('should hide', function() {
 
   });
 
-  it('should position itself properly', function() {
+  stub('should position itself properly', function() {
 
   });
 
-  it('should know if it is visible or not', function() {
+  stub('should know if it is visible or not', function() {
 
   });
 
-  it('should load contents from a url', function() {
+  stub('should load contents from a url', function() {
 
   });
 
-  it('should call a setup function', function() {
+  stub('should call a setup function', function() {
 
   });
 
   it('should destroy', function() {
-    this.palette = new Midas.Palette($('palette_button'));
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
     this.palette.destroy();
 
     expect(this.palette.element).toBeFalsy();

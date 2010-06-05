@@ -54,3 +54,72 @@ jasmine.unloadCSS = function(filename) {
   document.body.removeChild(element);
 };
 
+
+
+
+
+
+
+
+
+// stub functionality
+jasmine.TrivialReporter.prototype.reportSpecResults = function(spec) {
+  var results = spec.results();
+  var status = results.passed() ? 'passed' : 'failed';
+  var style = '';
+  if (results.skipped) {
+    status = 'skipped';
+  }
+  if (results.failedCount == 0 && results.passedCount == 0 && !results.skipped) {
+    status = 'stubbed';
+    style = "background-color: #FFA200; border: 1px solid #000000";
+  }
+  var specDiv = this.createDom('div', { className: 'spec '  + status, style: style },
+      this.createDom('a', { className: 'run_spec', href: '?spec=' + encodeURIComponent(spec.getFullName()) }, "run"),
+      this.createDom('a', {
+        className: 'description',
+        href: '?spec=' + encodeURIComponent(spec.getFullName()),
+        title: spec.getFullName()
+      }, spec.description));
+
+
+  var resultItems = results.getItems();
+  var messagesDiv = this.createDom('div', { className: 'messages' });
+  for (var i = 0; i < resultItems.length; i++) {
+    var result = resultItems[i];
+    if (result.passed && !result.passed()) {
+      messagesDiv.appendChild(this.createDom('div', {className: 'resultMessage fail'}, result.message));
+
+      if (result.trace.stack) {
+        messagesDiv.appendChild(this.createDom('div', {className: 'stackTrace'}, result.trace.stack));
+      }
+    }
+  }
+
+  if (messagesDiv.childNodes.length > 0) {
+    specDiv.appendChild(messagesDiv);
+  }
+
+  this.suiteDivs[spec.suite.getFullName()].appendChild(specDiv);
+};
+
+var stub = function(desc, func) {
+  return jasmine.getEnv().stub(desc, func);
+};
+
+jasmine.Env.prototype.stub = function(description, func) {
+  var spec = new jasmine.Spec(this, this.currentSuite, description);
+  this.currentSuite.add(spec);
+  this.currentSpec = spec;
+
+  if (func) {
+    spec.stub(func);
+  }
+
+  return spec;
+};
+
+jasmine.Spec.prototype.stub = function (e) {
+  var expectationResult = new jasmine.MessageResult('stubbed');
+  this.results_.addResult(expectationResult);
+};

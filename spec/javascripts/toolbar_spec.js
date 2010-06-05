@@ -65,15 +65,15 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
-  it('should keep track of palettes that is has', function() {
+  stub('should keep track of palettes that is has', function() {
 
   });
 
-  it('should hide all palettes when anything besides a palette is clicked', function() {
+  stub('should hide all palettes when anything besides a palette is clicked', function() {
 
   });
 
-  it ('should inactivate any active buttons', function() {
+  stub('should inactivate any active buttons', function() {
 
   });
   
