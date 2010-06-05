@@ -336,7 +336,7 @@ describe('Midas.Region', function() {
         this.region.updateSelections();
         jasmine.simulate.keypress(this.div, {charCode: 'a'.charCodeAt(0)});
 
-        if (jasmine.browser.AppleWebKit) {
+        if (jasmine.browser.WebKit) {
           // can't get this working in webkit, however, it does in fact work
         } else if(jasmine.browser.Gecko) {
           expect(this.div.innerHTML).toEqual('a');

@@ -68,10 +68,6 @@ describe('Midas', function () {
     expect(this.midas.regionElements).toContain($('region2'));
   });
 
-  it('should unactivate buttons when the regions lose focus', function() {
-
-  });
-
   it('should destroy', function() {
     this.midas = new Midas();
     this.midas.destroy();
