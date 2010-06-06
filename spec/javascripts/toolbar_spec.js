@@ -65,8 +65,10 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
-  stub('should keep track of palettes that is has', function() {
+  it('should keep track of palettes that is has', function() {
+    this.toolbar = new Midas.Toolbar();
 
+    expect(this.toolbar.palettes.length).toEqual(1);
   });
 
   stub('should hide all palettes when anything besides a palette is clicked', function() {
@@ -81,6 +83,7 @@ describe('Midas.Toolbar', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
 
+    expect(this.toolbar.palettes.length).toEqual(0);
     expect(this.toolbar.element).toBeFalsy();
     expect($$('.midas-toolbar').length).toEqual(0);
   });

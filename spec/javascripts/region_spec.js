@@ -126,6 +126,11 @@ describe('Midas.Region', function() {
     });
 
     it('should throw an exception when the action is unknown', function() {
+
+      // this test doesn't work in webkit because execCommand doesn't
+      // return false ever, so it's impossible to tell if the command
+      // was handled or not.
+
       try {
         this.region.handleAction('pizza');
       } catch(e) {

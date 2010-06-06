@@ -4,49 +4,91 @@ var Midas = Class.create({
     classname: 'editable',
     saveUrl: window.location.href,
     saveMethod: 'put',
-    configuration: null
+    configuration: null,
+    useIframe: false // boolean true, or a string of the document to load
   },
+  contentWindow: window,
   actionsToHandle: ['save'],
 
   initialize: function(options, toolbarOptions, regionOptions, statusbarOptions) {
+    options = options || {};
     if (!Midas.agentIsCapable()) throw('Midas requires a browser that has contentEditable features');
-
+    if (options['useIframe'] && !window.isTop()) {
+      Midas.trace('Midas will only instantiate in "top", when using an iframe');
+      return;
+    }
+    
     Midas.registerInstance(this);
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
     this.config = this.options['configuration'];
-    
-    toolbarOptions = toolbarOptions || {};
-    Object.extend(toolbarOptions, {configuration: this.options['configuration']});
-    this.toolbar = new Midas.Toolbar(toolbarOptions);
 
-    statusbarOptions = statusbarOptions || {};
-    Object.extend(statusbarOptions, {configuration: this.options['configuration']});
-    this.statusbar = new Midas.Statusbar(statusbarOptions);
+    this.toolbarOptions = toolbarOptions || {};
+    this.statusbarOptions = statusbarOptions || {};
+    this.regionOptions = regionOptions || {};
 
-    regionOptions = regionOptions || {};
-    Object.extend(regionOptions, {configuration: this.options['configuration']});
-    this.regions = [];
-    this.regionElements = $$('div.' + this.options['classname']);
-    var index = 0;
-    this.regionElements.each(function(element) {
-      this.regions.push(new Midas.Region(element, regionOptions, 'midas' + this._id + '_region_' + index));
-      index++;
-    }.bind(this));
-
-    if (this.regions[0]) this.setActiveRegion(this.regions[0]);
-
-    window.onbeforeunload = this.onBeforeUnload.bind(this);
+    this.initializeInterface();
 
     this.setupObservers();
   },
 
-  onBeforeUnload: function() {
-    if (this.changed) return "You've made changes without saving them.  Are you sure you'd like to navigate away without saving them first?";
+  initializeInterface: function() {
+    this.regions = [];
+
+    if (this.options['useIframe']) {
+      var src = (this.options['useIframe'] === true) ? window.location.href + '?midas_regions=true' : this.options['useIframe'];
+
+      this.iframe = new Element('iframe', {
+        seamless: 'true',
+        frameborder: '0',
+        className: 'midas-iframe-window',
+        src: 'about:blank'
+      });
+
+      Event.observe(this.iframe, 'load', function() {
+        this.initializeRegions(this.iframe.contentWindow);
+        this.finalizeInterface();
+      }.bind(this));
+
+      this.iframe.src = src;
+      document.body.setStyle('margin:0;padding:0;');
+      document.body.appendChild(this.iframe);
+    } else {
+      this.initializeRegions(this.contentWindow);
+      this.finalizeInterface();
+    }
+  },
+
+  initializeRegions: function(contentWindow) {
+    this.contentWindow = contentWindow;
+    Object.extend(this.regionOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
+
+    var body = this.contentWindow.document.body;
+    if (typeof(body.select) == 'function') {
+      this.regionElements = body.select('div.' + this.options['classname']);
+    } else {
+      this.regionElements = body.getElementsByClassName(this.options['classname']);
+    }
+
+    for (var i = 0; i < this.regionElements.length; ++i) {
+      this.regions.push(new Midas.Region(this.regionElements[i], this.regionOptions, 'midas' + this._id + '_region_' + i));
+    }
+  },
+
+  finalizeInterface: function() {
+    if (this.regions[0]) this.setActiveRegion(this.regions[0]);
+
+    Object.extend(this.toolbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
+    Object.extend(this.statusbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
+
+    this.toolbar = new Midas.Toolbar(this.toolbarOptions);
+    this.statusbar = new Midas.Statusbar(this.statusbarOptions);
   },
 
   setupObservers: function() {
+    window.onbeforeunload = this.onBeforeUnload.bind(this);
+
     Event.observe(document, 'mouseup', function(e) {
       var element = Event.element(e);
       if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
@@ -148,12 +190,20 @@ var Midas = Class.create({
     return true;
   },
 
+  onBeforeUnload: function() {
+    if (this.changed) return "You've made changes without saving them.  Are you sure you'd like to navigate away without saving them first?";
+  },
+
   destroy: function() {
-    this.toolbar.destroy();
-    this.statusbar.destroy();
+    if (this.toolbar) this.toolbar.destroy();
+    if (this.statusbar) this.statusbar.destroy();
     this.regions.each(function(region) {
       region.destroy();
     });
+    if (this.iframe) {
+      this.iframe.remove();
+      this.iframe = null;
+    }
     this.toolbar = null;
     this.statusbar = null;
     this.regions = [];

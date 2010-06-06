@@ -37,3 +37,7 @@ String.prototype.toHex = function() {
     }
   )
 };
+
+window.isTop = function() {
+  return (this == top);
+};

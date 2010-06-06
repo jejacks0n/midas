@@ -52,6 +52,18 @@ describe('Midas', function () {
     expect(this.midas).toBeUndefined();
   });
 
+  it('should only instantiate if the window is top (when using an iframe)', function() {
+    var spy1 = spyOn(Midas, 'trace');
+    var spy2 = spyOn(window, 'isTop').andCallFake(function() {
+      return false;
+    });
+
+    this.midas = new Midas({useIframe: true});
+
+    expect(spy1.callCount).toEqual(1);
+    expect(spy2.callCount).toEqual(1);
+  });
+
   it('should make all regions with the editable class editable', function() {
     this.midas = new Midas();
 
@@ -234,6 +246,30 @@ describe('Midas', function () {
 
       jasmine.simulate.click($$('.midas-button-preview')[0]);
       expect(spy.callCount).toEqual(1);
+    });
+
+  });
+
+  describe('when using an iframe', function() {
+
+    it('should create an iframe', function() {
+      this.midas = new Midas({useIframe: 'about:blank'});
+      spyOn(this.midas, 'initializeRegions');
+      spyOn(this.midas, 'finalizeInterface');
+      expect($$('.midas-iframe-window').length).toEqual(1);
+    });
+    
+    it('should communicate which contentWindow the toolbar should use', function() {
+      runs(function() {
+        this.midas = new Midas({useIframe: 'about:blank'});
+        this.iframe = $$('.midas-iframe-window')[0];
+      });
+
+      waits(100);
+
+      runs(function() {
+        expect(this.midas.toolbar.options['contentWindow'] == this.iframe.contentWindow).toEqual(true);
+      })
     });
 
   });

@@ -6,11 +6,13 @@ Midas.Toolbar = Class.create({
   palettes: [],
   options: {
     appendTo: null,
+    contentWindow: window,
     configuration: null
   },
 
   initialize: function(options) {
     if (!Midas.version) throw('Midas.Toolbar requires Midas');
+    this.palettes = [];
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
@@ -35,7 +37,7 @@ Midas.Toolbar = Class.create({
       }
     }
     
-    ($(this.options['appendTo']) || document.body).appendChild(this.element);    
+    ($(this.options['appendTo']) || document.body).appendChild(this.element);
   },
 
   setupObservers: function() {
@@ -115,6 +117,7 @@ Midas.Toolbar = Class.create({
             break;
           case 'palette':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
+                  console.debug(this.palettes);
             this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           case 'select':
@@ -150,7 +153,7 @@ Midas.Toolbar = Class.create({
   },
 
   setActiveButtons: function(regions, activeRegion) {
-    var selection = window.getSelection();
+    var selection = this.options['contentWindow'].getSelection();
     if (!selection.rangeCount) return;
 
     var range = selection.getRangeAt(0);
@@ -188,11 +191,11 @@ Midas.Toolbar = Class.create({
 
   destroy: function() {
     this.palettes.each(function(palette) {
-      palette.destroy();
-    });
+      if (palette.destroy) palette.destroy();
+    });    
     this.palettes = [];
-    this.element.remove();
-    this.element = null;
+    if (this.element) this.element.remove();
+    if (this.element) this.element = null;
   }
 });
 

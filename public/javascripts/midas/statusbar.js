@@ -4,6 +4,7 @@ Midas.Statusbar = Class.create({
   options: {
     appendTo: null,
     configuration: null,
+    contentWindow: window,
     panels: ['Path']
   },
 
@@ -43,7 +44,7 @@ Midas.Statusbar = Class.create({
   insertPath: function(region, event) {
     if (!event) return '<span><strong>Path:</strong></span>';
     
-    var selection = window.getSelection();
+    var selection = this.options['contentWindow'].getSelection();
     if (!selection.rangeCount) return;
     var range = selection.getRangeAt(0);
 

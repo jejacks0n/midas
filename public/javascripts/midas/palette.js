@@ -56,6 +56,8 @@ Midas.Palette = Class.create({
   },
 
   position: function() {
+    if (!this.element) return;
+    
     var keepVisible = this.visible();
     this.element.setStyle({top: 0, left: 0, display: 'block', visibility: 'hidden'});
     var position = this.button.cumulativeOffset();

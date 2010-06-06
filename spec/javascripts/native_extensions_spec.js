@@ -29,4 +29,11 @@ describe('Native Extensions', function () {
     expect(string2.toHex()).toEqual('#000000');
   });
 
+  it('should have a isTop() function on window', function() {
+    var iframe = $('iframe1');
+    iframe.contentWindow.isTop = window.isTop;
+
+    expect(window.isTop()).toEqual(true);
+    expect(iframe.contentWindow.isTop()).toEqual(false);
+  });
 });

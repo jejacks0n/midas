@@ -4,6 +4,7 @@ Midas.Region = Class.create({
   name: null,
   options: {
     configuration: null,
+    contentWindow: window,
     inline: false
   },
 
@@ -19,6 +20,7 @@ Midas.Region = Class.create({
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
     this.config = this.options['configuration'];
     this.name = this.element.getAttribute('id') || name;
+    this.doc = this.options['contentWindow'].document;
     this.selections = [];
 
     this.makeEditable();
@@ -39,9 +41,9 @@ Midas.Region = Class.create({
       this.element.setStyle({maxWidth: this.element.getWidth() + 'px'});
     }
     this.element.contentEditable = true;
-    
-    document.execCommand('styleWithCSS', false, false);
-    //document.execCommand('enableInlineTableEditing', false, false);
+
+    this.doc.execCommand('styleWithCSS', false, false);
+    //this.doc.execCommand('enableInlineTableEditing', false, false);
   },
 
   setupObservers: function() {
@@ -59,7 +61,7 @@ Midas.Region = Class.create({
     }.bind(this));
 
     this.element.observe('keyup', function(event) {
-      Midas.fire('region', {region: this, name: this.name, event: event, changed: true});
+      Midas.fire('region:update', {region: this, name: this.name, event: event, changed: true});
     }.bind(this));
     this.element.observe('keypress', function(event) {
       Midas.fire('region:update', {region: this, name: this.name, event: event});
@@ -119,11 +121,11 @@ Midas.Region = Class.create({
 
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
-    
-    var supported = document.execCommand('styleWithCSS', false, false);
+
+    var supported = this.doc.execCommand('styleWithCSS', false, false);
     var handled;
     try {
-      handled = document.execCommand(action, false, argument);
+      handled = this.doc.execCommand(action, false, argument);
     } catch(e) {
       Midas.trace(e);
 
