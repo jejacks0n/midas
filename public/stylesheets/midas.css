@@ -20,6 +20,7 @@
  *----------------------------------------------------------------------------*/
 .midas-toolbar {
   position: fixed;
+  z-index: 10001;
   top: 0;
   left: 0;
   width: 100%;
@@ -33,7 +34,7 @@
   padding-right: 10px;
   background: #E2E1E2 url(../images/midas/toolbars/actions/_background.png) repeat-x bottom;
   }
-.midas-actionsbar a {
+.midas-actionsbar .midas-button {
   display: block;
   float: left;
   margin-left: 7px;
@@ -48,7 +49,7 @@
   outline: none;
   font-family: Helvetica, Tahoma, Arial, sans-serif;
   }
-.midas-actionsbar a em {
+.midas-actionsbar .midas-button em {
   display: block;
   margin: 0 -5px;
   font-style: normal;
@@ -65,42 +66,18 @@
   padding: 0 20px;
   background: url(../images/midas/toolbars/actions/_separator.png) no-repeat;
   }
-.midas-actionsbar a.midas-button-save    {
-  background-image: url(../images/midas/toolbars/actions/save.png);
-  }
-.midas-actionsbar a.midas-button-preview {
-  background-image: url(../images/midas/toolbars/actions/preview.png);
-  }
-.midas-actionsbar a.midas-button-undo {
-  background-image: url(../images/midas/toolbars/actions/undo.png);
-  }
-.midas-actionsbar a.midas-button-redo {
-  background-image: url(../images/midas/toolbars/actions/redo.png);
-  }
-.midas-actionsbar a.midas-button-insertlink {
-  background-image: url(../images/midas/toolbars/actions/insertlink.png);
-  }
-.midas-actionsbar a.midas-button-insertmedia {
-  background-image: url(../images/midas/toolbars/actions/insertmedia.png);
-  }
-.midas-actionsbar a.midas-button-inserttable {
-  background-image: url(../images/midas/toolbars/actions/inserttable.png);
-  }
-.midas-actionsbar a.midas-button-insertobject {
-  background-image: url(../images/midas/toolbars/actions/insertobject.png);
-  }
-.midas-actionsbar a.midas-button-insertcharacter {
-  background-image: url(../images/midas/toolbars/actions/insertcharacter.png);
-  }
-.midas-actionsbar a.midas-button-inspectorpanel {
-  background-image: url(../images/midas/toolbars/actions/inspectorpanel.png);
-  }
-.midas-actionsbar a.midas-button-notespanel {
-  background-image: url(../images/midas/toolbars/actions/notespanel.png);
-  }
-.midas-actionsbar a.midas-button-historypanel {
-  background-image: url(../images/midas/toolbars/actions/historypanel.png);
-  }
+.midas-actionsbar .midas-button-save            { background-image: url(../images/midas/toolbars/actions/save.png); }
+.midas-actionsbar .midas-button-preview         { background-image: url(../images/midas/toolbars/actions/preview.png); }
+.midas-actionsbar .midas-button-undo            { background-image: url(../images/midas/toolbars/actions/undo.png); }
+.midas-actionsbar .midas-button-redo            { background-image: url(../images/midas/toolbars/actions/redo.png); }
+.midas-actionsbar .midas-button-insertlink      { background-image: url(../images/midas/toolbars/actions/insertlink.png); }
+.midas-actionsbar .midas-button-insertmedia     { background-image: url(../images/midas/toolbars/actions/insertmedia.png); }
+.midas-actionsbar .midas-button-inserttable     { background-image: url(../images/midas/toolbars/actions/inserttable.png); }
+.midas-actionsbar .midas-button-insertobject    { background-image: url(../images/midas/toolbars/actions/insertobject.png); }
+.midas-actionsbar .midas-button-insertcharacter { background-image: url(../images/midas/toolbars/actions/insertcharacter.png); }
+.midas-actionsbar .midas-button-inspectorpanel  { background-image: url(../images/midas/toolbars/actions/inspectorpanel.png); }
+.midas-actionsbar .midas-button-notespanel      { background-image: url(../images/midas/toolbars/actions/notespanel.png); }
+.midas-actionsbar .midas-button-historypanel    { background-image: url(../images/midas/toolbars/actions/historypanel.png); }
 
 /* Editor menu bar
  *----------------------------------------------------------------------------*/
@@ -132,7 +109,7 @@
 .midas-htmleditorbar .midas-line-separator {
   background: url(../images/midas/toolbars/htmleditor/_line_separator.png) no-repeat;
   }
-.midas-htmleditorbar a {
+.midas-htmleditorbar .midas-button {
   display: block;
   outline: none;
   float: left;
@@ -141,24 +118,24 @@
   margin: 0 7px 4px 0;
   background-image: url(../images/midas/toolbars/htmleditor/buttons.png);
   }
-.midas-htmleditorbar a em {
+.midas-htmleditorbar .midas-button em {
   display: none;
   }
-.midas-htmleditorbar div.midas-group {
+.midas-htmleditorbar .midas-group {
   float: left;
   }
-.midas-htmleditorbar div.midas-group .midas-separator,
-.midas-htmleditorbar div.midas-group .midas-line-separator,
-.midas-htmleditorbar div.midas-group .midas-flex-separator {
+.midas-htmleditorbar .midas-group .midas-separator,
+.midas-htmleditorbar .midas-group .midas-line-separator,
+.midas-htmleditorbar .midas-group .midas-flex-separator {
   margin-left: 7px;
   }
 
-.midas-htmleditorbar div.midas-group a {
+.midas-htmleditorbar .midas-group .midas-button {
   width: 22px;
   margin-left: 0;
   margin-right: 0;
   }
-.midas-htmleditorbar div.midas-group a:first-child {
+.midas-htmleditorbar .midas-group .midas-button:first-child {
   width: 23px;
   }
 /*menu#edit command.select {*/
@@ -173,150 +150,144 @@
   /*background-position: left bottom !important;*/
   /*text-indent: -1000px;*/
   /*}*/
-/*menu#edit command.color {*/
-  /*width: 27px;*/
-  /*background-position: -177px 0;*/
-  /*}*/
-/*menu#edit command.color.disabled, .disabled command.color {*/
-  /*background-position: -177px -36px !important;*/
-  /*}*/
 /*menu#edit #style                                                    { margin-right: 5px }*/
 /*menu#edit #style label                                              { width: 100px }*/
 /*menu#edit #size label                                               { width: 30px }*/
 
-.midas-htmleditorbar .midas-button-bold                             { background-position: -68px 0 }
-.midas-htmleditorbar .midas-button-bold.active                      { background-position: -68px -18px }
+.midas-htmleditorbar .midas-button-bold                       { background-position: -68px 0 }
+.midas-htmleditorbar .midas-button-bold.active                { background-position: -68px -18px }
 .midas-htmleditorbar .midas-button-bold.disabled,
-.disabled .midas-button-bold                                        { background-position: -68px -36px !important }
+.disabled .midas-button-bold                                  { background-position: -68px -36px !important }
 
-.midas-htmleditorbar .midas-button-italic                           { background-position: -91px 0 }
-.midas-htmleditorbar .midas-button-italic.active                    { background-position: -91px -18px }
+.midas-htmleditorbar .midas-button-italic                     { background-position: -91px 0 }
+.midas-htmleditorbar .midas-button-italic.active              { background-position: -91px -18px }
 .midas-htmleditorbar .midas-button-italic.disabled,
-.disabled .midas-button-italic                                      { background-position: -91px -36px !important }
+.disabled .midas-button-italic                                { background-position: -91px -36px !important }
 
-.midas-htmleditorbar .midas-button-overline                         { background-position: -113px 0 }
-.midas-htmleditorbar .midas-button-overline.active                  { background-position: -113px -18px }
+.midas-htmleditorbar .midas-button-overline                   { background-position: -113px 0 }
+.midas-htmleditorbar .midas-button-overline.active            { background-position: -113px -18px }
 .midas-htmleditorbar .midas-button-overline.disabled,
-.disabled .midas-button-overline                                    { background-position: -113px -36px !important }
+.disabled .midas-button-overline                              { background-position: -113px -36px !important }
 
-.midas-htmleditorbar .midas-button-strikethrough                    { background-position: -135px 0 }
-.midas-htmleditorbar .midas-button-strikethrough.active             { background-position: -135px -18px }
+.midas-htmleditorbar .midas-button-strikethrough              { background-position: -135px 0 }
+.midas-htmleditorbar .midas-button-strikethrough.active       { background-position: -135px -18px }
 .midas-htmleditorbar .midas-button-strikethrough.disabled,
-.disabled .midas-button-strikethrough                               { background-position: -135px -36px !important }
+.disabled .midas-button-strikethrough                         { background-position: -135px -36px !important }
 
-.midas-htmleditorbar .midas-button-underline                        { background-position: -157px 0 }
-.midas-htmleditorbar .midas-button-underline.active                 { background-position: -157px -18px }
+.midas-htmleditorbar .midas-button-underline                  { background-position: -157px 0 }
+.midas-htmleditorbar .midas-button-underline.active           { background-position: -157px -18px }
 .midas-htmleditorbar .midas-button-underline.disabled,
-.disabled .midas-button-underline                                   { background-position: -157px -36px !important }
+.disabled .midas-button-underline                             { background-position: -157px -36px !important }
 
-.midas-htmleditorbar .midas-button-subscript                        { background-position: -180px 0 }
-.midas-htmleditorbar .midas-button-subscript.active                 { background-position: -180px -18px }
+.midas-htmleditorbar .midas-button-subscript                  { background-position: -180px 0 }
+.midas-htmleditorbar .midas-button-subscript.active           { background-position: -180px -18px }
 .midas-htmleditorbar .midas-button-subscript.disabled,
-.disabled .midas-button-subscript                                   { background-position: -180px -36px !important }
+.disabled .midas-button-subscript                             { background-position: -180px -36px !important }
 
-.midas-htmleditorbar .midas-button-superscript                      { background-position: -203px 0 }
-.midas-htmleditorbar .midas-button-superscript.active               { background-position: -203px -18px }
+.midas-htmleditorbar .midas-button-superscript                { background-position: -203px 0 }
+.midas-htmleditorbar .midas-button-superscript.active         { background-position: -203px -18px }
 .midas-htmleditorbar .midas-button-superscript.disabled,
-.disabled .midas-button-superscript                                 { background-position: -203px -36px !important }
+.disabled .midas-button-superscript                           { background-position: -203px -36px !important }
 
-.midas-htmleditorbar .midas-button-justifyleft                      { background-position: -226px 0 }
-.midas-htmleditorbar .midas-button-justifyleft.active               { background-position: -226px -18px }
+.midas-htmleditorbar .midas-button-justifyleft                { background-position: -226px 0 }
+.midas-htmleditorbar .midas-button-justifyleft.active         { background-position: -226px -18px }
 .midas-htmleditorbar .midas-button-justifyleft.disabled,
-.disabled .midas-button-justifyleft                                 { background-position: -226px -36px !important }
+.disabled .midas-button-justifyleft                           { background-position: -226px -36px !important }
 
-.midas-htmleditorbar .midas-button-justifycenter                    { background-position: -249px 0 }
-.midas-htmleditorbar .midas-button-justifycenter.active             { background-position: -249px -18px }
+.midas-htmleditorbar .midas-button-justifycenter              { background-position: -249px 0 }
+.midas-htmleditorbar .midas-button-justifycenter.active       { background-position: -249px -18px }
 .midas-htmleditorbar .midas-button-justifycenter.disabled,
-.disabled .midas-button-justifycenter                               { background-position: -249px -36px !important }
+.disabled .midas-button-justifycenter                         { background-position: -249px -36px !important }
 
-.midas-htmleditorbar .midas-button-justifyright                     { background-position: -271px 0 }
-.midas-htmleditorbar .midas-button-justifyright.active              { background-position: -271px -18px }
+.midas-htmleditorbar .midas-button-justifyright               { background-position: -271px 0 }
+.midas-htmleditorbar .midas-button-justifyright.active        { background-position: -271px -18px }
 .midas-htmleditorbar .midas-button-justifyright.disabled,
-.disabled .midas-button-justifyright                                { background-position: -271px -36px !important }
+.disabled .midas-button-justifyright                          { background-position: -271px -36px !important }
 
-.midas-htmleditorbar .midas-button-justifyfull                      { background-position: -293px 0 }
-.midas-htmleditorbar .midas-button-justifyfull.active               { background-position: -293px -18px }
+.midas-htmleditorbar .midas-button-justifyfull                { background-position: -293px 0 }
+.midas-htmleditorbar .midas-button-justifyfull.active         { background-position: -293px -18px }
 .midas-htmleditorbar .midas-button-justifyfull.disabled,
-.disabled .midas-button-justifyfull                                 { background-position: -293px -36px !important }
+.disabled .midas-button-justifyfull                           { background-position: -293px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertunorderedlist              { background-position: -316px 0 }
-.midas-htmleditorbar .midas-button-insertunorderedlist.active       { background-position: -316px -18px }
+.midas-htmleditorbar .midas-button-insertunorderedlist        { background-position: -316px 0 }
+.midas-htmleditorbar .midas-button-insertunorderedlist.active { background-position: -316px -18px }
 .midas-htmleditorbar .midas-button-insertunorderedlist.disabled,
-.disabled .midas-button-insertunorderedlist                         { background-position: -316px -36px !important }
+.disabled .midas-button-insertunorderedlist                   { background-position: -316px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertorderedlist                { background-position: -339px 0 }
-.midas-htmleditorbar .midas-button-insertorderedlist.active         { background-position: -339px -18px }
+.midas-htmleditorbar .midas-button-insertorderedlist          { background-position: -339px 0 }
+.midas-htmleditorbar .midas-button-insertorderedlist.active   { background-position: -339px -18px }
 .midas-htmleditorbar .midas-button-insertorderedlist.disabled,
-.disabled .midas-button-insertorderedlist                           { background-position: -339px -36px !important }
+.disabled .midas-button-insertorderedlist                     { background-position: -339px -36px !important }
 
-.midas-htmleditorbar .midas-button-outdent                          { background-position: -362px 0 }
-.midas-htmleditorbar .midas-button-outdent.active                   { background-position: -362px -18px }
+.midas-htmleditorbar .midas-button-outdent                    { background-position: -362px 0 }
+.midas-htmleditorbar .midas-button-outdent.active             { background-position: -362px -18px }
 .midas-htmleditorbar .midas-button-outdent.disabled,
-.disabled .midas-button-outdent                                     { background-position: -362px -36px !important }
+.disabled .midas-button-outdent                               { background-position: -362px -36px !important }
 
-.midas-htmleditorbar .midas-button-indent                           { background-position: -385px 0 }
-.midas-htmleditorbar .midas-button-indent.active                    { background-position: -385px -18px }
+.midas-htmleditorbar .midas-button-indent                     { background-position: -385px 0 }
+.midas-htmleditorbar .midas-button-indent.active              { background-position: -385px -18px }
 .midas-htmleditorbar .midas-button-indent.disabled,
-.disabled .midas-button-indent                                      { background-position: -385px -36px !important }
+.disabled .midas-button-indent                                { background-position: -385px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertrowbefore                  { background-position: -408px 0 }
-.midas-htmleditorbar .midas-button-insertrowbefore.active           { background-position: -408px -18px }
+.midas-htmleditorbar .midas-button-insertrowbefore            { background-position: -408px 0 }
+.midas-htmleditorbar .midas-button-insertrowbefore.active     { background-position: -408px -18px }
 .midas-htmleditorbar .midas-button-insertrowbefore.disabled,
-.disabled .midas-button-insertrowbefore                             { background-position: -408px -36px !important }
+.disabled .midas-button-insertrowbefore                       { background-position: -408px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertrowafter                   { background-position: -431px 0 }
-.midas-htmleditorbar .midas-button-insertrowafter.active            { background-position: -431px -18px }
+.midas-htmleditorbar .midas-button-insertrowafter             { background-position: -431px 0 }
+.midas-htmleditorbar .midas-button-insertrowafter.active      { background-position: -431px -18px }
 .midas-htmleditorbar .midas-button-insertrowafter.disabled,
-.disabled .midas-button-insertrowafter                              { background-position: -431px -36px !important }
+.disabled .midas-button-insertrowafter                        { background-position: -431px -36px !important }
 
-.midas-htmleditorbar .midas-button-deleterow                        { background-position: -453px 0 }
-.midas-htmleditorbar .midas-button-deleterow.active                 { background-position: -453px -18px }
+.midas-htmleditorbar .midas-button-deleterow                  { background-position: -453px 0 }
+.midas-htmleditorbar .midas-button-deleterow.active           { background-position: -453px -18px }
 .midas-htmleditorbar .midas-button-deleterow.disabled,
-.disabled .midas-button-deleterow                                   { background-position: -453px -36px !important }
+.disabled .midas-button-deleterow                             { background-position: -453px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertcolumnbefore               { background-position: -475px 0 }
-.midas-htmleditorbar .midas-button-insertcolumnbefore.active        { background-position: -475px -18px }
+.midas-htmleditorbar .midas-button-insertcolumnbefore         { background-position: -475px 0 }
+.midas-htmleditorbar .midas-button-insertcolumnbefore.active  { background-position: -475px -18px }
 .midas-htmleditorbar .midas-button-insertcolumnbefore.disabled,
-.disabled .midas-button-insertcolumnbefore                          { background-position: -475px -36px !important }
+.disabled .midas-button-insertcolumnbefore                    { background-position: -475px -36px !important }
 
-.midas-htmleditorbar .midas-button-insertcolumnafter                { background-position: -497px 0 }
-.midas-htmleditorbar .midas-button-insertcolumnafter.active         { background-position: -497px -18px }
+.midas-htmleditorbar .midas-button-insertcolumnafter          { background-position: -497px 0 }
+.midas-htmleditorbar .midas-button-insertcolumnafter.active   { background-position: -497px -18px }
 .midas-htmleditorbar .midas-button-insertcolumnafter.disabled,
-.disabled .midas-button-insertcolumnafter                           { background-position: -497px -36px !important }
+.disabled .midas-button-insertcolumnafter                     { background-position: -497px -36px !important }
 
-.midas-htmleditorbar .midas-button-deletecolumn                     { background-position: -519px 0 }
-.midas-htmleditorbar .midas-button-deletecolumn.active              { background-position: -519px -18px }
+.midas-htmleditorbar .midas-button-deletecolumn               { background-position: -519px 0 }
+.midas-htmleditorbar .midas-button-deletecolumn.active        { background-position: -519px -18px }
 .midas-htmleditorbar .midas-button-deletecolumn.disabled,
-.disabled .midas-button-deletecolumn                                { background-position: -519px -36px !important }
+.disabled .midas-button-deletecolumn                          { background-position: -519px -36px !important }
 
-.midas-htmleditorbar .midas-button-horizontalrule                   { background-position: -542px 0 }
-.midas-htmleditorbar .midas-button-horizontalrule.active            { background-position: -542px -18px }
+.midas-htmleditorbar .midas-button-horizontalrule             { background-position: -542px 0 }
+.midas-htmleditorbar .midas-button-horizontalrule.active      { background-position: -542px -18px }
 .midas-htmleditorbar .midas-button-horizontalrule.disabled,
-.disabled .midas-button-horizontalrule                              { background-position: -542px -36px !important }
-	
-.midas-htmleditorbar .midas-button-pagebreak                        { background-position: -565px 0 }
-.midas-htmleditorbar .midas-button-pagebreak.active                 { background-position: -565px -18px }
+.disabled .midas-button-horizontalrule                        { background-position: -542px -36px !important }
+
+.midas-htmleditorbar .midas-button-pagebreak                  { background-position: -565px 0 }
+.midas-htmleditorbar .midas-button-pagebreak.active           { background-position: -565px -18px }
 .midas-htmleditorbar .midas-button-pagebreak.disabled,
-.disabled .midas-button-pagebreak                                   { background-position: -565px -36px !important }
+.disabled .midas-button-pagebreak                             { background-position: -565px -36px !important }
 
-.midas-htmleditorbar .midas-button-removeformatting                 { background-position: -588px 0 }
-.midas-htmleditorbar .midas-button-removeformatting.active          { background-position: -588px -18px }
+.midas-htmleditorbar .midas-button-removeformatting           { background-position: -588px 0 }
+.midas-htmleditorbar .midas-button-removeformatting.active    { background-position: -588px -18px }
 .midas-htmleditorbar .midas-button-removeformatting.disabled,
-.disabled .midas-button-removeformatting                            { background-position: -588px -36px !important }
+.disabled .midas-button-removeformatting                      { background-position: -588px -36px !important }
 
-.midas-htmleditorbar .midas-button-html                             { background-position: -612px 0 }
-.midas-htmleditorbar .midas-button-html.active                      { background-position: -588px -18px }
+.midas-htmleditorbar .midas-button-html                       { background-position: -612px 0 }
+.midas-htmleditorbar .midas-button-html.active                { background-position: -588px -18px }
 .midas-htmleditorbar .midas-button-html.disabled,
-.disabled .midas-button-html                                        { background-position: -588px -36px !important }
+.disabled .midas-button-html                                  { background-position: -588px -36px !important }
 
 
 /* Status bar
  *----------------------------------------------------------------------------*/
 .midas-statusbar {
+  position: fixed;
+  z-index: 10001;
   padding: 5px 10px 4px 10px;
   background: #E2E1E2;
   border-top: 1px solid #727272;
-  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -330,20 +301,22 @@
 
 /* Midas IFRAME setup
  *----------------------------------------------------------------------------*/
+.midas-iframe-container {
+  position: absolute;
+  z-index: 10000;
+  background: #FFF;
+  }
 .midas-iframe-window {
-  width: 100%;
-  height: 200px;
-  margin-top: 86px;
   }
 
 
 /* Palettes
  *----------------------------------------------------------------------------*/
 .midas-palette {
+  position: fixed;
   background: #E2E1E2;
   border: 1px solid #727272;
   margin-top: -1px;
-  position: fixed;
 	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);

@@ -9,7 +9,9 @@ describe('Midas.Toolbar', function() {
     try {
       this.toolbar.destroy();
       this.toolbar = null;
-    } catch(e) {}
+    } catch(e) {
+      this.toolbar = null;
+    }
     jasmine.unloadCSS('midas_styles');
   });
 
@@ -108,7 +110,7 @@ describe('Midas.Toolbar', function() {
 
       jasmine.simulate.click(this.toolbar.buttons['preview'].element);
       expect(this.toolbar.buttons['preview'].element.getAttribute('class')).
-              toEqual('midas-button-preview pressed');
+              toEqual('midas-button midas-button-preview pressed');
       expect(this.spy.callCount).toEqual(2);
     });
 

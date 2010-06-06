@@ -37,6 +37,10 @@ Midas.Statusbar = Class.create({
     }.bind(this), 1);
   },
 
+  getHeight: function() {
+    return ($(this.options['appendTo']) || this.element).getHeight();
+  },
+  
   destroy: function() {
     this.element.remove();
   },

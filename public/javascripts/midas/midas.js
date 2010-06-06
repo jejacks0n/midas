@@ -52,8 +52,11 @@ var Midas = Class.create({
       }.bind(this));
 
       this.iframe.src = src;
-      document.body.setStyle('margin:0;padding:0;');
-      document.body.appendChild(this.iframe);
+      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});
+      this.iframeContainer.appendChild(this.iframe);
+
+      document.body.setStyle('overflow:hidden');
+      document.body.appendChild(this.iframeContainer);
     } else {
       this.initializeRegions(this.contentWindow);
       this.finalizeInterface();
@@ -84,10 +87,14 @@ var Midas = Class.create({
 
     this.toolbar = new Midas.Toolbar(this.toolbarOptions);
     this.statusbar = new Midas.Statusbar(this.statusbarOptions);
+
+    this.resize();
+
   },
 
   setupObservers: function() {
     window.onbeforeunload = this.onBeforeUnload.bind(this);
+    Event.observe(window, 'resize', this.resize.bind(this));
 
     Event.observe(document, 'mouseup', function(e) {
       var element = Event.element(e);
@@ -188,6 +195,25 @@ var Midas = Class.create({
     });
 
     return true;
+  },
+
+  resize: function() {
+    var view = document.viewport.getDimensions();
+
+    if (this.iframe) {
+      var toolbarHeight = (this.toolbar) ? this.toolbar.getHeight() : 0;
+      var statusbarHeight = (this.statusbar) ? this.statusbar.getHeight() : 0;
+      this.iframeContainer.setStyle({
+        height: (view.height - statusbarHeight - toolbarHeight - 10) + 'px',
+        width: view.width + 'px',
+        top: this.toolbar.getHeight() + 'px',
+        left: 0
+      });
+      this.iframe.setStyle({
+        height: (view.height - statusbarHeight - toolbarHeight - 10) + 'px',
+        width: view.width + 'px'
+      });
+    }
   },
 
   onBeforeUnload: function() {

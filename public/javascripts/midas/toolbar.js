@@ -71,7 +71,7 @@ Midas.Toolbar = Class.create({
     if (Object.isArray(buttonSpec)) {
       var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
 
-      element = new Element('a', {href: '#', title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0]});
+      element = new Element('div', {title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0], 'class': 'midas-button'});
       element.update('<em>' + buttonSpec[0] + '</em>');
       element.addClassName('midas-button-' + action.replace('_', '-'));
       element.observe('click', function(event) {
@@ -117,7 +117,6 @@ Midas.Toolbar = Class.create({
             break;
           case 'palette':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
-                  console.debug(this.palettes);
             this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           case 'select':
@@ -187,6 +186,10 @@ Midas.Toolbar = Class.create({
     this.element.select('.active').each(function(button) {
       button.removeClassName('active');
     });
+  },
+
+  getHeight: function() {
+    return ($(this.options['appendTo']) || this.element).getHeight();
   },
 
   destroy: function() {
