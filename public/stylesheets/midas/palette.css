@@ -1,0 +1,50 @@
+/* Palette
+ *----------------------------------------------------------------------------*/
+.midas-palette {
+  position: fixed;
+  background: #E2E1E2;
+  border: 1px solid #727272;
+  margin-top: -1px;
+	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  }
+.midas-htmleditorbar .midas-button-forecolor,
+.midas-htmleditorbar .midas-button-backcolor {
+  background-position: 0 -54px;
+  }
+.midas-htmleditorbar .midas-button-forecolor {
+  background-color: #000;
+  }
+
+#midas_forecolor_selector,
+#midas_backcolor_selector {
+  width: 170px;
+  padding: 1px;
+  }
+#midas_forecolor_selector div,
+#midas_backcolor_selector div {
+  float: left;
+  border: 1px solid #E2E1E2;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  }
+#midas_forecolor_selector div:hover,
+#midas_backcolor_selector div:hover {
+  border: 1px solid #333;
+  }
+#midas_forecolor_selector div#midas_forecolor_last_picked,
+#midas_backcolor_selector div#midas_backcolor_last_picked {
+  border: 1px solid #333;
+  width: 166px;
+  clear: left;
+  text-align: center;
+  margin: 1px 1px 2px 1px;
+  position: relative;
+  top: 1px;
+  float: none;
+  line-height: 15px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 8.5pt;
+  }

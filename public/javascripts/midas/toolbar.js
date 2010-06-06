@@ -24,7 +24,6 @@ Midas.Toolbar = Class.create({
 
   build: function() {
     this.element = new Element('div', {id: this.options['id'] || this.generateId()}).addClassName('midas-toolbar');
-    this.element.appendChild(new Element('link', {rel: 'stylesheet', href: this.config.stylesheet}));
 
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {

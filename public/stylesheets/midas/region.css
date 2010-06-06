@@ -1,0 +1,16 @@
+/* Region
+ *----------------------------------------------------------------------------*/
+.midas-region {
+  outline: 1px dotted #F00;
+  }
+.midas-region .midas-page-break {
+  height: 5px;
+  background: #EEE;
+  overflow: hidden;
+  border: 1px dotted #999;
+  border-width: 1px 0;
+  margin: 2px 0;
+  }
+.midas-region .midas-page-break em {
+  display: none;
+  }

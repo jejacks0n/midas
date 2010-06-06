@@ -1,0 +1,9 @@
+/* Midas IFRAME setup
+ *----------------------------------------------------------------------------*/
+.midas-iframe-container {
+  position: absolute;
+  z-index: 10000;
+  background: #FFF;
+  }
+.midas-iframe-window {
+  }
