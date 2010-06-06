@@ -28,3 +28,5 @@ pkg
 public/javascripts/midas.js
 public/javascripts/midas.min.js
 spec/javascripts/fixtures/fixtures.js
+public/stylesheets/midas.bundle.css
+public/stylesheets/midas.css
