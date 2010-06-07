@@ -26,7 +26,9 @@ For now, it requires Prototype, but after development slows down, there are plan
 agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which
 means Gecko and Webkit at this point.
 
-Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all versions).
+Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all
+versions).  More support for other browsers will be added over time, in theory, or we could wait
+until all the browsers support the W3C spec, which is my personal hope.
 
 h2. Installation and Usage
 
@@ -62,7 +64,8 @@ h2. Midas and Saving
 
 h2. Development
 
-The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.
+The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.  To get
+started run @bundle install@, which will give you all the gems you'll need for testing etc.
 
 h3. Javascript
 
