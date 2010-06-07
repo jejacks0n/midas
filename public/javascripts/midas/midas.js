@@ -89,7 +89,6 @@ var Midas = Class.create({
     this.statusbar = new Midas.Statusbar(this.statusbarOptions);
 
     this.resize();
-
   },
 
   setupObservers: function() {
@@ -222,6 +221,7 @@ var Midas = Class.create({
       region.destroy();
     });
     if (this.iframe) {
+      document.body.setStyle('overflow:auto');
       this.iframe.remove();
       this.iframe = null;
     }
