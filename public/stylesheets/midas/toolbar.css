@@ -105,10 +105,13 @@
   height: 18px;
   width: 23px;
   margin: 0 7px 4px 0;
-  background-image: url(../../images/midas/toolbars/htmleditor/buttons.png);
   }
 .midas-htmleditorbar .midas-button em {
   display: none;
+  }
+.midas-htmleditorbar .midas-button,
+.midas-htmleditorbar .midas-button em {
+  background-image: url(../../images/midas/toolbars/htmleditor/buttons.png);
   }
 .midas-htmleditorbar .midas-button.disabled,
 .midas-htmleditorbar.disabled .midas-button,
@@ -185,25 +188,29 @@
 .midas-htmleditorbar .midas-button-removeformatting           { background-position: -588px 0 }
 .midas-htmleditorbar .midas-button-removeformatting.active    { background-position: -588px -18px }
 .midas-htmleditorbar .midas-button-html                       { background-position: -612px 0 }
-.midas-htmleditorbar .midas-button-html.active                { background-position: -588px -18px }
+.midas-htmleditorbar .midas-button-html.active                { background-position: -612px -18px }
 
 /* color palette buttons */
-.midas-htmleditorbar .midas-button-forecolor,
-.midas-htmleditorbar .midas-button-backcolor                  { background-position: 0 -36px; }
+.midas-htmleditorbar .midas-palette-button,
+.midas-htmleditorbar .midas-palette-button {
+  background-position: 0 -36px;
+  }
 
-/*menu#edit command.select {*/
-  /*width: auto;*/
-  /*padding-right: 14px;*/
-  /*background: url(/images/protosite_editor/edit/buttons.gif) no-repeat right top;*/
-  /*}*/
-/*menu#edit command.select.disabled, .disabled command.select {*/
-  /*background-position: right bottom !important;*/
-  /*}*/
-/*menu#edit command.select.disabled label, .disabled command.select label {*/
-  /*background-position: left bottom !important;*/
-  /*text-indent: -1000px;*/
-  /*}*/
-/*menu#edit #style                                                    { margin-right: 5px }*/
-/*menu#edit #style label                                              { width: 100px }*/
-/*menu#edit #size label                                               { width: 30px }*/
-
+/* select buttons */
+.midas-htmleditorbar .midas-select-button {
+  width: auto;
+  background-position: -24px -36px;
+  overflow: hidden;
+  padding-left: 10px;
+  }
+.midas-htmleditorbar .midas-select-button em {
+  background-position: right -36px;
+  display: block;
+  white-space: nowrap;
+  padding-right: 15px;
+  font-style: normal;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 8.5pt;
+  line-height: 19px;
+  cursor: pointer;
+  }

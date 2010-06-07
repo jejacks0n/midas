@@ -116,14 +116,18 @@ Midas.Toolbar = Class.create({
             break;
           case 'palette':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
+            element.addClassName('midas-palette-button');
             this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           case 'select':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
-            element.observe('click', function() {
-              var contents = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
-            }.bind(this));
+            element.addClassName('midas-select-button');
+            element.down('em').update(buttonSpec[0]);
+            var contents = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
+
+//            element.observe('click', function() {
+//              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
+//            }.bind(this));
             break;
           default:
             throw('Unknown button type "' + type + '" for the "' + action + '" button');
