@@ -43,10 +43,12 @@ Midas.Palette = Class.create({
 
   show: function() {
     if (!this.loaded) {
+      this.position(true);
       this.load(this.show.bind(this));
       return;
     }
 
+    this.element.setStyle({width: 'auto', height: 'auto'});
     this.position();
     this.element.show();
   },
@@ -55,10 +57,10 @@ Midas.Palette = Class.create({
     this.element.hide();
   },
 
-  position: function() {
+  position: function(keepVisible) {
     if (!this.element) return;
     
-    var keepVisible = this.visible();
+    keepVisible = keepVisible || this.visible();
     this.element.setStyle({top: 0, left: 0, display: 'block', visibility: 'hidden'});
     var position = this.button.cumulativeOffset();
     var dimensions = this.element.getDimensions();

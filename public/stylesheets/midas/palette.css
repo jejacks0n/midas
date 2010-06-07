@@ -2,13 +2,18 @@
  *----------------------------------------------------------------------------*/
 .midas-palette {
   position: fixed;
-  background: #E2E1E2;
+  width: 30px;
+  height: 30px;
+  background: #E2E1E2 url(../../images/midas/palette-loading.gif) no-repeat center;
   border: 1px solid #727272;
   margin-top: -1px;
 	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
   }
+
+/* Specific Palettes
+ *----------------------------------------------------------------------------*/
 .midas-htmleditorbar .midas-button-forecolor,
 .midas-htmleditorbar .midas-button-backcolor {
   background-position: 0 -54px;
