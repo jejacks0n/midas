@@ -81,6 +81,21 @@ describe('Midas.Toolbar', function() {
 
   });
   
+  it('should keep any disabled buttons from being clicked', function() {
+    this.toolbar = new Midas.Toolbar();
+    var spy = spyOn(Midas, 'fire');
+
+    this.toolbar.element.down('.midas-htmleditorbar').addClassName('disabled');
+    jasmine.simulate.click($$('.midas-button-bold')[0]);
+
+    expect(spy.callCount).toEqual(0);
+
+    this.toolbar.element.down('.midas-htmleditorbar').removeClassName('disabled');
+    jasmine.simulate.click($$('.midas-button-bold')[0]);
+
+    expect(spy.callCount).toEqual(1);
+  });
+
   it('should destroy', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();

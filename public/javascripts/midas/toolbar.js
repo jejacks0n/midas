@@ -75,7 +75,7 @@ Midas.Toolbar = Class.create({
       element.addClassName('midas-button-' + action.replace('_', '-'));
       element.observe('click', function(event) {
         event.stop();
-        element.blur();
+        if (element.hasClassName('disabled') || element.up('.disabled')) return;
         Midas.fire('button', {
           action: action,
           event: event,

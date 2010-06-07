@@ -30,12 +30,14 @@ Midas.Palette = Class.create({
   },
 
   setupObservers: function() {
-    Event.observe(window, 'resize', this.position.bind(this));
+    Event.observe(window, 'resize', function() {
+      this.position();
+    }.bind(this));
     Event.observe(this.element, 'mousedown', function(event) {
       event.stop();
     });
     Event.observe(this.button, 'click', function() {
-      if (!this.element) return;
+      if (!this.element || this.disabled()) return;
       if (this.visible()) this.hide();
       else this.show();
     }.bind(this));
@@ -78,6 +80,10 @@ Midas.Palette = Class.create({
 
   visible: function() {
     return (!this.element || this.element.getStyle('display') == 'block');
+  },
+
+  disabled: function() {
+    return (this.button.hasClassName('disabled') || this.button.up('.disabled'));
   },
 
   load: function(callback) {
