@@ -26,6 +26,10 @@ namespace :midas do
     
   end
 
+  task :install_js => [:minify_js, :bundle_css, :copy_assets] do
+
+  end
+
   desc "Build install files, but don't install"
   task :build => [:minify_js, :bundle_css] do
 
