@@ -111,6 +111,20 @@ describe('Midas', function () {
       midas3 = null;
     });
 
+    it('should prompt before leaving the page if any changes were made', function() {
+      expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
+
+      expect(Midas.onBeforeUnload()).toEqual(null);
+
+      var midas = new Midas();
+      midas.changed = true;
+
+      expect(Midas.onBeforeUnload()).toEqual('You have unsaved changes.  Are you sure you want to leave without saving them first?');
+
+      midas.destroy();
+      midas = null;
+    });
+
     describe('for detecting the browser', function () {
 
       // I'm not really sure how to test these.. most of the other tests will

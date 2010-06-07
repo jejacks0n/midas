@@ -93,7 +93,6 @@ var Midas = Class.create({
   },
 
   setupObservers: function() {
-    window.onbeforeunload = this.onBeforeUnload.bind(this);
     Event.observe(window, 'resize', this.resize.bind(this));
 
     Event.observe(document, 'mouseup', function(e) {
@@ -216,10 +215,6 @@ var Midas = Class.create({
     }
   },
 
-  onBeforeUnload: function() {
-    if (this.changed) return "You've made changes without saving them.  Are you sure you'd like to navigate away without saving them first?";
-  },
-
   destroy: function() {
     if (this.toolbar) this.toolbar.destroy();
     if (this.statusbar) this.statusbar.destroy();
@@ -243,6 +238,7 @@ Object.extend(Midas, {
   instances: [],
   agentId: null,
   debugMode: false,
+  silentMode: false,
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -250,6 +246,17 @@ Object.extend(Midas, {
 
   unregisterInstance: function(instance) {
     this.instances = this.instances.without(instance);
+  },
+
+  onBeforeUnload: function() {
+    var prompt = false;
+    for (var i = 0; i < Midas.instances.length; ++i) {
+      if (Midas.instances[i].changed) {
+        prompt = true;
+        break;
+      }
+    }
+    if (!Midas.silentMode && prompt) return "You have unsaved changes.  Are you sure you want to leave without saving them first?";
   },
 
   agent: function() {
@@ -305,3 +312,4 @@ Object.extend(Midas, {
   }
 });
 
+window.onbeforeunload = Midas.onBeforeUnload;
