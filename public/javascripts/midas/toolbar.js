@@ -160,6 +160,8 @@ Midas.Toolbar = Class.create({
     node = node.nodeType == 3 ? Element.up(node) : node;
     if (!node) return;
 
+    if (node == activeRegion.element || !Element.descendantOf(node, activeRegion.element)) return;
+
     var length = this.contexts.length;
     for (var i = 0; i < length; ++i) {
       var context = this.contexts[i];
