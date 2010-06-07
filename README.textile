@@ -1,21 +1,110 @@
-= Installation
+h1. Midas
+
+Midas is an editor much like TinyMCE and FCKEditor, but with a different usage paradigm.  It expects
+that an entire page is something that can be editable, and allows editable regions to be specified.
+
+The important difference is that it uses the HTML5 contentEditable feature on divs, instead of using
+iframes, which allows for css to be applied in ways that other editors don't handle.
+
+h2. The Story
+
+I wrote and used a similar editor in the past (written in 2005, and utilized up until now).  It was
+getting pretty outdated, used iframes, and did some lame hackery to pull css in and apply it to the
+contents of the editable iframe.  The methodology has some downsides in how the css can be created
+and managed.
+
+So a lot of things have changed in that time, and it seemed time for a re-write.  I decided to open
+source it so the community could build on it, and maybe help out if it's successful.  This time it's
+fully tested (using jasmine), which should make it easier to jump in and make changes should you
+want to do so.
+
+My plan is to build it out fully, so it can boast the same, or close to the same feature set that
+editors like TinyMCE currently have.  But until then, it has some features that the other editors
+don't provide at this point, and lacks some that they do.
+
+For now, it requires Prototype, but after development slows down, there are plans to make it library
+agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which
+means Gecko and Webkit at this point.
+
+Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all versions).
+
+h2. Installation and Usage
+
+1. Download and install the gem:
+@gem install midas@
+
+2. Put the Midas rake tasks into your @Rakefile@
+...
+
+3. Run the following rake tasks based on your needs:
+* @rake midas:install@ - to install the entire thing
+* @rake midas:install_js@ - to install just the editor and css (no additional tools like image uploading are included)
+
+4. Check that the files are in your project.
+* /public/javascripts/midas.js - unminified / packed js
+* /public/javascripts/midas.min.js - minified and packed js (configuration is not minified)
+* /public/stylesheets/midas.css - unminfied css, with image urls intact
+* /public/stylesheets/midas.bundle.css - minified css, with image urls replaced with data urls (no images are nessicary when using this css, which greatly reduces the number of requests)
+
+5. Include the files you want into your layout (or views):
+...
+
+6. Add some 'editable' classnames to some divs that you want to be able to edit.
+
+7. Instantiate Midas (at the bottom of the page, in window.onload, or in dom:loaded etc):
+<pre>var midas = new Midas();</pre>
+
+h2. Midas Options
 
 
+h2. Midas and Saving
 
-= Development
 
-  Testing:
+h2. Development
 
-    ruby:
-      rake spec
+The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.
 
-    javascript:
-      rake jasmine:server
-      or
-      rake jasmine:ci
+h3. Javascript
 
-      integration:
-        rake midas:minify_js
-        rake jasmine:server
+The javascript is broken into several different files in the gems /public/javascripts/midas path..
+midas.js is the controller more or less, and the other files are different aspects of the system.
+These get combined into a single file by running @rake midas:build@.  The same is true for the
+CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
 
-        navigate to http://localhost:8888/integration/midas.html
+The following four files are generated after running the rake task:
+
+* /public/javascripts/midas.js
+* /public/javascripts/midas.min.js
+* /public/stylesheets/midas.css
+* /public/stylesheets/midas.bundle.css
+
+These files will be copied to the Rails project by the @rake midas:install@ command.
+
+h4. Testing with Jasmine:
+* run @rake jasmine:server@
+* navigate to @http://localhost:8888/@
+
+h4. Testing with Cucumber:
+* run @cucumber@
+
+h4. Regression testing (something I often do):
+* after runing @rake jasmine:server@ you can navigate to the following urls and confirm things are still in working order:
+* @http://localhost:8888/midas/examples/index.html@
+* @http://localhost:8888/midas/examples/iframe.html@
+* @http://localhost:8888/midas/examples/bundled.html@
+
+You can also run @rake jasmine:ci@ if you're using a CI system.
+
+h3. Rake Tasks
+
+* @midas:build@ - builds the installed files
+* @midas:install@ - builds the installed files, and copies them into the Rails project
+
+* @midas:minify_js@ - generates midas.js and midas.min.js (configuration doesn't get minified)
+* @midas:bundle_css@ - generates midas.css and midas.bundled.css
+* @midas:copy_assets@ - copies all css, and js files into the Rails project
+* @midas:copy_images@ - copies all the images into the Rails project (not useful if using midas.bundle.css)
+
+h3. Rails Stuff
+
+Haven't gotten there just yet.
