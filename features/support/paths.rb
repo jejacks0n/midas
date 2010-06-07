@@ -9,7 +9,7 @@ module NavigationHelpers
     case page_name
     
     when /the editor page/
-      '/integration/midas.html'
+      '/midas/examples/index.html'
 
 
     # Add more mappings here.

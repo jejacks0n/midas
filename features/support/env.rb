@@ -34,6 +34,6 @@ class Capybara::Driver::Selenium < Capybara::Driver::Base
 end
 
 Before do
-  visit '/integration/midas.html'
+  visit '/midas/examples/index.html'
 end
 
