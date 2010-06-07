@@ -1,41 +1,27 @@
 h1. Midas
 
-Midas is an editor much like TinyMCE and FCKEditor, but with a different usage paradigm.  It expects
-that an entire page is something that can be editable, and allows editable regions to be specified.
+Midas is an editor much like TinyMCE and FCKEditor, but with a different usage paradigm.  It expects that an entire page is something that can be editable, and allows editable regions to be specified.
 
-The important difference is that it uses the HTML5 contentEditable feature on divs, instead of using
-iframes, which allows for css to be applied in ways that other editors don't handle.
+The important difference is that it uses the HTML5 contentEditable feature on divs, instead of using iframes, which allows for css to be applied in ways that other editors don't handle.
 
 h2. The Story
 
-I wrote and used a similar editor in the past (written in 2005, and utilized up until now).  It was
-getting pretty outdated, used iframes, and did some lame hackery to pull css in and apply it to the
-contents of the editable iframe.  The methodology has some downsides in how the css can be created
-and managed.
+I wrote and used a similar editor in the past (written in 2005, and utilized up until now).  It was getting pretty outdated, used iframes, and did some lame hackery to pull css in and apply it to the contents of the editable iframe.  The methodology has some downsides in how the css can be created and managed.
 
-So a lot of things have changed in that time, and it seemed time for a re-write.  I decided to open
-source it so the community could build on it, and maybe help out if it's successful.  This time it's
-fully tested (using jasmine), which should make it easier to jump in and make changes should you
-want to do so.
+So a lot of things have changed in that time, and it seemed time for a re-write.  I decided to open source it so the community could build on it, and maybe help out if it's successful.  This time it's fully tested (using jasmine), which should make it easier to jump in and make changes should you want to do so.
 
-My plan is to build it out fully, so it can boast the same, or close to the same feature set that
-editors like TinyMCE currently have.  But until then, it has some features that the other editors
-don't provide at this point, and lacks some that they do.
+My plan is to build it out fully, so it can boast the same, or close to the same feature set that editors like TinyMCE currently have.  But until then, it has some features that the other editors don't provide at this point, and lacks some that they do.
 
-For now, it requires Prototype, but after development slows down, there are plans to make it library
-agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which
-means Gecko and Webkit at this point.
+For now, it requires Prototype, but after development slows down, there are plans to make it library agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which means Gecko and Webkit at this point.
 
-Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all
-versions).  More support for other browsers will be added over time, in theory, or we could wait
-until all the browsers support the W3C spec, which is my personal hope.
+Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all versions).  More support for other browsers will be added over time, in theory, or we could wait until all the browsers support the W3C spec, which is my personal hope.
 
 h2. Installation and Usage
 
 1. Download and install the gem:
 @gem install midas@
 
-2. Put the Midas rake tasks into your @Rakefile@
+2. Put the Midas rake tasks into your Rakefile
 ...
 
 3. Run the following rake tasks based on your needs:
@@ -58,21 +44,48 @@ h2. Installation and Usage
 
 h2. Midas Options
 
+The Midas constructer takes three arguments, all objects, in the following manner:
+
+* midas options
+* toolbar options
+* region options
+
+So, instantiating Midas can be as simple as:
+
+<pre>
+  var midas = new Midas();
+</pre>
+
+to as advanced as:
+
+<pre>
+  var midas = new Midas({
+    useIframe: true,
+    classname: 'some-editable-classname'
+    }, {
+    // toolbar options
+    }, {
+    // region options
+    });
+</pre>
+
+h3. Supported Options
+
+... coming soon ...
 
 h2. Midas and Saving
 
+Midas assumes that saves will be "updates", so it uses the rails standard POST with the _method parameter set to "put".  It's unlikely that Midas will be used to create pages, so by default the method is considered to be PUT, however, as outlined above in the Midas Options section you can override this to be a "create" action by specifying "post" instead.
+
+To save successfully an id attribute is required on any element with the "editable" classname (or whatever classname you provide).  The POST comes through with fields the name of the id attribute of the elements that were editable.
 
 h2. Development
 
-The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.  To get
-started run @bundle install@, which will give you all the gems you'll need for testing etc.
+The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.  To get started run @bundle install@, which will give you all the gems you'll need for testing etc.
 
 h3. Javascript
 
-The javascript is broken into several different files in the gems /public/javascripts/midas path..
-midas.js is the controller more or less, and the other files are different aspects of the system.
-These get combined into a single file by running @rake midas:build@.  The same is true for the
-CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
+The javascript is broken into several different files in the gems /public/javascripts/midas path.. midas.js is the controller more or less, and the other files are different aspects of the system.  These get combined into a single file by running @rake midas:build@.  The same is true for the CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
 
 The following four files are generated after running the rake task:
 
