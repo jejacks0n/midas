@@ -222,7 +222,7 @@ var Midas = Class.create({
     });
     if (this.iframe) {
       document.body.setStyle('overflow:auto');
-      this.iframe.remove();
+      this.iframeContainer.remove();
       this.iframe = null;
     }
     this.toolbar = null;
