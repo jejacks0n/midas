@@ -2,11 +2,16 @@
  *----------------------------------------------------------------------------*/
 .midas-toolbar {
   position: fixed;
-  z-index: 10001;
+  z-index: 10002;
   top: 0;
   left: 0;
   width: 100%;
   overflow: hidden;
+  }
+.midas-toolbar .loading {
+  background-image: url(../../images/midas/toolbars/loading.gif);
+  background-repeat: no-repeat;
+  background-position:  center;
   }
 
 /* Toolbar: Actionbar
@@ -38,6 +43,7 @@
   margin: 0 -5px;
   font-style: normal;
   color: #222;
+  cursor: default;
   font-size: 8.5pt;
   }
 .midas-actionsbar .midas-button.disabled,

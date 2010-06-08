@@ -1,2 +1,58 @@
 /* Select
  *----------------------------------------------------------------------------*/
+.midas-select {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  background-color: #FFF;
+  border: 1px solid #727272;
+  margin-top: -1px;
+	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  overflow: auto;
+  }
+
+/* Specific Selects
+ *----------------------------------------------------------------------------*/
+#midas_formatblock_selector,
+#midas_style_selector {
+  padding: 10px 0;
+  }
+#midas_formatblock_selector *,
+#midas_style_selector * {
+  cursor: default;
+  padding: 0 10px;
+  }
+#midas_formatblock_selector *:hover,
+#midas_style_selector *:hover {
+  background-color: #E2E1E2 !important;
+  color: #000 !important;
+  }
+#midas_formatblock_selector h1 { margin: 0 }
+#midas_formatblock_selector h2 { margin: 0 }
+#midas_formatblock_selector h3 { margin: 0 }
+#midas_formatblock_selector h4 { margin: 0 }
+#midas_formatblock_selector h5 { margin: 0 }
+#midas_formatblock_selector h6 { margin: 0 }
+#midas_formatblock_selector .-paragraph { }
+#midas_formatblock_selector .-blockquote { }
+#midas_formatblock_selector .-pre { font-family: monospace }
+
+#midas_style_selector span {
+  display: block;
+  }
+#midas_style_selector .red {
+  color: red;
+  }
+#midas_style_selector .large-bold {
+  font-size: 20px;
+  font-weight: bold;
+  }
+#midas_style_selector .blue {
+  background-color: blue;
+  color: #FFF;
+  }
