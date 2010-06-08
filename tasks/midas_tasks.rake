@@ -1,6 +1,9 @@
 require 'packr'
 require 'base64'
 
+javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select]
+stylesheet_files = %w[midas region toolbar statusbar dialog palette select]
+
 def copy(filename, from_dir, to_dir)
   from = File.expand_path(File.join(from_dir, filename))
   to = File.expand_path(File.join(to_dir, filename))
@@ -43,7 +46,7 @@ namespace :midas do
 
     code = ''
     config_code = File.read("#{input_path}/config.js")
-    %w[native_extensions midas region toolbar statusbar dialog palette].each do |file|
+    javascript_files.each do |file|
       code << File.read("#{input_path}/#{file}.js")
     end
 
@@ -60,7 +63,7 @@ namespace :midas do
     input_path = "#{thisfile}/../public/stylesheets/midas"
 
     code = ''
-    %w[midas region toolbar statusbar dialog palette].each do |file|
+    stylesheet_files.each do |file|
       code << File.read("#{input_path}/#{file}.css")
     end
 
@@ -106,4 +109,3 @@ namespace :midas do
   end
 
 end
-

@@ -20,6 +20,7 @@ src_files:
   - javascripts/midas/statusbar.js
   - javascripts/midas/dialog.js
   - javascripts/midas/palette.js
+  - javascripts/midas/select.js
   - javascripts/midas/config.js
 
 # stylesheets
