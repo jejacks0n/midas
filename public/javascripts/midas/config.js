@@ -71,8 +71,8 @@ Midas.Config = {
       historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history']]
       },
     htmleditor: {
-      style:                 ['Style', '', ['select', function() { return Midas.Config.styles }]],
-      formatblock:           ['Block Format', '', ['select', function() { return Midas.Config.blocks }]],
+      style:                 ['Style', '', ['select', '/midas/style.html']],
+      formatblock:           ['Block Format', '', ['select', '/midas/formatblock.html']],
       sep1:                  '-',
       //backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
       forecolor:             ['Text Color', '', ['palette', '/midas/forecolor.html'], ['context']],
@@ -152,30 +152,5 @@ Midas.Config = {
     horizontalrule:      {insertHTML: function() {
                             return '<div class="hr"><hr/></div>';
                          }}
-    },
-
-  /* CSS Classes that can be inserted using the toolbar
-   * -- will wrap selections in spans with a classname of whatever is selected
-   */
-  styles: [
-    ['red',  'Red text'],
-    ['bold', 'Large bold text'],
-    ['blue', 'Blue background']
-    ],
-
-  /* Block elements that can be inserted using the toolbar
-   * -- will wrap selections in selected element
-   */
-  blocks: [
-    ['<h1>', 'Heading 1 &lt;h1&gt;'],
-    ['<h2>', 'Heading 2 &lt;h2&gt;'],
-    ['<h3>', 'Heading 3 &lt;h3&gt;'],
-    ['<h4>', 'Heading 4 &lt;h4&gt;'],
-    ['<h5>', 'Heading 5 &lt;h5&gt;'],
-    ['<h6>', 'Heading 6 &lt;h6&gt;'],
-    ['<p>',  'Paragraph'],
-    ['<blockquote>', 'Blockquote &lt;blockquote&gt;']
-    ['<pre>', 'Formatted &lt;pre&gt;']
-    ]
-
+    }
 };
