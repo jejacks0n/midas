@@ -57,16 +57,20 @@ Midas.Config = {
       save:                  ['Save', 'Save this page'],
       preview:               ['Preview', 'Preview this page', ['toggle'], ['mode']],
       sep1:                  ' ',
-      undo:                  ['Undo', 'Undo your last action'],
-      redo:                  ['Redo', 'Redo your last action'],
-      sep2:                  ' ',
-      insertlink:            ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
-      insertmedia:           ['Media', 'Insert media', ['dialog', '/midas/media']],
-      inserttable:           ['Table', 'Insert a table', ['dialog', '/midas/table']],
-      insertobject:          ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
-      insertcharacter:       ['Character', 'Insert special characters', ['dialog', '/midas/character']],
-      inspectorpanel:        ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector']],
-      sep3:                  '*',
+      undoredo: {
+        undo:                ['Undo', 'Undo your last action'],
+        redo:                ['Redo', 'Redo your last action'],
+        sep2:                ' '
+        },
+      insert: {
+        insertlink:          ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
+        insertmedia:         ['Media', 'Insert media', ['dialog', '/midas/media']],
+        inserttable:         ['Table', 'Insert a table', ['dialog', '/midas/table']],
+        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
+        insertcharacter:     ['Character', 'Insert special characters', ['dialog', '/midas/character']],
+        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector']],
+        sep3:                '*'
+        },
       notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes']],
       historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history']]
       },
