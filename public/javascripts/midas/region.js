@@ -128,7 +128,6 @@ Midas.Region = Class.create({
       handled = this.doc.execCommand(action, false, argument);
     } catch(e) {
       Midas.trace(e);
-
       // Gecko does some interesting things when it fails on indent
       if (action == 'indent') {
         var sibling = this.element.previousSibling;

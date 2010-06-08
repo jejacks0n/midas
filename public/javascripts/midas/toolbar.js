@@ -75,33 +75,36 @@ Midas.Toolbar = Class.create({
       element = new Element('div', {title: buttonSpec[1] ? buttonSpec[1] : buttonSpec[0], 'class': 'midas-button'});
       element.update('<em>' + buttonSpec[0] + '</em>');
       element.addClassName('midas-button-' + action.replace('_', '-'));
-      element.observe('click', function(event) {
-        event.stop();
-        if (element.hasClassName('disabled') || element.up('.disabled')) return;
-        Midas.fire('button', {
-          action: action,
-          event: event,
-          toolbar: this
-        });
-      }.bind(this));
 
+      var observed = false;
       types.each(function(buttonType) {
         var type = buttonType[0];
         var mixed = buttonType[1];
         switch(type) {
-          case 'toggle':
-            element.observe('click', function() {
-              element.toggleClassName('pressed');
-            });
-            break;
           case 'context':
             this.contexts.push({element: element, callback: mixed || action});
             break;
-          case 'mode':
-            element.observe('click', function() {
-              Midas.fire('mode', {mode: mixed || action, toolbar: this});
-            }.bind(this));
+          case 'toggle':
+            element.observe('click', function() { element.toggleClassName('pressed'); });
             break;
+          case 'mode':
+            element.observe('click', function() { Midas.fire('mode', {mode: mixed || action, toolbar: this}); }.bind(this));
+            break;
+
+          case 'palette':
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
+            element.addClassName('midas-palette-button');
+            this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
+            observed = true;
+            break;
+          case 'select':
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
+            element.addClassName('midas-select-button');
+            element.down('em').update(buttonSpec[0]);
+            this.selects.push(new Midas.Select(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
+            observed = true;
+            break;
+
           case 'dialog':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
@@ -116,21 +119,22 @@ Midas.Toolbar = Class.create({
               alert('this would open a panel with the url: ' + url);
             }.bind(this));
             break;
-          case 'palette':
-            if (!mixed) throw('Button "' + action + '" is missing arguments');
-            element.addClassName('midas-palette-button');
-            this.palettes.push(new Midas.Palette(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
-            break;
-          case 'select':
-            if (!mixed) throw('Button "' + action + '" is missing arguments');
-            element.addClassName('midas-select-button');
-            element.down('em').update(buttonSpec[0]);
-            this.selects.push(new Midas.Select(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
-            break;
+
           default:
             throw('Unknown button type "' + type + '" for the "' + action + '" button');
         }
       }.bind(this));
+
+      if (!observed) element.observe('click', function(event) {
+        event.stop();
+        if (element.hasClassName('disabled') || element.up('.disabled')) return;
+        Midas.fire('button', {
+          action: action,
+          event: event,
+          toolbar: this
+        });
+      }.bind(this));
+
       this.buttons[action] = {element: element, spec: buttonSpec};
     } else if (Object.isString(buttonSpec)) {
       element = this.makeSeparator(buttonSpec);
