@@ -7,6 +7,7 @@ var Midas = Class.create({
     configuration: null,
     useIframe: false // boolean true, or a string of the document to load
   },
+  modes: [],
   contentWindow: window,
   actionsToHandle: ['save'],
 
@@ -166,7 +167,16 @@ var Midas = Class.create({
   },
 
   handleMode: function(mode, toolbar) {
-    //!!
+    this.modes[mode] = !this.modes[mode];
+    switch(mode) {
+      case 'preview':
+        window.getSelection().removeAllRanges();
+        this.toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert');
+        this.regions.each(function(region) {
+          region.togglePreview();
+        });
+        break;
+    }
   },
 
   serialize: function() {
