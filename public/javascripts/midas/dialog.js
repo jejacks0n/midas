@@ -49,12 +49,23 @@ Midas.Dialog = Class.create({
       this.load(this.show.bind(this));
       return;
     }
+
+    if (this.toolbar.activeRegion) {
+      this.contextClass = this.toolbar.activeRegion.name;
+      this.element.addClassName(this.contextClass);
+    }
+
     this.element.setStyle({width: 'auto', height: 'auto'});
     this.position();
     this.element.show();
   },
 
   hide: function() {
+    if (this.contextClass) {
+      this.element.removeClassName(this.contextClass);
+      this.contextClass = null;
+    }
+
     this.element.hide();
   },
 

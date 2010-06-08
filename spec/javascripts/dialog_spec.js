@@ -50,6 +50,25 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('none');
   });
 
+  it('should add and remove a class for the active region', function() {
+
+    this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar'), activeRegion: {name: 'region1'}});
+
+    var button = $('dialog_button');
+    jasmine.simulate.click(button);
+
+    expect(this.dialog.element.hasClassName('region1')).toEqual(true);
+
+    this.dialog.toolbar.activeRegion = {name: 'region2'};
+    jasmine.simulate.click(button);
+
+    expect(this.dialog.element.hasClassName('region1')).toEqual(false);
+
+    jasmine.simulate.click(button);
+    expect(this.dialog.element.hasClassName('region1')).toEqual(false);
+    expect(this.dialog.element.hasClassName('region2')).toEqual(true);
+  });
+
   it('should hide', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
