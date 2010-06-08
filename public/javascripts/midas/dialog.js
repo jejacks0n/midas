@@ -25,7 +25,8 @@ Midas.Dialog = Class.create({
   },
 
   build: function() {
-    this.element = new Element('div');
+    this.element = new Element('div', {'class': 'midas-dialog', style: 'display:none'});
+    this.toolbar.element.appendChild(this.element);
   },
 
   setupObservers: function() {
@@ -48,7 +49,6 @@ Midas.Dialog = Class.create({
       this.load(this.show.bind(this));
       return;
     }
-
     this.element.setStyle({width: 'auto', height: 'auto'});
     this.position();
     this.element.show();
@@ -70,6 +70,8 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
+    this.loaded = true;
+    if (callback) callback();
   },
 
   execute: function(action, options, event) {

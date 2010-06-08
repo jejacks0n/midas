@@ -38,15 +38,16 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
-    $('palette_button').addClassName('disabled');
-    jasmine.simulate.click($('palette_button'));
+    var button = $('palette_button');
+    button.addClassName('disabled');
+    jasmine.simulate.click(button);
 
     expect(spy.callCount).toEqual(0);
     expect(this.palette.element.getStyle('display')).toEqual('none');
 
-    $('palette_button').removeClassName('disabled');
-    $('palette_button').up().addClassName('disabled');
-    jasmine.simulate.click($('palette_button'));
+    button.removeClassName('disabled');
+    button.up().addClassName('disabled');
+    jasmine.simulate.click(button);
 
     expect(spy.callCount).toEqual(0);
     expect(this.palette.element.getStyle('display')).toEqual('none');
@@ -108,7 +109,7 @@ describe('Midas.Palette', function() {
   it('should call a setup function when it loads a panel', function() {
     window.callCount = 0;
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
-      options.onSuccess({responseText: "<script>window['setup_backcolor'] = function() { window.callCount++ }</script>"});
+      options.onSuccess({responseText: "<script>window['midas_setup_backcolor'] = function() { window.callCount++ }</script>"});
     });
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
