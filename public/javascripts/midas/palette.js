@@ -100,7 +100,7 @@ Midas.Palette = Class.create({
         if (callback) callback();
       }.bind(this),
       onFailure: function() {
-        alert('unable to get the palette contents');
+        alert('unable to get the url "' + this.options.url + '" for loading');
       }
     });
   },
