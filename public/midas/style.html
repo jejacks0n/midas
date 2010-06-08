@@ -1,5 +1,33 @@
+<script type="text/javascript">
+  window['midas_setup_style'] = function() {
+    $('midas_style_selector').select('div').each(function(div) {
+      Event.observe(div, 'click', function(event) {
+        event.stop();
+        this.execute('formatblock', {value: div.getAttribute('class')}, event);
+      }.bind(this));
+    }.bind(this));
+  }
+</script>
+
+<style type="text/css">
+  #midas_style_selector .red {
+    color: red;
+    }
+  #midas_style_selector .red {
+    color: red;
+    }
+  #midas_style_selector .large-bold {
+    font-size: 20px;
+    font-weight: bold;
+    }
+  #midas_style_selector .blue {
+    background-color: blue;
+    color: #FFF;
+    }
+</style>
+
 <div id="midas_style_selector" class="midas-select-content">
-  <span class="red">Red text</span>
-  <span class="large-bold">Large bold text</span>
-  <span class="blue">Blue background</span>
+  <div class="red">Red text</div>
+  <div class="large-bold">Large bold text</div>
+  <div class="blue">Blue background</div>
 </div>

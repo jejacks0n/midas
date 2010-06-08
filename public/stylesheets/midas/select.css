@@ -41,18 +41,3 @@
 #midas_formatblock_selector .-paragraph { }
 #midas_formatblock_selector .-blockquote { }
 #midas_formatblock_selector .-pre { font-family: monospace }
-
-#midas_style_selector span {
-  display: block;
-  }
-#midas_style_selector .red {
-  color: red;
-  }
-#midas_style_selector .large-bold {
-  font-size: 20px;
-  font-weight: bold;
-  }
-#midas_style_selector .blue {
-  background-color: blue;
-  color: #FFF;
-  }

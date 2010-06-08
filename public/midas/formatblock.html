@@ -1,5 +1,16 @@
+<script type="text/javascript">
+  window['midas_setup_formatblock'] = function() {
+    $('midas_formatblock_selector').childElements().each(function(element) {
+      Event.observe(element, 'click', function(event) {
+        event.stop();
+        this.execute('formatblock', {value: element.getAttribute('data-tag')}, event);
+      }.bind(this));
+    }.bind(this));
+  }
+</script>
+
 <div id="midas_formatblock_selector" class="midas-select-content">
-  <h1 data-value="h1">Heading 1 &lt;h1&gt;</h1>
+  <h1 data-tag="h1">Heading 1 &lt;h1&gt;</h1>
   <h2 data-tag="h2">Heading 2 &lt;h2&gt;</h2>
   <h3 data-tag="h3">Heading 3 &lt;h3&gt;</h3>
   <h4 data-tag="h4">Heading 4 &lt;h4&gt;</h4>

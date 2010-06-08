@@ -35,7 +35,7 @@ Midas.Palette = Class.create(Midas.Dialog, {
         this.element.innerHTML = transport.responseText;
         transport.responseText.evalScripts();
 
-        this.setupFunction = window['setup_' + this.name];
+        this.setupFunction = window['midas_setup_' + this.name];
         if (this.setupFunction) this.setupFunction.call(this);
 
         if (callback) callback();
