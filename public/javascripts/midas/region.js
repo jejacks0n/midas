@@ -7,6 +7,7 @@ Midas.Region = Class.create({
     contentWindow: window,
     inline: false
   },
+  previewing: false,
 
   initialize: function(element, options, name) {
     if (!Midas.version) throw('Midas.Region requires Midas');
@@ -35,7 +36,7 @@ Midas.Region = Class.create({
     }
     
     if (this.options['inline']) {
-      this.element.setStyle({height: 'auto', minHeight: '20px'});
+      this.element.setStyle({height: 'auto', minHeight: '20px', minWidth: '20px'});
     } else {
       this.element.setStyle({overflow: 'auto'});
       this.element.setStyle({maxWidth: this.element.getWidth() + 'px'});
@@ -48,22 +49,27 @@ Midas.Region = Class.create({
 
   setupObservers: function() {
     this.element.observe('focus', function(event) {
+      if (this.previewing) return;
       Midas.fire('region', {region: this, name: this.name, event: event});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
 
     this.element.observe('click', function(event) {
+      if (this.previewing) return;
       Midas.fire('region', {region: this, name: this.name, event: event});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
     this.element.observe('mouseup', function(event) {
+      if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: event});
     }.bind(this));
 
     this.element.observe('keyup', function(event) {
+      if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: event, changed: true});
     }.bind(this));
     this.element.observe('keypress', function(event) {
+      if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: event});
 
       switch(event.keyCode) {
@@ -140,6 +146,18 @@ Midas.Region = Class.create({
 
   serialize: function() {
     return {name: this.name, content: this.getContents()}
+  },
+
+  togglePreview: function() {
+    if (this.previewing) {
+      this.element.contentEditable = true;
+      this.element.removeClassName('midas-region-preview');
+      this.previewing = false;
+    } else {
+      this.element.contentEditable = false;
+      this.element.addClassName('midas-region-preview');
+      this.previewing = true;
+    }
   },
 
   destroy: function() {

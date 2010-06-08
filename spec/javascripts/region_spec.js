@@ -26,6 +26,7 @@ describe('Midas.Region', function() {
     // firefox doesn't like to give focus to a complely blank contentEditable region, so
     // we put a &nbsp; inside empty ones, and then reset it on focus/click, so you don't
     // really see the &nbsp;
+    
     if (jasmine.browser.Gecko) {
       this.region = new Midas.Region('region3');
 
@@ -50,6 +51,22 @@ describe('Midas.Region', function() {
 
     this.region.setContents('bacon');
     expect(this.region.getContents()).toEqual('bacon');
+  });
+
+  it('should toggle preview on and off', function() {
+    this.region = new Midas.Region('region1');
+
+    expect(this.region.previewing).toEqual(false);
+
+    this.region.togglePreview();
+
+    expect(this.region.previewing).toEqual(true);
+    expect(this.region.element.hasClassName('midas-region-preview')).toEqual(true);
+
+    this.region.togglePreview();
+
+    expect(this.region.previewing).toEqual(false);
+    expect(this.region.element.hasClassName('midas-region-preview')).toEqual(false);
   });
 
   it('should serialize', function() {
