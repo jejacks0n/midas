@@ -124,10 +124,9 @@ Midas.Toolbar = Class.create({
             element.addClassName('midas-select-button');
             element.down('em').update(buttonSpec[0]);
             var contents = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-
-//            element.observe('click', function() {
-//              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
-//            }.bind(this));
+            element.observe('click', function() {
+              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
+            }.bind(this));
             break;
           default:
             throw('Unknown button type "' + type + '" for the "' + action + '" button');
@@ -200,7 +199,7 @@ Midas.Toolbar = Class.create({
   destroy: function() {
     this.palettes.each(function(palette) {
       if (palette.destroy) palette.destroy();
-    });    
+    });
     this.palettes = [];
     if (this.element) this.element.remove();
     if (this.element) this.element = null;
