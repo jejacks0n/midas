@@ -80,7 +80,7 @@ describe('Midas.Toolbar', function() {
   stub('should inactivate any active buttons', function() {
 
   });
-  
+
   it('should keep any disabled buttons from being clicked', function() {
     this.toolbar = new Midas.Toolbar();
     var spy = spyOn(Midas, 'fire');
@@ -94,6 +94,10 @@ describe('Midas.Toolbar', function() {
     jasmine.simulate.click($$('.midas-button-bold')[0]);
 
     expect(spy.callCount).toEqual(1);
+  });
+
+  stub('should keep track of the active region', function() {
+
   });
 
   it('should destroy', function() {

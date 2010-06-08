@@ -152,7 +152,8 @@ var Midas = Class.create({
   },
 
   setActiveRegion: function(region) {
-    this.activeRegion = region; 
+    this.activeRegion = region;
+    if (this.toolbar) this.toolbar.setActiveRegion(region);
   },
 
   handleAction: function(action, event, toolbar, options) {

@@ -1,6 +1,7 @@
 if (!Midas) var Midas = {};
 Midas.Toolbar = Class.create({
   version: 0.2,
+  activeRegion: null,
   contexts: [],
   buttons: {},
   palettes: [],
@@ -154,6 +155,10 @@ Midas.Toolbar = Class.create({
 
   makeSeparator: function(button) {
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
+  },
+
+  setActiveRegion: function(region) {
+    this.activeRegion = region;
   },
 
   setActiveButtons: function(regions, activeRegion) {
