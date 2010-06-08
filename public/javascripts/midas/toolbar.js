@@ -4,6 +4,7 @@ Midas.Toolbar = Class.create({
   contexts: [],
   buttons: {},
   palettes: [],
+  selects: [],
   options: {
     appendTo: null,
     contentWindow: window,
@@ -13,6 +14,7 @@ Midas.Toolbar = Class.create({
   initialize: function(options) {
     if (!Midas.version) throw('Midas.Toolbar requires Midas');
     this.palettes = [];
+    this.selects = [];
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
@@ -43,11 +45,11 @@ Midas.Toolbar = Class.create({
     Event.observe(this.element, 'mousedown', function(e) {
       e.stop();
     }.bind(this));
+    Event.observe(document, 'keypress', function(e) {
+      if (e.keyCode == 27) this.hidePopups();
+    }.bind(this));
     Event.observe(document, 'mouseup', function(e) {
-      var element = Event.element(e);
-      this.palettes.each(function(palette) {
-        if (element != palette.element || element.descendantOf(palette.element)) palette.hide();
-      }.bind(this));
+      this.hidePopups(Event.element(e));
     }.bind(this))
   },
 
@@ -123,10 +125,7 @@ Midas.Toolbar = Class.create({
             if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.addClassName('midas-select-button');
             element.down('em').update(buttonSpec[0]);
-            var contents = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-            element.observe('click', function() {
-              alert('this would open a place a pulldown near the button with the contents: ' + contents.join(','));
-            }.bind(this));
+            this.selects.push(new Midas.Select(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             break;
           default:
             throw('Unknown button type "' + type + '" for the "' + action + '" button');
@@ -196,11 +195,24 @@ Midas.Toolbar = Class.create({
     return ($(this.options['appendTo']) || this.element).getHeight();
   },
 
+  hidePopups: function(element) {
+    this.palettes.each(function(palette) {
+      if (element != palette.element || element.descendantOf(palette.element)) palette.hide();
+    }.bind(this));
+    this.selects.each(function(select) {
+      if (element != select.element || element.descendantOf(select.element)) select.hide();
+    }.bind(this));
+  },
+
   destroy: function() {
     this.palettes.each(function(palette) {
       if (palette.destroy) palette.destroy();
     });
     this.palettes = [];
+    this.selects.each(function(select) {
+      if (select.destroy) select.destroy();
+    });
+    this.selects = [];
     if (this.element) this.element.remove();
     if (this.element) this.element = null;
   }
