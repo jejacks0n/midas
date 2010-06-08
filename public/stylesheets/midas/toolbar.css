@@ -48,6 +48,7 @@
   }
 .midas-actionsbar .midas-button.disabled,
 .midas-actionsbar.disabled .midas-button,
+.midas-actionsbar .midas-group.disabled .midas-button,
 .disabled .midas-actionsbar .midas-button {
   opacity: 0.33 !important;
   }

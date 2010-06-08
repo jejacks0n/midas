@@ -54,7 +54,7 @@ describe('Midas.Toolbar', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
     
     expect($('toolbar').select('.midas-group').length).toBeGreaterThan(2);
-    expect($('toolbar').innerHTML).toContain('class="midas-group"');
+    expect($('toolbar').innerHTML).toContain('class="midas-group midas-group-list"');
     expect(this.toolbar.buttons['preview']['spec']).
             toEqual(Midas.Config.toolbars['actions']['preview']);
   });
@@ -78,6 +78,10 @@ describe('Midas.Toolbar', function() {
   });
 
   stub('should inactivate any active buttons', function() {
+
+  });
+
+  stub('should disable buttons, button groups, and toolbars', function() {
 
   });
 

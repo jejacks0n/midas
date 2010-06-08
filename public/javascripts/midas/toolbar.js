@@ -140,13 +140,13 @@ Midas.Toolbar = Class.create({
     } else if (Object.isString(buttonSpec)) {
       element = this.makeSeparator(buttonSpec);
     } else {
-      element = this.makeButtonGroup(buttonSpec);
+      element = this.makeButtonGroup(action, buttonSpec);
     }
     return element;
   },
 
-  makeButtonGroup: function(group) {
-    var element = new Element('div').addClassName('midas-group');
+  makeButtonGroup: function(action, group) {
+    var element = new Element('div', {'class': 'midas-group midas-group-' + action});
     for (var button in group) {
       element.appendChild(this.makeButton(button, group[button]));
     }
@@ -202,6 +202,16 @@ Midas.Toolbar = Class.create({
 
   getHeight: function() {
     return ($(this.options['appendTo']) || this.element).getHeight();
+  },
+
+  toggleDisabled: function() {
+    for (var i = 0; i < arguments.length; ++i) {
+      var element;
+      element = this.element.down('.midas-' + arguments[i]);
+      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
+      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
+      if (element) element.toggleClassName('disabled');
+    }
   },
 
   hidePopups: function(element) {
