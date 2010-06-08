@@ -45,7 +45,7 @@ Midas.Toolbar = Class.create({
     Event.observe(this.element, 'mousedown', function(e) {
       e.stop();
     }.bind(this));
-    Event.observe(document, 'keypress', function(e) {
+    Event.observe(document, 'keydown', function(e) {
       if (e.keyCode == 27) this.hidePopups();
     }.bind(this));
     Event.observe(document, 'mouseup', function(e) {
@@ -162,7 +162,7 @@ Midas.Toolbar = Class.create({
     node = node.nodeType == 3 ? Element.up(node) : node;
     if (!node) return;
 
-    if (node == activeRegion.element || !Element.descendantOf(node, activeRegion.element)) return;
+    if (node != activeRegion.element && !Element.descendantOf(node, activeRegion.element)) return;
 
     var length = this.contexts.length;
     for (var i = 0; i < length; ++i) {
