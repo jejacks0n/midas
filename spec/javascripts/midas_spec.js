@@ -207,18 +207,19 @@ describe('Midas', function () {
 
     it('should understand context and highlight buttons', function() {
       this.midas = new Midas();
-      this.midas.regions[0].focused = true;
+      this.midas.regions[2].focused = true;
+      this.midas.activeRegion = this.midas.regions[2];
 
       var span = $('div6').down('span');
       jasmine.simulate.selection(span);
 
-      Event.fire(document, 'midas:region:update', {region: this.midas.regions[0], name: 'name', event: {}});
+      Event.fire(document, 'midas:region:update', {region: this.midas.regions[2], name: 'name', event: {}});
       expect(this.midas.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(true);
 
       var em = $('div3').down('em');
       jasmine.simulate.selection(em);
 
-      Event.fire(document, 'midas:region:update', {region: this.midas.regions[0], name: 'name', event: {}});
+      Event.fire(document, 'midas:region:update', {region: this.midas.regions[2], name: 'name', event: {}});
 
       expect(this.midas.toolbar.element.down('.midas-button-bold').hasClassName('active')).toEqual(false);
       expect(this.midas.toolbar.element.down('.midas-button-italic').hasClassName('active')).toEqual(true);
@@ -267,6 +268,7 @@ describe('Midas', function () {
   describe('when using an iframe', function() {
 
     it('should create an iframe', function() {
+      this.fail();
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
