@@ -268,7 +268,6 @@ describe('Midas', function () {
   describe('when using an iframe', function() {
 
     it('should create an iframe', function() {
-      this.fail();
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
