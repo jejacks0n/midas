@@ -27,7 +27,11 @@
   <link  href="/stylesheets/midas/select.css" rel="stylesheet"/>
 
   <style type="text/css">
+    body {
+      font-size: 20px;
+      }
     .editable {
+      position: relative;
       width: 200px;
       height: 200px;
       float: left;
@@ -43,7 +47,7 @@
       }
   </style>
 </head>
-<body onload="Midas.debugMode = true; Midas.silentMode = true; var midas = new Midas({}, {appendTo: 'toolbar'});">
+<body onload="Midas.debugMode = true; Midas.silentMode = true; var midas = new Midas({}, {appendTo: 'toolbar'}, {inline: false});">
 
   <div id="toolbar"></div>
 
