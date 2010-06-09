@@ -16,6 +16,7 @@ Midas.Statusbar = Class.create({
     this.config = this.options['configuration'];
 
     this.build();
+    this.setupObservers();
   },
 
   build: function() {
@@ -26,6 +27,12 @@ Midas.Statusbar = Class.create({
     }.bind(this));
 
     ($(this.options['appendTo']) || document.body).appendChild(this.element);
+  },
+
+  setupObservers: function() {
+    Event.observe(this.element, 'mousedown', function(e) {
+      e.stop();
+    }.bind(this));
   },
 
   update: function(region, event) {
@@ -71,9 +78,10 @@ Midas.Statusbar = Class.create({
 
     var element = new Element('span').update('<strong>Path:</strong> ' + path);
     element.observe('click', function(event) {
+      event.stop();
       var index = Element.nextSiblings(Event.element(event)).length;
       var selection = window.getSelection();
-      var range = document.createRange();
+      var range = this.options['contentWindow'].document.createRange();
       range.selectNode(this.path[index - 1]);
       selection.removeAllRanges();
       selection.addRange(range);
