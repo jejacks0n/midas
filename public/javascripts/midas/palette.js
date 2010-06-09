@@ -41,8 +41,9 @@ Midas.Palette = Class.create(Midas.Dialog, {
         if (callback) callback();
       }.bind(this),
       onFailure: function() {
-        alert('unable to get the url "' + this.options.url + '" for loading');
-      }
+        this.hide();
+        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" palette');
+      }.bind(this)
     });
   }
 
