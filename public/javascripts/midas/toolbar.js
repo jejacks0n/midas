@@ -39,8 +39,13 @@ Midas.Toolbar = Class.create({
         this.element.appendChild(element);
       }
     }
-    
-    ($(this.options['appendTo']) || document.body).appendChild(this.element);
+
+    var appendTo = document.body;
+    if (this.options['appendTo']) {
+      appendTo = $(this.options['appendTo']);
+      this.element.setStyle('position:relative;top:0;left:0');
+    }
+    appendTo.appendChild(this.element);
   },
 
   setupObservers: function() {

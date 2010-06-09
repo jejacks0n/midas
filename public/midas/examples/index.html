@@ -35,6 +35,10 @@
     #toolbar {
       height: 100px;
       }
+    #toolbar .titlebar {
+      background: black;
+      color: #FFF;
+      }
     #region1, #region2 {
       position: relative;
       float: left;
@@ -53,7 +57,9 @@
 </head>
 <body onload="Midas.debugMode = true; Midas.silentMode = true; var midas = new Midas({}, {appendTo: 'toolbar'}, {inline: false});">
 
-  <div id="toolbar"></div>
+  <div id="toolbar">
+    <div class="titlebar">this is the titlebar</div>
+  </div>
 
   <h3></h3>
   
