@@ -5,6 +5,7 @@
         event.stop();
 
         var color = div.getStyle('background-color');
+        if (color == 'transparent' || color == '') return;
 
         $('midas_forecolor_last_picked').setStyle('background-color:' + color);
 
