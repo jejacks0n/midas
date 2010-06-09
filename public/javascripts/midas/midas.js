@@ -30,8 +30,6 @@ var Midas = Class.create({
     this.regionOptions = regionOptions || {};
 
     this.initializeInterface();
-
-    this.setupObservers();
   },
 
   initializeInterface: function() {
@@ -90,20 +88,28 @@ var Midas = Class.create({
     this.statusbar = new Midas.Statusbar(this.statusbarOptions);
 
     this.resize();
+
+    this.setupObservers();
   },
 
   setupObservers: function() {
     Event.observe(window, 'resize', this.resize.bind(this));
 
-    Event.observe(document, 'mouseup', function(e) {
-      var element = Event.element(e);
-      if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
-      for (var i = 0; i < this.regions.length; ++i) {
-        if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
-      }
+    var observedDocuments = [document];
+    if (this.iframe) observedDocuments.push(this.iframe.contentWindow.document);
+    observedDocuments.each(function(doc) {
+      Event.observe(doc, 'mouseup', function(e) {
+        var element = Event.element(e);
+        if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
+        if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
 
-      this.setActiveRegion(null);
-      if (this.toolbar) this.toolbar.unsetActiveButtons();
+        for (var i = 0; i < this.regions.length; ++i) {
+          if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
+        }
+
+        this.setActiveRegion(null);
+        if (this.toolbar) this.toolbar.unsetActiveButtons();
+      }.bind(this));
     }.bind(this));
 
     //{action: action, event: event, toolbar: this}
