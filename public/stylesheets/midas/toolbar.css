@@ -11,7 +11,7 @@
 .midas-toolbar .loading {
   background-image: url(../../images/midas/toolbars/loading.gif);
   background-repeat: no-repeat;
-  background-position:  center;
+  background-position: center;
   }
 
 /* Toolbar: Actionbar
@@ -39,11 +39,12 @@
   display: block;
   margin: 0 -5px;
   height: 15px;
-  padding-top: 43px;
+  padding-top: 41px;
   font-style: normal;
   color: #222;
   cursor: default;
   font-size: 8.5pt;
+  line-height: 15px;
   background-repeat: no-repeat;
   background-position: 50% 7px;
   }
@@ -66,9 +67,13 @@
 .midas-actionsbar .pressed {
   background: url(../../images/midas/toolbars/actions/_pressed.png) no-repeat !important;
   }
-.midas-actionsbar .midas-button.active {
-  text-shadow: none !important;
-  opacity: 0.8;
+.midas-actionsbar .active {
+  text-shadow: none;
+  margin-top: 1px;
+  height: 57px;
+  }
+.midas-actionsbar .midas-button.active em {
+  padding-top: 40px;
   }
 .midas-actionsbar .midas-button-save em            { background-image: url(../../images/midas/toolbars/actions/save.png) }
 .midas-actionsbar .midas-button-preview em         { background-image: url(../../images/midas/toolbars/actions/preview.png) }
@@ -228,4 +233,5 @@
   font-size: 8.5pt;
   line-height: 19px;
   cursor: pointer;
+  color: #222;
   }

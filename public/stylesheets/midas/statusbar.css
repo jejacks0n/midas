@@ -11,9 +11,15 @@
   width: 100%;
   font-family: Helvetica, Tahoma, Arial, sans-serif;
   font-size: 8.5pt;
+  line-height: 12px;
+  text-align: left;
   cursor: default;
   height: 12px;
+  color: #222;
   }
 .midas-statusbar span {
   margin-right: 25px;
+  }
+.midas-statusbar span a {
+  color: #000;
   }

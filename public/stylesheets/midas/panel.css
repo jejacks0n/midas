@@ -1,2 +1,14 @@
 /* Panel
  *----------------------------------------------------------------------------*/
+.midas-panel {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  right: 20px;
+  top: 20px;
+  background-color: #333;
+  opacity: 0.95;
+	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  }
