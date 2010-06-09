@@ -36,6 +36,7 @@
       height: 100px;
       }
     #region1, #region2 {
+      position: relative;
       float: left;
       width: 200px;
       }
@@ -59,6 +60,7 @@
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
     <div style="border:1px solid green">te<span>s</span>ting</div>
+    <div style="border:1px solid red;position:absolute;right:0">absolute</div>
     <table>
       <thead>
         <tr>
@@ -77,6 +79,8 @@
         </tr>
       </tbody>
     </table>
+    <div style="border:1px solid red;position:relative">relative</div>
+    more content
   </div>
 	
   <div id="region2" class="editable">
