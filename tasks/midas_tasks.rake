@@ -1,8 +1,8 @@
 require 'packr'
 require 'base64'
 
-javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select]
-stylesheet_files = %w[midas region toolbar statusbar dialog palette select]
+javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select panel]
+stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel]
 
 def copy(filename, from_dir, to_dir)
   from = File.expand_path(File.join(from_dir, filename))
@@ -75,7 +75,7 @@ namespace :midas do
         encoded.size > 32 * 1024 ? "url(..#{$1})" : "url(data:image/png;base64,#{encoded})"
       end
       # remove comments (only /* */ style, we don't support the other kind)
-      code.gsub!(/\/?\*.*/, '')
+      code.gsub!(/\/?\*[-| ].*\/?/, '')
       # remove whitespace
       code.gsub!(/\s+/, ' ')
       # put a few line breaks back in

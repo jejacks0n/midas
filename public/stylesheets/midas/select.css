@@ -23,7 +23,7 @@
   padding: 10px 0;
   }
 #midas_formatblock_selector *,
-#midas_style_selector * {
+#midas_style_selector *{
   cursor: default;
   padding: 0 10px;
   }
