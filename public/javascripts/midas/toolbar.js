@@ -46,12 +46,22 @@ Midas.Toolbar = Class.create({
     Event.observe(this.element, 'mousedown', function(e) {
       e.stop();
     }.bind(this));
+
+    Event.observe(document, 'mouseup', function(e) {
+      this.hidePopups(Event.element(e));
+    }.bind(this));
     Event.observe(document, 'keydown', function(e) {
       if (e.keyCode == 27) this.hidePopups();
     }.bind(this));
-    Event.observe(document, 'mouseup', function(e) {
-      this.hidePopups(Event.element(e));
-    }.bind(this))
+
+    if (this.options['contentWindow'].document) {
+      Event.observe(this.options['contentWindow'].document, 'mouseup', function(e) {
+        this.hidePopups(Event.element(e));
+      }.bind(this));
+      Event.observe(this.options['contentWindow'].document, 'keydown', function(e) {
+        if (e.keyCode == 27) this.hidePopups();
+      }.bind(this));
+    }
   },
 
   generateId: function() {

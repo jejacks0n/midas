@@ -104,6 +104,14 @@ describe('Midas.Toolbar', function() {
 
   });
 
+  stub('should observe keypress and mouseup on document', function() {
+
+  });
+
+  stub('should observe keypress and mouseup on the iframe document when appropriate', function() {
+
+  });
+
   it('should destroy', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
