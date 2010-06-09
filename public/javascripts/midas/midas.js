@@ -177,7 +177,7 @@ var Midas = Class.create({
     switch(mode) {
       case 'preview':
         window.getSelection().removeAllRanges();
-        this.toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert');
+        this.toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
         this.regions.each(function(region) {
           region.togglePreview();
         });

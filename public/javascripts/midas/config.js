@@ -57,17 +57,20 @@ Midas.Config = {
       save:                  ['Save', 'Save this page'],
       preview:               ['Preview', 'Preview this page', ['toggle'], ['mode']],
       sep1:                  ' ',
-      undoredo: {
+      undoredo:              {
         undo:                ['Undo', 'Undo your last action'],
         redo:                ['Redo', 'Redo your last action'],
         sep2:                ' '
         },
-      insert: {
+      insert:                {
         insertlink:          ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
         insertmedia:         ['Media', 'Insert media', ['dialog', '/midas/media']],
         inserttable:         ['Table', 'Insert a table', ['dialog', '/midas/table']],
         insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
         insertcharacter:     ['Character', 'Insert special characters', ['dialog', '/midas/character']],
+        sep3:                '*'
+        },
+      inspector:             {
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector']],
         sep3:                '*'
         },
