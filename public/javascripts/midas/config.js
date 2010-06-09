@@ -22,8 +22,8 @@ Midas.Config = {
    *     a string url
    *     a function that returns a string url
    *   'select' will open a select/pulldown style window, expects the action to be:
-   *     an array
-   *     a function that returns an array
+   *     a string url
+   *     a function that returns a string url
    *   'context' will call a callback function, expects the action to be:
    *     a function that returns a boolean to highlight the button or not
    *     note: if a function isn't provided, the key will be passed to the
@@ -71,11 +71,11 @@ Midas.Config = {
         sep3:                '*'
         },
       inspector:             {
-        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector']],
+        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector.html']],
         sep3:                '*'
         },
-      notespanel:            ['Notes', 'Open the page notes panel', ['toggle'], ['panel', '/midas/notes']],
-      historypanel:          ['History', 'Open the page history panel', ['toggle'], ['panel', '/midas/history']]
+      notespanel:            ['Notes', 'Open the page notes panel', ['toggle'], ['panel', '/midas/notes.html']],
+      historypanel:          ['History', 'Open the page history panel', ['toggle'], ['panel', '/midas/history.html']]
       },
     htmleditor: {
       style:                 ['Style', '', ['select', '/midas/style.html']],
