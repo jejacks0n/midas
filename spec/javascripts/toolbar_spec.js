@@ -67,14 +67,16 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
-  it('should keep track of palettes that is has', function() {
+  it('should keep track of palettes, selects, and panels that is has', function() {
     this.toolbar = new Midas.Toolbar();
 
     expect(this.toolbar.palettes.length).toEqual(1);
+    expect(this.toolbar.selects.length).toEqual(2);
+    expect(this.toolbar.panels.length).toEqual(3);
   });
 
   stub('should hide all palettes when anything besides a palette is clicked', function() {
-
+    
   });
 
   stub('should inactivate any active buttons', function() {
@@ -112,11 +114,17 @@ describe('Midas.Toolbar', function() {
 
   });
 
+  stub('should add the active classname on mousedown, and remove it on mouseup', function() {
+
+  });
+
   it('should destroy', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
 
     expect(this.toolbar.palettes.length).toEqual(0);
+    expect(this.toolbar.selects.length).toEqual(0);
+    expect(this.toolbar.panels.length).toEqual(0);
     expect(this.toolbar.element).toBeFalsy();
     expect($$('.midas-toolbar').length).toEqual(0);
   });

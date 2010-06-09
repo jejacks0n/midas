@@ -6,6 +6,7 @@ Midas.Toolbar = Class.create({
   buttons: {},
   palettes: [],
   selects: [],
+  panels: [],
   options: {
     appendTo: null,
     contentWindow: window,
@@ -110,6 +111,12 @@ Midas.Toolbar = Class.create({
             this.selects.push(new Midas.Select(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
             observed = true;
             break;
+          case 'panel':
+            if (!mixed) throw('Button "' + action + '" is missing arguments');
+            element.addClassName('midas-panel-button');
+            this.panels.push(new Midas.Panel(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
+            observed = true;
+            break;
 
           case 'dialog':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
@@ -118,21 +125,14 @@ Midas.Toolbar = Class.create({
               alert('this would open a dialog with the url: ' + url);
             }.bind(this));
             break;
-          case 'panel':
-            if (!mixed) throw('Button "' + action + '" is missing arguments');
-            element.observe('click', function() {
-              var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-              alert('this would open a panel with the url: ' + url);
-            }.bind(this));
-            break;
 
           default:
             throw('Unknown button type "' + type + '" for the "' + action + '" button');
         }
       }.bind(this));
 
-      element.observe('mousedown', function() { element.addClassName('active') });
-      element.observe('mouseup', function() { element.removeClassName('active') });
+      element.observe('mousedown', function() { element.addClassName('active'); });
+      element.observe('mouseup', function() { element.removeClassName('active'); });
 
       if (!observed) element.observe('click', function(event) {
         event.stop();
@@ -232,14 +232,12 @@ Midas.Toolbar = Class.create({
   },
 
   destroy: function() {
-    this.palettes.each(function(palette) {
-      if (palette.destroy) palette.destroy();
-    });
+    this.palettes.each(function(palette) { if (palette.destroy) palette.destroy(); });
+    this.selects.each(function(select) { if (select.destroy) select.destroy(); });
+    this.panels.each(function(panel) { if (panel.destroy) panel.destroy(); });
     this.palettes = [];
-    this.selects.each(function(select) {
-      if (select.destroy) select.destroy();
-    });
     this.selects = [];
+    this.panels = [];
     if (this.element) this.element.remove();
     if (this.element) this.element = null;
   }

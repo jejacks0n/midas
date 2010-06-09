@@ -5,10 +5,34 @@
   width: 30px;
   height: 30px;
   right: 20px;
-  top: 20px;
-  background-color: #333;
-  opacity: 0.95;
+  top: 80px;
+  background-color: #111;
+  opacity: 0.85;
 	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
 	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  color: #FFF;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 9.5pt;
+  }
+
+.midas-panel .midas-panel-content h3 {
+  font-size: 11pt;
+  padding: 10px 60px 8px 15px;
+  margin: 0 0 20px 0;
+  background: #333 url(../../images/midas/toolbars/move.png) no-repeat right center;
+  }
+.midas-panel .midas-panel-content h3:first-child {
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  }
+.midas-panel .midas-panel-content .midas-panel-pane {
+  padding: 0 15px 20px 15px;
   }
