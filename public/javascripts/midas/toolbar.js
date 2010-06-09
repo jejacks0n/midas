@@ -131,6 +131,9 @@ Midas.Toolbar = Class.create({
         }
       }.bind(this));
 
+      element.observe('mousedown', function() { element.addClassName('active') });
+      element.observe('mouseup', function() { element.removeClassName('active') });
+
       if (!observed) element.observe('click', function(event) {
         event.stop();
         if (element.hasClassName('disabled') || element.up('.disabled')) return;

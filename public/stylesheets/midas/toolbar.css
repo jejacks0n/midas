@@ -26,7 +26,7 @@
 .midas-actionsbar .midas-button {
   display: block;
   float: left;
-  margin-left: 7px;
+  margin-left: 6px;
   height: 58px;
   min-width: 42px;
   text-align: center;
@@ -37,7 +37,7 @@
   }
 .midas-actionsbar .midas-button em {
   display: block;
-  margin: 0 -20px;
+  margin: 0 -5px;
   height: 15px;
   padding-top: 43px;
   font-style: normal;
@@ -66,18 +66,22 @@
 .midas-actionsbar .pressed {
   background: url(../../images/midas/toolbars/actions/_pressed.png) no-repeat !important;
   }
-.midas-actionsbar .midas-button-save em            { background-image: url(../../images/midas/toolbars/actions/save.png); }
-.midas-actionsbar .midas-button-preview em         { background-image: url(../../images/midas/toolbars/actions/preview.png); }
-.midas-actionsbar .midas-button-undo em            { background-image: url(../../images/midas/toolbars/actions/undo.png); }
-.midas-actionsbar .midas-button-redo em            { background-image: url(../../images/midas/toolbars/actions/redo.png); }
-.midas-actionsbar .midas-button-insertlink em      { background-image: url(../../images/midas/toolbars/actions/insertlink.png); }
-.midas-actionsbar .midas-button-insertmedia em     { background-image: url(../../images/midas/toolbars/actions/insertmedia.png); }
-.midas-actionsbar .midas-button-inserttable em     { background-image: url(../../images/midas/toolbars/actions/inserttable.png); }
-.midas-actionsbar .midas-button-insertobject em    { background-image: url(../../images/midas/toolbars/actions/insertobject.png); }
-.midas-actionsbar .midas-button-insertcharacter em { background-image: url(../../images/midas/toolbars/actions/insertcharacter.png); }
-.midas-actionsbar .midas-button-inspectorpanel em  { background-image: url(../../images/midas/toolbars/actions/inspectorpanel.png); }
-.midas-actionsbar .midas-button-notespanel em      { background-image: url(../../images/midas/toolbars/actions/notespanel.png); }
-.midas-actionsbar .midas-button-historypanel em    { background-image: url(../../images/midas/toolbars/actions/historypanel.png); }
+.midas-actionsbar .midas-button.active {
+  text-shadow: none !important;
+  opacity: 0.8;
+  }
+.midas-actionsbar .midas-button-save em            { background-image: url(../../images/midas/toolbars/actions/save.png) }
+.midas-actionsbar .midas-button-preview em         { background-image: url(../../images/midas/toolbars/actions/preview.png) }
+.midas-actionsbar .midas-button-undo em            { background-image: url(../../images/midas/toolbars/actions/undo.png) }
+.midas-actionsbar .midas-button-redo em            { background-image: url(../../images/midas/toolbars/actions/redo.png) }
+.midas-actionsbar .midas-button-insertlink em      { background-image: url(../../images/midas/toolbars/actions/insertlink.png) }
+.midas-actionsbar .midas-button-insertmedia em     { background-image: url(../../images/midas/toolbars/actions/insertmedia.png) }
+.midas-actionsbar .midas-button-inserttable em     { background-image: url(../../images/midas/toolbars/actions/inserttable.png) }
+.midas-actionsbar .midas-button-insertobject em    { background-image: url(../../images/midas/toolbars/actions/insertobject.png) }
+.midas-actionsbar .midas-button-insertcharacter em { background-image: url(../../images/midas/toolbars/actions/insertcharacter.png) }
+.midas-actionsbar .midas-button-inspectorpanel em  { background-image: url(../../images/midas/toolbars/actions/inspectorpanel.png) }
+.midas-actionsbar .midas-button-notespanel em      { background-image: url(../../images/midas/toolbars/actions/notespanel.png) }
+.midas-actionsbar .midas-button-historypanel em    { background-image: url(../../images/midas/toolbars/actions/historypanel.png) }
 
 /* Toolbar: HTMLEditor
  *----------------------------------------------------------------------------*/
