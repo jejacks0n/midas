@@ -196,7 +196,7 @@ describe('Midas.Region', function() {
         var spy = spyOn(this.region.handle, 'insertHTML').andCallThrough();
         this.region.handleAction('pagebreak');
 
-        expect(spy).wasCalledWith(Midas.Config.behaviors['pagebreak']['insertHTML']);
+        expect(spy.argsForCall[0]).toContain(Midas.Config.behaviors['pagebreak']['insertHTML']);
       });
 
       it('should throw an exception when the behavior is unknown', function() {

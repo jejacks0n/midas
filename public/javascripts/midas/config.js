@@ -160,6 +160,12 @@ Midas.Config = {
   behaviors: {
     horizontalrule:      {insertHTML: function() {
                             return '<div class="hr"><hr/></div>';
+                         }},
+    style:               {insertHTML: function(event, toolbar, options) {
+                            //console.debug(arguments);
+                            var value = this.doSomething();
+                            console.debug(value);
+                            //return  + selectionHTML + '</span>';
                          }}
     }
 };

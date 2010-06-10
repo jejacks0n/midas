@@ -177,7 +177,7 @@ Midas.Region = Class.create({
 
       for (var behavior in behaviors) {
         if (Object.isFunction(this.handle[behavior])) {
-          this.handle[behavior].apply(this, Object.isArray(behaviors[behavior]) ? behaviors[behavior] : [behaviors[behavior]]);
+          this.handle[behavior].apply(this, Object.isArray(behaviors[behavior]) ? behaviors[behavior] : [behaviors[behavior], event, toolbar, options]);
 
           var sel = window.getSelection();
           this.selections.each(function(selection) {
@@ -202,13 +202,36 @@ Midas.Region = Class.create({
 
   handle: {
 
-    insertHTML: function(callback) {
-      this.execCommand('insertHTML', callback.call(this))
+    insertHTML: function(callback, event, toolbar, options) {
+      this.execCommand('insertHTML', callback.call(this, event, toolbar, options));
     },
 
     execCommand: function(action, argument) {
       this.execCommand(action, argument);
     }
 
+  },
+
+
+  doSomething: function() {
+    var container = new Element('span', {'class': 'red'});
+
+    var rangeFragment = this.selections[0].cloneContents();
+
+    console.debug(this.selections[0]);
+
+    container.appendChild(rangeFragment);
+
+    var newFragment = document.createDocumentFragment();
+    var newContainer = new Element('div');
+
+    newContainer.appendChild(container);
+    newFragment.appendChild(newContainer);
+
+
+
+    return newContainer.innerHTML;
+
   }
+
 });
