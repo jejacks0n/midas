@@ -128,7 +128,6 @@ var Midas = Class.create({
 
     //{mode: mode, toolbar: this}
     Event.observe(document, 'midas:mode', function(e) {
-      if (!this.activeRegion) return;
       var a = e.memo;
 
       if (this.toolbar != a['toolbar']) return;
