@@ -216,16 +216,16 @@ var Midas = Class.create({
     var view = document.viewport.getDimensions();
 
     if (this.iframe) {
-      var toolbarHeight = (this.toolbar) ? this.toolbar.getHeight() : 0;
+      var offsetTop = (this.toolbar) ? this.toolbar.getBottomOffset() : 0;
       var statusbarHeight = (this.statusbar) ? this.statusbar.getHeight() : 0;
       this.iframeContainer.setStyle({
-        height: (view.height - statusbarHeight - toolbarHeight - 10) + 'px',
+        height: (view.height - statusbarHeight - offsetTop - 10) + 'px',
         width: view.width + 'px',
-        top: this.toolbar.getHeight() + 'px',
+        top: offsetTop + 'px',
         left: 0
       });
       this.iframe.setStyle({
-        height: (view.height - statusbarHeight - toolbarHeight - 10) + 'px',
+        height: (view.height - statusbarHeight - offsetTop - 10) + 'px',
         width: view.width + 'px'
       });
     }
@@ -248,6 +248,7 @@ var Midas = Class.create({
     Midas.unregisterInstance(this);
   }
 });
+
 
 // Midas static methods
 Object.extend(Midas, {

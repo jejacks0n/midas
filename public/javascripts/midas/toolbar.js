@@ -17,6 +17,7 @@ Midas.Toolbar = Class.create({
     if (!Midas.version) throw('Midas.Toolbar requires Midas');
     this.palettes = [];
     this.selects = [];
+    this.panels = [];
 
     this.options = Object.extend(Object.clone(this.options), options);
     this.options['configuration'] = this.options['configuration'] || Midas.Config;
@@ -39,11 +40,13 @@ Midas.Toolbar = Class.create({
         this.element.appendChild(element);
       }
     }
+    this.positioningElement = new Element('div', {style: 'clear:both;height:0;overflow:hidden'});
+    this.element.appendChild(this.positioningElement);
 
     var appendTo = document.body;
     if (this.options['appendTo']) {
       appendTo = $(this.options['appendTo']);
-      this.element.setStyle('position:relative;top:0;left:0');
+      this.element.setStyle('position:static;top:0;left:0');
     }
     appendTo.appendChild(this.element);
   },
@@ -213,8 +216,8 @@ Midas.Toolbar = Class.create({
     });
   },
 
-  getHeight: function() {
-    return ($(this.options['appendTo']) || this.element).getHeight();
+  getBottomOffset: function() {
+    return this.positioningElement.cumulativeOffset().top;
   },
 
   toggleDisabled: function() {
@@ -229,10 +232,16 @@ Midas.Toolbar = Class.create({
 
   hidePopups: function(element) {
     this.palettes.each(function(palette) {
-      if (element != palette.element || element.descendantOf(palette.element)) palette.hide();
+      if (element != palette.element || !element.descendantOf(palette.element)) palette.hide();
     }.bind(this));
     this.selects.each(function(select) {
-      if (element != select.element || element.descendantOf(select.element)) select.hide();
+      if (element != select.element || !element.descendantOf(select.element)) select.hide();
+    }.bind(this));
+  },
+
+  hidePanels: function() {
+    this.panels.each(function(panel) {
+      panel.hide();
     }.bind(this));
   },
 
