@@ -2,6 +2,7 @@
  *----------------------------------------------------------------------------*/
 .midas-palette {
   position: fixed;
+  z-index: 10003;
   width: 30px;
   height: 30px;
   background-color: #E2E1E2;

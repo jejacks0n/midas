@@ -6,7 +6,6 @@
   top: 0;
   left: 0;
   width: 100%;
-  overflow: hidden;
   }
 .midas-toolbar .loading {
   background-image: url(../../images/midas/toolbars/loading.gif);
@@ -17,22 +16,22 @@
 /* Toolbar: Actionbar
  *----------------------------------------------------------------------------*/
 .midas-actionsbar {
-  width: 10000px;
   text-shadow: #EEE 0 1px 0;
   height: 60px;
   padding-right: 10px;
   background: #E2E1E2 url(../../images/midas/toolbars/actions/_background.png) repeat-x bottom;
+  overflow: hidden;
   }
 .midas-actionsbar .midas-button {
   display: block;
   float: left;
-  margin-left: 6px;
   height: 58px;
-  min-width: 42px;
+  min-width: 50px;
   text-align: center;
   white-space: nowrap;
   text-decoration: none;
   outline: none;
+  margin-bottom: 20px;
   font-family: Helvetica, Tahoma, Arial, sans-serif;
   }
 .midas-actionsbar .midas-button em {
@@ -60,12 +59,13 @@
   display: block;
   float: left;
   border: 0;
-  height: 47px;
+  height: 58px;
   padding: 0 15px;
+  margin-bottom: 20px;
   background: url(../../images/midas/toolbars/actions/_separator.png) no-repeat;
   }
 .midas-actionsbar .pressed {
-  background: url(../../images/midas/toolbars/actions/_pressed.png) no-repeat !important;
+  background: url(../../images/midas/toolbars/actions/_pressed.png) no-repeat;
   }
 .midas-actionsbar .active {
   text-shadow: none;
