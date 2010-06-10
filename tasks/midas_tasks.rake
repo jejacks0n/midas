@@ -1,8 +1,8 @@
 require 'packr'
 require 'base64'
 
-javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select panel]
-stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel]
+javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select panel wizard]
+stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel wizard]
 
 def copy(filename, from_dir, to_dir)
   from = File.expand_path(File.join(from_dir, filename))
