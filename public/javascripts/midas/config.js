@@ -15,9 +15,11 @@ Midas.Config = {
    *   'dialog' will open a dialog window, expects the action to be:
    *     a string url
    *     a function that returns a string url
+   *     note: optionally provide a second string argument for the panel title
    *   'panel' will open a panel dialog, expects the action to be:
    *     a string url
    *     a function that returns a string url
+   *     note: optionally provide a second string argument for the panel title
    *   'palette' will open a palette window, expects the action to be:
    *     a string url
    *     a function that returns a string url
@@ -74,7 +76,7 @@ Midas.Config = {
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector.html']],
         sep3:                '*'
         },
-      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes.html']],
+      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes.html', 'Page Notes']],
       historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history.html']]
       },
     htmleditor: {

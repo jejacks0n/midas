@@ -122,7 +122,7 @@ Midas.Toolbar = Class.create({
           case 'panel':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.addClassName('midas-panel-button');
-            this.panels.push(new Midas.Panel(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed}));
+            this.panels.push(new Midas.Panel(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed, title: buttonType[2] || buttonSpec[0]}));
             observed = true;
             break;
 
