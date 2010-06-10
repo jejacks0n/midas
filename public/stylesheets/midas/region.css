@@ -4,8 +4,14 @@
   outline: 1px dotted #F00;
   }
 .midas-region-preview {
-  outline: none !important;
+  outline: none;
   }
+.midas-region table,
+.midas-region td,
+.midas-region th {
+  border: 1px dotted #F00;
+  }
+
 .midas-region .midas-page-break {
   height: 5px;
   background: #EEE;
