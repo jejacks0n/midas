@@ -7,6 +7,8 @@
   <meta content='no' http-equiv='imagetoolbar' />
 	
   <script src="/javascripts/prototype.js" type="text/javascript"></script>
+  <script src="/javascripts/effects.js" type="text/javascript"></script>
+  <script src="/javascripts/dragdrop.js" type="text/javascript"></script>
 
   <script src="/javascripts/midas/native_extensions.js" type="text/javascript"></script>
   <script src="/javascripts/midas/midas.js" type="text/javascript"></script>
@@ -31,9 +33,13 @@
   <style type="text/css">
     body {
       font-size: 20px;
+      margin: 0;
+      padding: 0;
       }
     #toolbar {
-      height: 100px;
+      position: static;
+      z-index: 10000;
+      width: 100%;
       }
     #toolbar .titlebar {
       background: black;
@@ -66,7 +72,6 @@
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
     <div style="border:1px solid green">te<span>s</span>ting</div>
-    <div style="border:1px solid red;position:absolute;right:0">absolute</div>
     <table>
       <thead>
         <tr>
@@ -86,6 +91,7 @@
       </tbody>
     </table>
     <div style="border:1px solid red;position:relative">relative</div>
+    <div style="border:1px solid red;position:absolute;right:0">absolute</div>
     more content
   </div>
 	
