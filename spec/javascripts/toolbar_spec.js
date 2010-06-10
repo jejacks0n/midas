@@ -106,6 +106,10 @@ describe('Midas.Toolbar', function() {
 
   });
 
+  stub('should return the bottom offset of the toolbar for positioning', function() {
+    
+  });
+
   stub('should observe keypress and mouseup on document', function() {
 
   });
