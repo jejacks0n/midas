@@ -74,7 +74,7 @@ namespace :midas do
         encoded = Base64.encode64(File.read("#{thisfile}/../public#{$1}")).gsub("\n", '')
         encoded.size > 32 * 1024 ? "url(..#{$1})" : "url(data:image/png;base64,#{encoded})"
       end
-      # remove comments (only /* */ style, we don't support the other kind)
+      # remove comments (only /* */ style)
       code.gsub!(/\/?\*[-| ].*\/?/, '')
       # remove whitespace
       code.gsub!(/\s+/, ' ')
