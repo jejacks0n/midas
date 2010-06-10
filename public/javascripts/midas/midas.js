@@ -100,11 +100,13 @@ var Midas = Class.create({
     observedDocuments.each(function(doc) {
       Event.observe(doc, 'mouseup', function(e) {
         var element = Event.element(e);
-        if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
-        if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
+        if (element != document) {
+          if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
+          if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
 
-        for (var i = 0; i < this.regions.length; ++i) {
-          if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
+          for (var i = 0; i < this.regions.length; ++i) {
+            if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
+          }
         }
 
         this.setActiveRegion(null);
