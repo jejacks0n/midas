@@ -74,8 +74,8 @@ Midas.Config = {
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector.html']],
         sep3:                '*'
         },
-      notespanel:            ['Notes', 'Open the page notes panel', ['toggle'], ['panel', '/midas/notes.html']],
-      historypanel:          ['History', 'Open the page history panel', ['toggle'], ['panel', '/midas/history.html']]
+      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes.html']],
+      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history.html']]
       },
     htmleditor: {
       style:                 ['Style', '', ['select', '/midas/style.html']],
