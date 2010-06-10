@@ -153,10 +153,12 @@ Midas.Region = Class.create({
     if (this.previewing) {
       this.element.contentEditable = true;
       this.element.removeClassName('midas-region-preview');
+      this.element.addClassName('midas-region');
       this.previewing = false;
     } else {
       this.element.contentEditable = false;
       this.element.addClassName('midas-region-preview');
+      this.element.removeClassName('midas-region');
       this.previewing = true;
     }
   },

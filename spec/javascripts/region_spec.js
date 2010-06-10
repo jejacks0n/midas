@@ -62,11 +62,13 @@ describe('Midas.Region', function() {
 
     expect(this.region.previewing).toEqual(true);
     expect(this.region.element.hasClassName('midas-region-preview')).toEqual(true);
+    expect(this.region.element.hasClassName('midas-region')).toEqual(false);
 
     this.region.togglePreview();
 
     expect(this.region.previewing).toEqual(false);
     expect(this.region.element.hasClassName('midas-region-preview')).toEqual(false);
+    expect(this.region.element.hasClassName('midas-region')).toEqual(true);
   });
 
   it('should serialize', function() {
