@@ -165,7 +165,7 @@ Midas.Config = {
                             //console.debug(arguments);
                             var value = this.doSomething();
                             console.debug(value);
-                            //return  + selectionHTML + '</span>';
+                            return value;
                          }}
     }
 };
