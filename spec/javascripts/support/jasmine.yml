@@ -24,7 +24,7 @@ src_files:
   - javascripts/midas/palette.js
   - javascripts/midas/select.js
   - javascripts/midas/panel.js
-  - javascripts/midas/wizard.js
+  - javascripts/midas/modal.js
   - javascripts/midas/config.js
 
 # stylesheets

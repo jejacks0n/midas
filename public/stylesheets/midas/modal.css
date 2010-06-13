@@ -1,0 +1,67 @@
+/* Modal
+ *----------------------------------------------------------------------------*/
+#midas_modal_overlay {
+  position: fixed;
+  z-index: 10010;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  opacity: 0.75;
+  height: 100%;
+  }
+
+#midas_modal {
+  width: 500px;
+  margin: 0 auto;
+  }
+#midas_modal.loading .midas-modal-content {
+  background: url(../../images/midas/toolbars/loading.gif) no-repeat center;
+
+}
+#midas_modal .midas-modal-frame {
+  position: fixed;
+  top: 0;
+  z-index: 10011;
+  width: 500px;
+  background: #EFEFEF;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -moz-box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+  box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+  }
+#midas_modal h1 {
+  background: #DDD;
+  border-bottom: 1px solid #CCC;
+  margin: 0;
+  padding: 2px 10px 0 10px;
+  font: normal normal bold 14px/23px Helvetica, Tahoma, Arial, sans-serif;
+  }
+#midas_modal h1 span {
+  color: #000;
+  text-shadow: #EEE 1px 1px 0;
+  }
+#midas_modal h1 a {
+  display: block;
+  float: right;
+  font-size: 10px;
+  cursor: pointer;
+  color: #666;
+  }
+#midas_modal h1 a:hover {
+  color: #333;
+  }
+
+#midas_modal .midas-modal-content-container {
+  overflow: auto;
+  }
+#midas_modal .midas-modal-content {
+  color: #000;
+  height: 25px;
+  margin: 20px;
+  }
