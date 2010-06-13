@@ -81,8 +81,24 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
-    this.loaded = true;
-    if (callback) callback();
+    new Ajax.Request(this.options.url, {
+      method: 'get',
+      onSuccess: function(transport) {
+        this.loaded = true;
+        this.element.removeClassName('loading');
+        this.element.innerHTML = transport.responseText;
+        transport.responseText.evalScripts();
+
+        this.setupFunction = window['midas_setup_' + this.name];
+        if (this.setupFunction) this.setupFunction.call(this);
+
+        if (callback) callback();
+      }.bind(this),
+      onFailure: function() {
+        this.hide();
+        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" dialog');
+      }.bind(this)
+    });
   },
 
   execute: function(action, options, event) {

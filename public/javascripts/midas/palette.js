@@ -24,27 +24,5 @@ Midas.Palette = Class.create(Midas.Dialog, {
       display: keepVisible ? 'block' : 'none',
       visibility: 'visible'
     });
-  },
-
-  load: function(callback) {
-    new Ajax.Request(this.options.url, {
-      method: 'get',
-      onSuccess: function(transport) {
-        this.loaded = true;
-        this.element.removeClassName('loading');
-        this.element.innerHTML = transport.responseText;
-        transport.responseText.evalScripts();
-
-        this.setupFunction = window['midas_setup_' + this.name];
-        if (this.setupFunction) this.setupFunction.call(this);
-
-        if (callback) callback();
-      }.bind(this),
-      onFailure: function() {
-        this.hide();
-        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" palette');
-      }.bind(this)
-    });
   }
-
 });

@@ -25,6 +25,9 @@ describe('Midas.Dialog', function() {
   });
 
   it('should show when the button is clicked', function() {
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     expect(this.dialog.element.getStyle('display')).toEqual('none');
@@ -51,25 +54,21 @@ describe('Midas.Dialog', function() {
   });
 
   it('should add and remove a class for the active region', function() {
-
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar'), activeRegion: {name: 'region1'}});
 
     var button = $('dialog_button');
     jasmine.simulate.click(button);
 
     expect(this.dialog.element.hasClassName('region1')).toEqual(true);
-
-    this.dialog.toolbar.activeRegion = {name: 'region2'};
-    jasmine.simulate.click(button);
-
-    expect(this.dialog.element.hasClassName('region1')).toEqual(false);
-
-    jasmine.simulate.click(button);
-    expect(this.dialog.element.hasClassName('region1')).toEqual(false);
-    expect(this.dialog.element.hasClassName('region2')).toEqual(true);
   });
 
   it('should hide', function() {
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('dialog_button'));
@@ -80,6 +79,9 @@ describe('Midas.Dialog', function() {
   });
 
   it('should know if it is visible or not', function() {
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('dialog_button'));

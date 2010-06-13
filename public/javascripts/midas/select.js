@@ -11,7 +11,7 @@ Midas.Select = Class.create(Midas.Dialog, {
     if (!this.element) return;
 
     keepVisible = keepVisible || this.visible();
-    this.element.setStyle({top: 0, left: 0, display: 'block', visibility: 'hidden'});
+    this.element.setStyle({top: 0, left: 0, display: 'block', visibility: 'hidden', height: 'auto'});
     var position = this.button.cumulativeOffset();
     var dimensions = this.element.getDimensions();
     var viewportDimensions = document.viewport.getDimensions();
@@ -21,7 +21,7 @@ Midas.Select = Class.create(Midas.Dialog, {
     if (top < 20) top = 20;
 
     var height = 'auto';
-    if (top + dimensions.height > viewportDimensions.height) {
+    if (top + dimensions.height >= viewportDimensions.height - 20) {
       height = (viewportDimensions.height - top - 20);
     }
 
@@ -36,27 +36,5 @@ Midas.Select = Class.create(Midas.Dialog, {
       display: keepVisible ? 'block' : 'none',
       visibility: 'visible'
     });
-  },
-
-  load: function(callback) {
-    new Ajax.Request(this.options.url + '?' + Math.random() * 10000000, {
-      method: 'get',
-      onSuccess: function(transport) {
-        this.loaded = true;
-        this.element.removeClassName('loading');
-        this.element.innerHTML = transport.responseText;
-        transport.responseText.evalScripts();
-
-        this.setupFunction = window['midas_setup_' + this.name];
-        if (this.setupFunction) this.setupFunction.call(this);
-
-        if (callback) callback();
-      }.bind(this),
-      onFailure: function() {
-        this.hide();
-        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" select menu');
-      }.bind(this)
-    });
   }
-
 });
