@@ -12,10 +12,10 @@ Midas.Config = {
    * type can be:
    *   'button' (default) calls handleCommand and passes the key of the object (eg. save, preview, undo etc.)
    *   'toggle' will toggle on or off when clicked (and otherwise behaves like a button)
-   *   'dialog' will open a dialog window, expects the action to be:
+   *   'modal' will open a modal window, expects the action to be:
    *     a string url
    *     a function that returns a string url
-   *     note: optionally provide a second string argument for the panel title
+   *     note: optionally provide a second string argument for the modal dialog title
    *   'panel' will open a panel dialog, expects the action to be:
    *     a string url
    *     a function that returns a string url
@@ -65,11 +65,11 @@ Midas.Config = {
         sep2:                ' '
         },
       insert:                {
-        insertlink:          ['Link', 'Insert a hyperlink', ['dialog', '/midas/link']],
-        insertmedia:         ['Media', 'Insert media', ['dialog', '/midas/media']],
-        inserttable:         ['Table', 'Insert a table', ['dialog', '/midas/table']],
-        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['dialog', '/midas/object']],
-        insertcharacter:     ['Character', 'Insert special characters', ['dialog', '/midas/character']],
+        insertlink:          ['Link', 'Insert a hyperlink', ['modal', '/midas/link.html']],
+        insertmedia:         ['Media', 'Insert media', ['modal', '/midas/media.html']],
+        inserttable:         ['Table', 'Insert a table', ['modal', '/midas/table.html']],
+        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['modal', '/midas/object.html']],
+        insertcharacter:     ['Character', 'Insert special characters', ['modal', '/midas/character.html']],
         sep3:                '*'
         },
       inspector:             {
@@ -130,7 +130,7 @@ Midas.Config = {
         sep:                 '-'
         },
       removeformatting:      ['Remove Formatting', ''],
-      html:                  ['Edit HTML', '', ['dialog', '/midas/html']]
+      html:                  ['Edit HTML', '', ['modal', '/midas/html.html']]
       }
     },
 

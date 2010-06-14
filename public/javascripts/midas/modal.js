@@ -38,6 +38,7 @@ Object.extend(Midas.modal, {
   _setupObservers: function() {
     Event.observe(window, 'resize', this.position.bind(this));
     Event.observe(this.element.down('h1 a'), 'click', this.hide.bind(this));
+    Event.observe(this.overlayElement, 'mousedown', function(event) { event.stop(); });
 
     var documents = [document];
     var iframe = $$('iframe.midas-iframe-window')[0];

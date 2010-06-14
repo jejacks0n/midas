@@ -125,13 +125,13 @@ Midas.Toolbar = Class.create({
             this.panels.push(new Midas.Panel(element, action, this, {url: Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed, title: buttonType[2] || buttonSpec[0]}));
             observed = true;
             break;
-
-          case 'dialog':
+          case 'modal':
             if (!mixed) throw('Button "' + action + '" is missing arguments');
             element.observe('click', function() {
               var url = Object.isFunction(mixed) ? mixed.apply(this, [action]) : mixed;
-              alert('this would open a dialog with the url: ' + url);
+              Midas.modal(url, {title: buttonType[2] || buttonSpec[0]});
             }.bind(this));
+            observed = true;
             break;
 
           default:
