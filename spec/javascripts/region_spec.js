@@ -276,18 +276,14 @@ describe('Midas.Region', function() {
             }
             break;
           case 'underline':
-            if (jasmine.browser.AppleWebKit) {
-              expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('underline');
-            } else if (jasmine.browser.ChromeWebKit) {
+			if (jasmine.browser.WebKit) {
               expect(resultDiv.select('u').length).toEqual(1);
             } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('u').length).toEqual(1);
             }
             break;
           case 'strikethrough':
-            if (jasmine.browser.AppleWebKit) {
-              expect(resultDiv.down('span').getStyle('text-decoration')).toEqual('line-through');
-            } else if (jasmine.browser.ChromeWebKit) {
+            if (jasmine.browser.WebKit) {
               expect(resultDiv.select('s').length).toEqual(1);
             } else if (jasmine.browser.Gecko) {
               expect(resultDiv.select('strike').length).toEqual(1);
