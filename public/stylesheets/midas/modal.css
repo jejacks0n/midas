@@ -17,14 +17,14 @@
   }
 #midas_modal.loading .midas-modal-content {
   background: url(../../images/midas/toolbars/loading.gif) no-repeat center;
-
-}
+  }
 #midas_modal .midas-modal-frame {
   position: fixed;
   top: 0;
   z-index: 10011;
   width: 500px;
   background: #EFEFEF;
+  padding-bottom: 10px;
   -webkit-border-bottom-left-radius: 4px;
   -webkit-border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
@@ -52,6 +52,9 @@
   font-size: 10px;
   cursor: pointer;
   color: #666;
+  padding: 4px;
+  height: 20px;
+  margin-top: -4px;
   }
 #midas_modal h1 a:hover {
   color: #333;
@@ -63,5 +66,20 @@
 #midas_modal .midas-modal-content {
   color: #000;
   height: 25px;
-  margin: 20px;
+  margin: 20px 20px 10px;
+  }
+#midas_modal .midas-modal-content:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+  }
+
+#midas_modal .midas-modal-controls {
+  padding: 15px 0 5px;
+  margin: 0 20px;
+  border-top: 1px solid #CCC;
+  text-align: right;
   }
