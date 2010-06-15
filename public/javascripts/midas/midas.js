@@ -41,21 +41,26 @@ var Midas = Class.create({
       this.iframe = new Element('iframe', {
         seamless: 'true',
         frameborder: '0',
-        className: 'midas-iframe-window',
+        id: 'midas-iframe-window',
         src: 'about:blank'
       });
 
       Event.observe(this.iframe, 'load', function() {
+        this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
+        Midas.hijaxExternalLinks(this.iframe.contentWindow.document.body);
       }.bind(this));
 
       this.iframe.src = src;
-      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});
+      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});      
       this.iframeContainer.appendChild(this.iframe);
+      
 
       document.body.setStyle('overflow:hidden');
       document.body.appendChild(this.iframeContainer);
+      
+      
     } else {
       this.initializeRegions(this.contentWindow);
       this.finalizeInterface();
@@ -268,14 +273,15 @@ Object.extend(Midas, {
   },
 
   onBeforeUnload: function() {
-    var prompt = false;
+    var prompt = false,
+        message = "You have unsaved changes.  Are you sure you want to leave without saving them first?";
     for (var i = 0; i < Midas.instances.length; ++i) {
       if (Midas.instances[i].changed) {
         prompt = true;
         break;
       }
     }
-    if (!Midas.silentMode && prompt) return "You have unsaved changes.  Are you sure you want to leave without saving them first?";
+    if (!Midas.silentMode && prompt) return message;
   },
 
   agent: function() {
@@ -313,6 +319,19 @@ Object.extend(Midas, {
 
     Event.fire(document, event, memo);
   },
+  
+  hijaxExternalLinks: function(body) {
+    links = body.select('a');    
+    for (var a=0; a < links.length; a++) {
+      uri = links[a].getAttribute('href');      
+      if (uri.match(/^http:\/\//) && uri.split('://')[1] != window.location.hostname) {
+        if (links[a].target === '' || links[a].target == '_self') {
+          links[a].writeAttribute('target', '_top');
+        }        
+        links[a].addClassName('external-link');
+      }
+    };
+  },
 
   trace: function() {
     var args = [];
@@ -330,5 +349,3 @@ Object.extend(Midas, {
     }
   }
 });
-
-window.onbeforeunload = Midas.onBeforeUnload;
