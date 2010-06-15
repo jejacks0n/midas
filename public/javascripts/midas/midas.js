@@ -320,12 +320,12 @@ Object.extend(Midas, {
     Event.fire(document, event, memo);
   },
   
-  hijaxExternalLinks: function(body) {
-    links = body.select('a');    
+  hijaxExternalLinks: function(container) {
+    links = container.select('a');    
     for (var a=0; a < links.length; a++) {
       uri = links[a].getAttribute('href');      
-      if (uri.match(/^http:\/\//) && uri.split('://')[1] != window.location.hostname) {
-        if (links[a].target === '' || links[a].target == '_self') {
+      if (uri.match(/^http:\/\//) && uri.split('://')[1].split('/')[0] != window.location.hostname) {
+        if (links[a].target === '' || links[a].target == '_self' || links[a].target == '_parent') {
           links[a].writeAttribute('target', '_top');
         }        
         links[a].addClassName('external-link');
