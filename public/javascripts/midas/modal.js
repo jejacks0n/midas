@@ -25,7 +25,7 @@ Object.extend(Midas.modal, {
   _build: function() {
 		this.overlayElement = new Element('div', {id: 'midas_modal_overlay', style: 'display:none'});
 		this.element = new Element('div', {id: 'midas_modal', style: 'display:none'});
-    this.element.update('<div class="midas-modal-frame"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></div>');
+    this.element.update('<form class="midas-modal-frame"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></form>');
 
     this.frameElement = this.element.down('.midas-modal-frame');
     this.contentContainerElement = this.element.down('.midas-modal-content-container');
@@ -41,6 +41,9 @@ Object.extend(Midas.modal, {
     Event.observe(this.overlayElement, 'mousedown', function(event) { event.stop(); });
     Event.observe(this.overlayElement, 'mouseup', function(event) { event.stop(); });
     Event.observe(this.element, 'mouseup', function(event) { event.stop(); });
+    Event.observe(this.frameElement, 'submit', function(e) {
+      if (window['midas_modal_submit']) window['midas_modal_submit'](e);
+    });
 
     var documents = [document];
     var iframe = $$('iframe.midas-iframe-window')[0];
@@ -116,10 +119,7 @@ Object.extend(Midas.modal, {
         this.contentElement.innerHTML = transport.responseText;
         transport.responseText.evalScripts();
 
-        this.controls = this.contentElement.down('.midas-modal-controls');
-        if (this.controls) {
-          this.frameElement.appendChild(this.controls);
-        }
+        this.setupControls();
 
         this.position();
       }.bind(this),
@@ -143,8 +143,66 @@ Object.extend(Midas.modal, {
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20) {
       var titleHeight = this.element.down('h1').getHeight();
-      this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - 20) + 'px'})
+      this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - 20) + 'px'});
     }
+  },
+
+  setupControls: function() {
+    this.controls = this.contentElement.down('.midas-modal-controls');
+    if (this.controls) {
+      this.frameElement.appendChild(this.controls);
+    }
+
+    this.paneIndex = 0;
+    this.panes = this.frameElement.select('.midas-modal-pane');
+    if (this.panes.length > 1) {
+      if (!this.controls) {
+        this.controls = new Element('div', {'class': 'midas-modal-controls'});
+        this.frameElement.appendChild(this.controls);
+
+        this.prevButton = new Element('input', {type: 'button', value: 'Previous', disabled: 'disabled'});
+        this.nextButton = new Element('input', {type: 'button', value: 'Next'});
+
+        this.prevButton.observe('click', this.prevPane.bind(this));
+        this.nextButton.observe('click', this.nextPane.bind(this));
+
+        this.controls.appendChild(this.prevButton);
+        this.controls.appendChild(this.nextButton);
+
+        this.showPane(0);
+      }
+    }
+  },
+
+  prevPane: function() {
+    this.showPane(this.paneIndex - 1);
+  },
+
+  nextPane: function() {
+    this.showPane(this.paneIndex + 1);
+  },
+
+  showPane: function(index) {
+    this.paneIndex = index;
+    if (this.paneIndex <= 0) {
+      this.paneIndex = 0;
+      this.prevButton.disable();
+    } else {
+      this.prevButton.enable();
+    }
+
+    if (this.paneIndex >= this.panes.length - 1) {
+      this.paneIndex = (this.panes.length - 1);
+      this.nextButton.disable();
+    } else {
+      this.nextButton.enable();
+    }
+
+    this.panes.each(function(pane) {
+      pane.setStyle('display:none');
+    });
+
+    this.panes[this.paneIndex].setStyle('display:block');
   },
 
   fire: function(eventName) {

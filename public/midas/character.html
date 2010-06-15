@@ -7,10 +7,11 @@
       display.down('em').innerHTML = "&" + div.getAttribute('data-entity') + ';';
     });
   });
-  window['midas_complete_modal'] = function() {
+  window['midas_modal_submit'] = function(e) {
     var innerHTML = display.down('em').innerHTML;
     Midas.fire('action', {action: 'insertHTML', options: {value: innerHTML}});
     Midas.modal.hide();
+    e.stop();
   };
 </script>
 
@@ -265,7 +266,7 @@
 </div>
 
 <div id="midas_character_controls" class="midas-modal-controls">
-  <input type="submit" value="Submit" onclick="window['midas_complete_modal']()">
+  <input type="submit" value="Submit">
 </div>
 
 <style type="text/css">
