@@ -349,3 +349,5 @@ Object.extend(Midas, {
     }
   }
 });
+
+window.onbeforeunload = Midas.onBeforeUnload;
