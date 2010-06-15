@@ -262,25 +262,13 @@ describe('Midas.Region', function() {
 
           switch (action) {
           case 'bold':
-            if (jasmine.browser.WebKit) {
-              expect(resultDiv.select('b').length).toEqual(1);
-            } else if (jasmine.browser.Gecko) {
-              expect(resultDiv.select('b').length).toEqual(1);
-            }
+            expect(resultDiv.select('b').length).toEqual(1);
             break;
           case 'italic':
-            if (jasmine.browser.WebKit) {
-              expect(resultDiv.select('i').length).toEqual(1);
-            } else if (jasmine.browser.Gecko) {
-              expect(resultDiv.select('i').length).toEqual(1);
-            }
+            expect(resultDiv.select('i').length).toEqual(1);
             break;
           case 'underline':
-			if (jasmine.browser.WebKit) {
-              expect(resultDiv.select('u').length).toEqual(1);
-            } else if (jasmine.browser.Gecko) {
-              expect(resultDiv.select('u').length).toEqual(1);
-            }
+			expect(resultDiv.select('u').length).toEqual(1);
             break;
           case 'strikethrough':
             if (jasmine.browser.WebKit) {
@@ -290,18 +278,10 @@ describe('Midas.Region', function() {
             }
             break;
           case 'subscript':
-            if (jasmine.browser.WebKit) {
-              expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
-            } else if(jasmine.browser.Gecko) {
-              expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
-            }
+            expect(resultDiv.innerHTML).toEqual('<sub>action in region4</sub>');
             break;
           case 'superscript':
-            if (jasmine.browser.WebKit) {
-              expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
-            } else if(jasmine.browser.Gecko) {
-              expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
-            }
+            expect(resultDiv.innerHTML).toEqual('<sup>action in region4</sup>');
             break;
           case 'justifyleft':
             if (jasmine.browser.WebKit) {
