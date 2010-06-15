@@ -271,7 +271,40 @@ describe('Midas', function () {
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
-      expect($$('.midas-iframe-window').length).toEqual(1);
+      expect($('midas-iframe-window')).not.toBeNull();
+    });
+    
+    stub('should not prompt twice before leaving the page if any changes were made', function() {
+      expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
+    
+      expect(Midas.onBeforeUnload()).toEqual(null);
+    
+      var midas = new Midas();
+      midas.changed = true;
+    
+      expect(Midas.onBeforeUnload()).toEqual('You have unsaved changes.  Are you sure you want to leave without saving them first?');
+    
+      midas.destroy();
+      midas = null;
+    });
+    
+    it('should hijax external links within the frame and remove the top frame when clicked', function() {
+      var container = $('external_links');
+      Midas.hijaxExternalLinks(container);
+      
+      expect(container.select('a#external_link').first().className).toEqual('external-link');
+      expect(container.select('a#external_link').first().target).toEqual('_top');      
+      expect(container.select('a#external_link_target_self').first().target).toEqual('_top');
+      expect(container.select('a#external_link_target_self').first().className).toEqual('external-link');
+      
+      expect(container.select('a#external_link_target_blank').first().className).toEqual('external-link');
+      expect(container.select('a#external_link_target_blank').first().target).not.toEqual('_top');
+      
+      expect(container.select('a#relative_link').first().className).not.toEqual('external-link');
+      expect(container.select('a#relative_link').first().target).not.toEqual('_top');
+      expect(container.select('a#same_domain_link').first().className).not.toEqual('external-link');
+      expect(container.select('a#same_domain_link').first().target).not.toEqual('_top');
+      
     });
     
     it('should communicate which contentWindow the toolbar should use', function() {
@@ -286,7 +319,7 @@ describe('Midas', function () {
         this.iframe = $$('.midas-iframe-window')[0];
       });
 
-      waits(100);
+      waits(1000);
 
       runs(function() {
         if (!this.midas.toolbar) return;

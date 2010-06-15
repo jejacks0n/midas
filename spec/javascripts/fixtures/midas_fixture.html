@@ -7,6 +7,21 @@
   <div id="panel_button">panel button</div>
 </div>
 
+<div id="external_links">
+  <!-- should: change target to top and class to 'external-link' -->
+  <a id="external_link" href="http://www.google.com">google</a>
+  <!-- should: change target to _top and add class of 'external-link' -->
+  <a id="external_link_target_self" href="http://www.cnn.com" target='_self'>cnn.com</a>
+  
+  <!-- should: leave target alone, but add 'external-link' class -->
+  <a id="external_link_target_blank" href="http://www.yahoo.com" target='_blank'>yahoo.com</a>
+  
+  <!-- should: not open from top and not add 'external-link' class -->
+  <a id="relative_link" href="/" target='_blank'>Index</a>
+  <!-- should: not open from top and not add 'external-link' class -->
+  <a id="same_domain_link" href="http://localhost/index.html" target='_blank'>same domain</a>
+</div>
+
 <div id="region1" class="editable">
   region1
 </div>
