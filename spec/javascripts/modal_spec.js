@@ -3,7 +3,7 @@ describe('Midas.Modal', function() {
   beforeEach(function() {
     jasmine.loadFixture('midas_fixture');
     this.spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
-      options.onSuccess({responseText: ''});
+      options.onSuccess({responseText: '<div class="midas-modal-controls">bananas</div>'});
     });
   });
 
@@ -63,6 +63,23 @@ describe('Midas.Modal', function() {
 
     expect($('midas_modal').getStyle('display')).toEqual('none');
     expect($('midas_modal_overlay').getStyle('display')).toEqual('none');
+  });
+
+  it('should copy controls into the frame', function() {
+    var modal = Midas.modal('/bananas');
+
+    expect(modal.frameElement.innerHTML).toContain('<div class="midas-modal-controls">bananas</div>');
+    expect(modal.contentElement.innerHTML).not.toContain('<div class="midas-modal-controls">bananas</div>');
+  });
+
+  it('should remove the controls from the frame when hiding', function() {
+    var modal = Midas.modal();
+
+    expect(modal.frameElement.innerHTML).toContain('<div class="midas-modal-controls">bananas</div>');
+
+    modal.hide();
+
+    expect(modal.frameElement.innerHTML).not.toContain('<div class="midas-modal-controls">bananas</div>');
   });
 
   stub('should set the title', function() {

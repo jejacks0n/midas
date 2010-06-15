@@ -82,6 +82,10 @@ Object.extend(Midas.modal, {
 
     this.element.hide();
     this.overlayElement.hide();
+
+    if (this.controls) {
+      this.controls.remove();
+    }
   },
 
   updateTitle: function() {
@@ -109,6 +113,11 @@ Object.extend(Midas.modal, {
         this.element.removeClassName('loading');
         this.contentElement.innerHTML = transport.responseText;
         transport.responseText.evalScripts();
+
+        this.controls = this.contentElement.down('.midas-modal-controls');
+        if (this.controls) {
+          this.frameElement.appendChild(this.controls);
+        }
 
         this.position();
       }.bind(this),
