@@ -1,5 +1,6 @@
 <script type="text/javascript">
   window['midas_setup_forecolor'] = function() {
+    var lastPicked = $('midas_forecolor_last_picked');
     $('midas_forecolor_selector').select('div').each(function(div) {
       Event.observe(div, 'click', function(event) {
         event.stop();
@@ -7,7 +8,7 @@
         var color = div.getStyle('background-color');
         if (color == 'transparent' || color == '') return;
 
-        $('midas_forecolor_last_picked').setStyle('background-color:' + color);
+        lastPicked.setStyle('background-color:' + color);
 
         this.button.setStyle('background-color:' + color);
         this.execute('forecolor', {value: color.toHex()}, event);
