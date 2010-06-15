@@ -1,4 +1,75 @@
-<div style="width:600px;height:500px">
-  600x500
-  <a href="#" onclick="Midas.modal('/midas/link.html', {title: 'Insert Link'})">load link.html</a>
+<html>
+<body>
+
+<div id="table-creator">
+  <div id="table_container">
+    <table width="100%">
+      <tr><td></td><td></td></tr>
+      <tr><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="midas-modal-pane">
+    <h3>Table Creation</h3>
+    <label>Columns:</label>
+    <fieldset>
+      <button>-</button>
+      <button>+</button>
+    </fieldset>
+    <label>Rows:</label>
+    <fieldset>
+      <button>-</button>
+      <button>+</button>
+    </fieldset>
+    <hr/>
+    <label>Column Span:</label>
+    <fieldset>
+      <button>-</button>
+      <button>+</button>
+    </fieldset>
+    <label>Row Span:</label>
+    <fieldset>
+      <button>-</button>
+      <button>+</button>
+    </fieldset>
+  </div>
+
+  <div class="midas-modal-pane">
+    <h3>Table Attributes</h3>
+    <label>Width:</label>
+    <label>Border:</label>
+    <label>Width:</label>
+    <h3>Cell Attributes</h3>
+
+  </div>
 </div>
+
+<style type="text/css">
+#table-creator {
+  width: 480px;
+  }
+#table-creator table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  height: 200px;
+  }
+#table-creator td {
+  height: 50px;
+  border: 1px solid black;
+  }
+#table-creator fieldset {
+  border: 0;
+  }
+#table-creator #table_container {
+  float: left;
+  width: 200px;
+  margin-right: 40px;
+  }
+#table-creator .midas-modal-pane {
+  float: left;
+  width: 200px;
+  }
+</style>
+
+</body>
+</html>

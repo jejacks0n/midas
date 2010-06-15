@@ -24,7 +24,6 @@
   z-index: 10011;
   width: 500px;
   background: #EFEFEF;
-  padding-bottom: 10px;
   -webkit-border-bottom-left-radius: 4px;
   -webkit-border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
@@ -34,6 +33,9 @@
   -moz-box-shadow: 0 0 40px rgba(0, 0, 0, .9);
   -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, .9);
   box-shadow: 0 0 40px rgba(0, 0, 0, .9);
+  display: block;
+  padding: 0 0 10px;
+  margin: 0;
   }
 #midas_modal h1 {
   background: #DDD;
@@ -67,6 +69,7 @@
   color: #000;
   height: 25px;
   margin: 20px 20px 10px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
   }
 #midas_modal .midas-modal-content:after {
 	content: ".";
