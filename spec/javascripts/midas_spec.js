@@ -316,10 +316,10 @@ describe('Midas', function () {
 
       runs(function() {
         this.midas = new Midas({useIframe: 'about:blank'});
-        this.iframe = $$('.midas-iframe-window')[0];
+        this.iframe = $('midas-iframe-window');
       });
 
-      waits(1000);
+      waits(100);
 
       runs(function() {
         if (!this.midas.toolbar) return;
