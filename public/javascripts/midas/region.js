@@ -128,7 +128,7 @@ Midas.Region = Class.create({
 
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
-
+    
     var supported = this.doc.execCommand('styleWithCSS', false, false);
     var handled;
     try {

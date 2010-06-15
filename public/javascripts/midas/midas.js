@@ -114,18 +114,16 @@ var Midas = Class.create({
       }.bind(this));
     }.bind(this));
 
-    //{action: action, event: event, toolbar: this}
+    //{action: action, event: event, toolbar: this, options: {}}
     Event.observe(document, 'midas:button', function(e) {
-      if (!this.activeRegion) return;
       var a = e.memo;
-
-      if (this.toolbar != a['toolbar']) return;
-      this.changed = true;
-
-      var handled = this.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
-      if (!handled) this.activeRegion.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
-      if (this.statusbar) this.statusbar.update(this.activeRegion, e);
-      if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+      this.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
+    }.bindAsEventListener(this));
+    
+    //{action: action, options: {}}
+    Event.observe(document, 'midas:action', function(e) {
+      var a = e.memo;
+      this.handleAction(a['action'], e, null, a['options']);
     }.bindAsEventListener(this));
 
     //{mode: mode, toolbar: this}
@@ -166,11 +164,23 @@ var Midas = Class.create({
 
   handleAction: function(action, event, toolbar, options) {
     options = options || {};
-    
-    if (this.actionsToHandle.indexOf(action) < 0) return false;
-    if (Object.isFunction(this[action])) return this[action].apply(this, arguments);
 
-    throw('Unhandled action "' + action + '"');
+    if (toolbar && this.toolbar != toolbar) return;
+
+    if (this.actionsToHandle.indexOf(action) < 0) {
+      if (Object.isFunction(this[action])) {
+        var handled = this[action].apply(this, arguments);
+        if (handled) return handled;
+      }
+    }
+    if (!this.activeRegion) return;
+
+    this.changed = true;
+    
+    this.activeRegion.handleAction(action, event, toolbar, options);
+
+    if (this.statusbar) this.statusbar.update(this.activeRegion, event);
+    if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
   },
 
   handleMode: function(mode, toolbar) {
