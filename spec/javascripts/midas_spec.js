@@ -274,7 +274,7 @@ describe('Midas', function () {
       expect($('midas-iframe-window')).not.toBeNull();
     });
     
-    stub('should not prompt twice before leaving the page if any changes were made', function() {
+    it('should not prompt twice before leaving the page if any changes were made', function() {
       expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
     
       expect(Midas.onBeforeUnload()).toEqual(null);

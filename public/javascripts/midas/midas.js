@@ -46,7 +46,7 @@ var Midas = Class.create({
       });
 
       Event.observe(this.iframe, 'load', function() {
-        this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
+        // appears as though hijax is taking care of this -> this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
         Midas.hijaxExternalLinks(this.iframe.contentWindow.document.body);
