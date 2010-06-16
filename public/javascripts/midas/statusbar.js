@@ -80,7 +80,7 @@ Midas.Statusbar = Class.create({
     element.observe('click', function(event) {
       event.stop();
       var index = Element.nextSiblings(Event.element(event)).length;
-      var selection = window.getSelection();
+      var selection = this.options['contentWindow'].getSelection();
       var range = this.options['contentWindow'].document.createRange();
       range.selectNode(this.path[index - 1]);
       selection.removeAllRanges();
