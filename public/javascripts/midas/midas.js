@@ -61,7 +61,6 @@ var Midas = Class.create({
       document.body.setStyle('overflow:hidden');
       document.body.appendChild(this.iframeContainer);
       
-      
     } else {
       this.initializeRegions(this.contentWindow);
       window.onbeforeunload = Midas.onBeforeUnload;
@@ -90,9 +89,11 @@ var Midas = Class.create({
 
     Object.extend(this.toolbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
     Object.extend(this.statusbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
-
-    this.toolbar = new Midas.Toolbar(this.toolbarOptions);
-    this.statusbar = new Midas.Statusbar(this.statusbarOptions);
+    
+    if (!this.toolbar && !this.statusbar) {
+      this.toolbar = new Midas.Toolbar(this.toolbarOptions);
+      this.statusbar = new Midas.Statusbar(this.statusbarOptions);
+    }
 
     this.resize();
 
