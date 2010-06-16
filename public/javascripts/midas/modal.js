@@ -143,7 +143,8 @@ Object.extend(Midas.modal, {
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20) {
       var titleHeight = this.element.down('h1').getHeight();
-      this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - 20) + 'px'});
+      var controlsHeight = (this.controls ? this.controls.offsetHeight : 0);
+      this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
     }
   },
 
