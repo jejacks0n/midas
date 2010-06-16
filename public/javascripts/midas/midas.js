@@ -28,8 +28,9 @@ var Midas = Class.create({
     this.toolbarOptions = toolbarOptions || {};
     this.statusbarOptions = statusbarOptions || {};
     this.regionOptions = regionOptions || {};
-
-    this.initializeInterface();
+    
+    
+    this.initializeInterface();        
   },
 
   initializeInterface: function() {
@@ -46,7 +47,7 @@ var Midas = Class.create({
       });
 
       Event.observe(this.iframe, 'load', function() {
-        // appears as though hijax is taking care of this -> this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
+        this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
         Midas.hijaxExternalLinks(this.iframe.contentWindow.document.body);
@@ -63,6 +64,7 @@ var Midas = Class.create({
       
     } else {
       this.initializeRegions(this.contentWindow);
+      window.onbeforeunload = Midas.onBeforeUnload;
       this.finalizeInterface();
     }
   },
@@ -359,5 +361,3 @@ Object.extend(Midas, {
     }
   }
 });
-
-window.onbeforeunload = Midas.onBeforeUnload;
