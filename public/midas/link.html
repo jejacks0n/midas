@@ -1,4 +1,32 @@
-<div style="width:400px;height:200px">
-  400x200
-  <a href="#" onclick="Midas.modal('/midas/table.html', {title: 'Insert Table'})">load table.html</a>
+<script type="text/javascript">
+  window['midas_modal_submit'] = function(e) {
+    generator = $('midas_link_generator');
+
+    var link = '<a href="' + generator.down('#midas_link_url').value + '">' + generator.down('#midas_link_text').value + '</a>';
+    console.debug(link);
+    Midas.fire('action', {action: 'insertHTML', options: {value: link}});
+    Midas.modal.hide();
+    e.stop();
+  };
+</script>
+
+<div id="midas_link_generator">
+  <p><label for="midas_link_text">Link Text</label><input id="midas_link_text"/></p>
+  <p><label for="midas_link_url">Link URL</label><input id="midas_link_url" value="http://"/></p>
 </div>
+
+<div id="midas_character_controls" class="midas-modal-controls">
+  <input type="submit" value="Insert Link">
+</div>
+
+<style type="text/css">
+#midas_link_generator {
+  width: 400px;
+  height: 200px;
+  }
+#midas_link_generator label {
+  display: block;
+  float: left;
+  width: 100px;
+  }
+</style>
