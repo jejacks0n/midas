@@ -160,18 +160,18 @@ Object.extend(Midas.modal, {
       if (!this.controls) {
         this.controls = new Element('div', {'class': 'midas-modal-controls'});
         this.frameElement.appendChild(this.controls);
-
-        this.prevButton = new Element('input', {type: 'button', value: 'Previous', disabled: 'disabled'});
-        this.nextButton = new Element('input', {type: 'button', value: 'Next'});
-
-        this.prevButton.observe('click', this.prevPane.bind(this));
-        this.nextButton.observe('click', this.nextPane.bind(this));
-
-        this.controls.appendChild(this.prevButton);
-        this.controls.appendChild(this.nextButton);
-
-        this.showPane(0);
       }
+
+      this.prevButton = new Element('input', {type: 'button', value: 'Previous', disabled: 'disabled'});
+      this.nextButton = new Element('input', {type: 'button', value: 'Next'});
+
+      this.prevButton.observe('click', this.prevPane.bind(this));
+      this.nextButton.observe('click', this.nextPane.bind(this));
+
+      this.controls.insert({top: this.prevButton});
+      this.prevButton.insert({after: this.nextButton});
+
+      this.showPane(0);
     }
   },
 
