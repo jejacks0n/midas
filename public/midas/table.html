@@ -31,39 +31,26 @@
     },
 
     setupControls: function() {
-      this.remove_column_button = this.element.down('#remove_column');
-      this.add_column_button = this.element.down('#add_column');
-      this.remove_row_button = this.element.down('#remove_row');
-      this.add_row_button = this.element.down('#add_row');
-      this.increase_col_span_button = this.element.down('#increase_col_span');
-      this.decrease_col_span_button = this.element.down('#decrease_col_span');
-      this.increase_row_span_button = this.element.down('#increase_row_span');
-      this.decrease_row_span_button = this.element.down('#decrease_row_span');
+      this.remove_column_button = this.element.down('#remove_column').observe('click', this.removeColumn.bind(this));
+      this.add_column_button = this.element.down('#add_column').observe('click', this.addColumn.bind(this));
+      this.remove_row_button = this.element.down('#remove_row').observe('click', this.removeRow.bind(this));
+      this.add_row_button = this.element.down('#add_row').observe('click', this.addRow.bind(this));
 
-      this.remove_column_button.observe('click', this.removeColumn.bind(this));
-      this.add_column_button.observe('click', this.addColumn.bind(this));
-      this.remove_row_button.observe('click', this.removeRow.bind(this));
-      this.add_row_button.observe('click', this.addRow.bind(this));
-
-      this.increase_col_span_button.observe('click', function() {
+      this.increase_col_span_button = this.element.down('#increase_col_span').observe('click', function() {
         this.increaseColSpan(this.selectedCell());
       }.bind(this));
-      this.decrease_col_span_button.observe('click', function() {
+
+      this.decrease_col_span_button = this.element.down('#decrease_col_span').observe('click', function() {
         this.decreaseColSpan(this.selectedCell());
       }.bind(this));
 
-      this.increase_row_span_button.observe('click', function() {
+      this.increase_row_span_button = this.element.down('#increase_row_span').observe('click', function() {
         this.increaseRowSpan(this.selectedCell());
       }.bind(this));
-      this.decrease_row_span_button.observe('click', function() {
+
+      this.decrease_row_span_button = this.element.down('#decrease_row_span').observe('click', function() {
         this.decreaseRowSpan(this.selectedCell());
       }.bind(this));
-    },
-
-    deselectAllCells: function() {
-      this.tableBodyElement.select('td.selected').each(function(td) {
-        td.removeClassName('selected');
-      });
     },
 
     refreshContextualButtons: function() {
@@ -85,6 +72,12 @@
 
     selectedCell: function() {
       return this.tableBodyElement.down('td.selected');
+    },
+
+    deselectAllCells: function() {
+      this.tableBodyElement.select('td.selected').each(function(td) {
+        td.removeClassName('selected');
+      });
     },
 
     adjustTableRows: function() {
@@ -111,9 +104,7 @@
           }.bind(this));
         } else {
           // Add some columns to this row
-          var tds = Array(delta + 1).join('<td></td>');
-          console.debug(tds);
-          tr.insert({bottom: tds});
+          tr.insert({ bottom: Array(delta + 1).join('<td></td>') });
         }
 
         tr.writeAttribute('colcount', this.columnCount);
@@ -124,22 +115,21 @@
 
     addColumn: function() {
       this.columnCount += 1;
-
       this.adjustTableRows();
     },
 
     removeColumn: function() {
       if (this.columnCount <= 1) return;
-      this.columnCount -= 1;
 
+      this.columnCount -= 1;
       this.adjustTableRows();
     },
 
     addRow: function() {
       this.rowCount += 1;
 
-      var rowHTML = '<tr colcount="'+ this.columnCount +'">' + Array(this.columnCount + 1).join('<td></td>') + '</tr>';
-      this.tableBodyElement.insert({bottom: rowHTML});
+      var row = new Element('tr', {'colcount': this.columnCount}).update(Array(this.columnCount + 1).join('<td></td>'));
+      this.tableBodyElement.appendChild(row);
 
       this.adjustTableRows();
     },
@@ -159,9 +149,8 @@
       if (this.totalColSpanOfRowUpto(element) >= this.columnCount) return false;
 
       element.writeAttribute('colspan', currentColSpan + 1);
-      
+
       var rowSpan = this.rowSpanOfCell(element);
-      console.debug(rowSpan);
       if (rowSpan >= 2) {
         element.up().nextSiblings().slice(0, rowSpan - 1).each(function(row) {
           if (row) this.increaseColCountOnRow(row);
@@ -237,7 +226,7 @@
       colSpan.times(function() {
         this.decreaseColCountOnRow(sibling);
       }.bind(this));
-      
+
       this.adjustTableRows();
 
       return true;
