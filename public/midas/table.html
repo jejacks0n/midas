@@ -1,7 +1,288 @@
 <html>
 <body>
 
-<div id="table-creator">
+<script type="text/javascript">
+  var TableCreator = new Class.create({
+    initialize: function() {
+      this.element = $('midas-table-creator');
+      this.tableContainerElement = this.element.down('#table_container');
+      this.tableElement = this.tableContainerElement.down('table');
+      this.tableBodyElement = this.tableContainerElement.down('tbody');
+
+      this.columnCount = this.tableElement.down('tr').select('td').length;
+      this.rowCount = this.tableElement.select('tr').length;
+
+      this.element.observe('click', function(event) {
+        this.refreshContextualButtons();
+      }.bind(this));
+
+      // Listen for TD selection
+      this.tableBodyElement.observe('click', function(event) {
+          this.deselectAllCells();
+          event.target.addClassName('selected');
+      }.bind(this));
+
+      this.tableBodyElement.select('tr').each(function(tr) {
+        tr.writeAttribute('colcount', this.columnCount);
+      }.bind(this));
+
+      this.setupControls();
+      this.refreshContextualButtons();
+    },
+
+    setupControls: function() {
+      this.remove_column_button = this.element.down('#remove_column');
+      this.add_column_button = this.element.down('#add_column');
+      this.remove_row_button = this.element.down('#remove_row');
+      this.add_row_button = this.element.down('#add_row');
+      this.increase_col_span_button = this.element.down('#increase_col_span');
+      this.decrease_col_span_button = this.element.down('#decrease_col_span');
+      this.increase_row_span_button = this.element.down('#increase_row_span');
+      this.decrease_row_span_button = this.element.down('#decrease_row_span');
+
+      this.remove_column_button.observe('click', this.removeColumn.bind(this));
+      this.add_column_button.observe('click', this.addColumn.bind(this));
+      this.remove_row_button.observe('click', this.removeRow.bind(this));
+      this.add_row_button.observe('click', this.addRow.bind(this));
+
+      this.increase_col_span_button.observe('click', function() {
+        this.increaseColSpan(this.selectedCell());
+      }.bind(this));
+      this.decrease_col_span_button.observe('click', function() {
+        this.decreaseColSpan(this.selectedCell());
+      }.bind(this));
+
+      this.increase_row_span_button.observe('click', function() {
+        this.increaseRowSpan(this.selectedCell());
+      }.bind(this));
+      this.decrease_row_span_button.observe('click', function() {
+        this.decreaseRowSpan(this.selectedCell());
+      }.bind(this));
+    },
+
+    deselectAllCells: function() {
+      this.tableBodyElement.select('td.selected').each(function(td) {
+        td.removeClassName('selected');
+      });
+    },
+
+    refreshContextualButtons: function() {
+      this.remove_row_button.disabled = (this.rowCount <= 1);
+      this.remove_column_button.disabled = (this.columnCount <= 1);
+
+      var selectedCell = this.selectedCell();
+      if (selectedCell) {
+        this.increase_col_span_button.disabled = (this.totalColSpanOfRowUpto(selectedCell) >= this.columnCount);
+        this.decrease_col_span_button.disabled = !(this.colSpanOfCell(selectedCell) > 1);
+        this.increase_row_span_button.disabled = (this.totalRowSpanOfColUpto(selectedCell) >= this.rowCount);
+        this.decrease_row_span_button.disabled = !(this.rowSpanOfCell(selectedCell) > 1);
+      } else {
+        $$("#midas-table-creator .cell-buttons button").each(function(button) {
+          Form.Element.disable(button);
+        });
+      }
+    },
+
+    selectedCell: function() {
+      return this.tableBodyElement.down('td.selected');
+    },
+
+    adjustTableRows: function() {
+      this.tableBodyElement.select('tr').each(function(tr) {
+        var colCount = this.getColumnCount(tr);
+        delta = this.columnCount - colCount;
+
+        if (delta == 0) return true;
+
+        if (delta < 0) {
+          // Remove some columns from this row
+          Math.abs(delta).times(function() {
+            var lastChild = tr.down('td:last-child');
+            if (!this.decreaseColSpan(lastChild)) {
+              var childRowSpan = this.colSpanOfCell(lastChild);
+
+              if(childRowSpan > 1) {
+                lastChild.up().nextSiblings().slice(0, childRowSpan - 1).each(function(row) {
+                  this.decreaseColCountOnRow(row);
+                }.bind(this));
+              }
+              lastChild.remove();
+            }
+          }.bind(this));
+        } else {
+          // Add some columns to this row
+          var tds = Array(delta + 1).join('<td></td>');
+          console.debug(tds);
+          tr.insert({bottom: tds});
+        }
+
+        tr.writeAttribute('colcount', this.columnCount);
+      }.bind(this));
+
+      this.refreshContextualButtons();
+    },
+
+    addColumn: function() {
+      this.columnCount += 1;
+
+      this.adjustTableRows();
+    },
+
+    removeColumn: function() {
+      if (this.columnCount <= 1) return;
+      this.columnCount -= 1;
+
+      this.adjustTableRows();
+    },
+
+    addRow: function() {
+      this.rowCount += 1;
+
+      var rowHTML = '<tr colcount="'+ this.columnCount +'">' + Array(this.columnCount + 1).join('<td></td>') + '</tr>';
+      this.tableBodyElement.insert({bottom: rowHTML});
+
+      this.adjustTableRows();
+    },
+
+    removeRow: function() {
+      if (this.rowCount <= 1) return;
+      this.rowCount -= 1;
+
+      this.tableBodyElement.down('tr', this.rowCount).remove();
+
+      this.adjustTableRows();
+    },
+
+    increaseColSpan: function(element) {
+      var currentColSpan = this.colSpanOfCell(element);
+
+      if (this.totalColSpanOfRowUpto(element) >= this.columnCount) return false;
+
+      element.writeAttribute('colspan', currentColSpan + 1);
+      
+      var rowSpan = this.rowSpanOfCell(element);
+      console.debug(rowSpan);
+      if (rowSpan >= 2) {
+        element.up().nextSiblings().slice(0, rowSpan - 1).each(function(row) {
+          if (row) this.increaseColCountOnRow(row);
+        }.bind(this));
+      }
+
+      this.increaseColCountOnRow(element.up());
+      this.adjustTableRows();
+
+      return true;
+    },
+
+    decreaseColSpan: function(element) {
+      var currentColSpan = this.colSpanOfCell(element);
+
+      if (!currentColSpan) return false;
+      if (currentColSpan == 1) {
+        element.removeAttribute('colspan');
+        return false;
+      } else {
+        element.writeAttribute('colspan', currentColSpan - 1);
+      }
+
+      var rowSpan = this.rowSpanOfCell(element);
+      if (rowSpan >= 2) {
+        element.up().nextSiblings().slice(0, rowSpan - 1).each(function(row) {
+          if (row) this.decreaseColCountOnRow(row);
+        }.bind(this));
+      }
+
+      this.decreaseColCountOnRow(element.up());
+      this.adjustTableRows();
+
+      return true;
+    },
+
+    totalColSpanOfRowUpto: function(element) {
+      return element.previousSiblings().inject(this.colSpanOfCell(element), function(total, td) {
+        return total + this.colSpanOfCell(td);
+      }.bind(this));
+    },
+
+    increaseRowSpan: function(element) {
+      var currentRowSpan = this.rowSpanOfCell(element);
+
+      if (currentRowSpan >= this.rowCount) return false;
+
+      element.writeAttribute('rowspan', currentRowSpan + 1);
+
+      var colSpan = this.colSpanOfCell(element);
+      (colSpan).times(function() {
+        this.increaseColCountOnRow(element.up().next(currentRowSpan - 1));
+      }.bind(this));
+
+      this.adjustTableRows();
+
+      return true;
+    },
+
+    decreaseRowSpan: function(element) {
+      var currentRowSpan = this.rowSpanOfCell(element);
+
+      if (!currentRowSpan) return false;
+      if(currentRowSpan == 1) {
+        element.removeAttribute('rowspan');
+        return false;
+      } else {
+        element.writeAttribute('rowspan', currentRowSpan - 1);
+      }
+
+      var colSpan = this.colSpanOfCell(element);
+      var sibling = element.up().next(currentRowSpan - 2);
+      colSpan.times(function() {
+        this.decreaseColCountOnRow(sibling);
+      }.bind(this));
+      
+      this.adjustTableRows();
+
+      return true;
+    },
+
+    totalRowSpanOfColUpto: function(element) {
+      return element.up().previousSiblings().length + this.rowSpanOfCell(element);
+    },
+
+    increaseColCountOnRow: function(row) {
+      var newCount = this.getColumnCount(row) + 1;
+      row.writeAttribute('colcount', newCount);
+      return newCount;
+    },
+
+    decreaseColCountOnRow: function(row) {
+      var newCount = this.getColumnCount(row) - 1;
+      row.writeAttribute('colcount', newCount);
+      return newCount;
+    },
+
+    getColumnCount: function(row) {
+      return parseInt(row.readAttribute('colcount')) || 1;
+    },
+
+    colSpanOfCell: function(cell) {
+      return parseInt(cell.readAttribute('colspan')) || 1;
+    },
+
+    rowSpanOfCell: function(cell) {
+      return parseInt(cell.readAttribute('rowspan')) || 1;
+    }
+  });
+
+  window['midas_modal_submit'] = function(e) {
+    var innerHTML = table_creator.tableContainerElement.innerHTML;
+    Midas.fire('action', {action: 'insertHTML', options: {value: innerHTML}});
+    Midas.modal.hide();
+    e.stop();
+  };
+
+  table_creator = new TableCreator;
+</script>
+
+<div id="midas-table-creator">
   <div id="table_container">
     <table width="100%">
       <tr><td></td><td></td></tr>
@@ -12,62 +293,71 @@
   <div class="midas-modal-pane">
     <h3>Table Creation</h3>
     <label>Columns:</label>
-    <fieldset>
-      <button>-</button>
-      <button>+</button>
+    <fieldset id="midas_column_buttons" class="table-buttons">
+      <button type="button" id="remove_column">-</button>
+      <button type="button" id="add_column">+</button>
     </fieldset>
     <label>Rows:</label>
-    <fieldset>
-      <button>-</button>
-      <button>+</button>
+    <fieldset id="midas_row_buttons" class="table-buttons">
+      <button type="button" id="remove_row">-</button>
+      <button type="button" id="add_row">+</button>
     </fieldset>
     <hr/>
     <label>Column Span:</label>
-    <fieldset>
-      <button>-</button>
-      <button>+</button>
+    <fieldset id="midas_colspan_buttons" class="cell-buttons">
+      <button type="button" id="decrease_col_span">-</button>
+      <button type="button" id="increase_col_span">+</button>
     </fieldset>
     <label>Row Span:</label>
-    <fieldset>
-      <button>-</button>
-      <button>+</button>
+    <fieldset id="midas_rowspan_buttons" class="cell-buttons">
+      <button type="button" id="decrease_row_span">-</button>
+      <button type="button" id="increase_row_span">+</button>
     </fieldset>
   </div>
 
-  <div class="midas-modal-pane">
-    <h3>Table Attributes</h3>
-    <label>Width:</label>
-    <label>Border:</label>
-    <label>Width:</label>
-    <h3>Cell Attributes</h3>
+  <!--<div class="midas-modal-pane">-->
+    <!--<h3>Table Attributes</h3>-->
+    <!--<label>Width:</label>-->
+    <!--<label>Border:</label>-->
+    <!--<label>Width:</label>-->
+    <!--<h3>Cell Attributes</h3>-->
 
-  </div>
+  <!--</div>-->
+</div>
+
+<div id="midas_character_controls" class="midas-modal-controls">
+  <input type="submit" value="Insert Table">
 </div>
 
 <style type="text/css">
-#table-creator {
-  width: 480px;
-  }
-#table-creator table {
+#midas-table-creator table {
   border: 1px solid black;
   border-collapse: collapse;
-  height: 200px;
+  height: 100%;
+  width: 100%;
   }
-#table-creator td {
-  height: 50px;
+#midas-table-creator tr {
+  height: auto;
+  }
+#midas-table-creator td {
   border: 1px solid black;
+  height: auto;
   }
-#table-creator fieldset {
+#midas-table-creator fieldset {
   border: 0;
   }
-#table-creator #table_container {
+#midas-table-creator #table_container {
   float: left;
   width: 200px;
   margin-right: 40px;
+  height: 200px;
   }
-#table-creator .midas-modal-pane {
+#midas-table-creator .midas-modal-pane {
   float: left;
   width: 200px;
+  }
+#midas-table-creator td.selected {
+  background-color: blue;
   }
 </style>
 
