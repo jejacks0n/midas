@@ -18,8 +18,9 @@
 
       // Listen for TD selection
       this.tableBodyElement.observe('click', function(event) {
-          this.deselectAllCells();
-          event.target.addClassName('selected');
+        this.deselectAllCells();
+        event.target.addClassName('selected');
+        $('table_cell_width').value = this.selectedCell().readAttribute('width');
       }.bind(this));
 
       this.tableBodyElement.select('tr').each(function(tr) {
@@ -50,6 +51,26 @@
 
       this.decrease_row_span_button = this.element.down('#decrease_row_span').observe('click', function() {
         this.decreaseRowSpan(this.selectedCell());
+      }.bind(this));
+
+      this.element.down('#table_width').observe('change', function(event) {
+        this.tableElement.writeAttribute('width', event.target.value);
+      }.bind(this));
+
+      this.element.down('#table_border').observe('change', function(event) {
+        this.tableElement.writeAttribute('border', event.target.value);
+      }.bind(this));
+
+      this.element.down('#table_cell_spacing').observe('change', function(event) {
+        this.tableElement.writeAttribute('cellspacing', event.target.value);
+      }.bind(this));
+
+      this.element.down('#table_cell_padding').observe('change', function(event) {
+        this.tableElement.writeAttribute('cellpadding', event.target.value);
+      }.bind(this));
+      
+      this.element.down('#table_cell_width').observe('change', function(event) {
+        this.selectedCell().writeAttribute('width', event.target.value);
       }.bind(this));
     },
 
@@ -273,7 +294,7 @@
 
 <div id="midas-table-creator">
   <div id="table_container">
-    <table width="100%">
+    <table width="100%" border="1" cellspacing="0">
       <tr><td></td><td></td></tr>
       <tr><td></td><td></td></tr>
     </table>
@@ -304,14 +325,22 @@
     </fieldset>
   </div>
 
-  <!--<div class="midas-modal-pane">-->
-    <!--<h3>Table Attributes</h3>-->
-    <!--<label>Width:</label>-->
-    <!--<label>Border:</label>-->
-    <!--<label>Width:</label>-->
-    <!--<h3>Cell Attributes</h3>-->
+  <div class="midas-modal-pane" id="midas_table_attributes">
+    <h3>Table Attributes</h3>
+    <label><em>Width:</em> <input id="table_width" value="100%"/></label>
+    <label><em>Border:</em> <input id="table_border" value="1"/></label>
+    <label><em>Cell Spacing:</em> <input id="table_cell_spacing" value="0"/></label>
+    <label><em>Cell Padding:</em> <input id="table_cell_padding"/></label>
 
-  <!--</div>-->
+    <h3>Cell Attributes</h3>
+    <label><em>Cell Width:</em> <input id="table_cell_width"/></label>
+    <!--<label><em>Alignment:</em> <select id="table_cell_alignment">-->
+      <!--<option></option>-->
+      <!--<option>left</option>-->
+      <!--<option>center</option>-->
+      <!--<option>right</option>-->
+    <!--</select></label>-->
+  </div>
 </div>
 
 <div id="midas_character_controls" class="midas-modal-controls">
@@ -319,22 +348,6 @@
 </div>
 
 <style type="text/css">
-#midas-table-creator table {
-  border: 1px solid black;
-  border-collapse: collapse;
-  height: 100%;
-  width: 100%;
-  }
-#midas-table-creator tr {
-  height: auto;
-  }
-#midas-table-creator td {
-  border: 1px solid black;
-  height: auto;
-  }
-#midas-table-creator fieldset {
-  border: 0;
-  }
 #midas-table-creator #table_container {
   float: left;
   width: 200px;
@@ -343,10 +356,32 @@
   }
 #midas-table-creator .midas-modal-pane {
   float: left;
-  width: 200px;
+  width: 250px;
+  }
+#midas-table-creator table {
+  height: 100%;
+  width: 100%;
+  }
+#midas-table-creator tr {
+  height: auto;
+  }
+#midas-table-creator td {
+  height: auto;
+  }
+#midas-table-creator fieldset {
+  border: 0;
   }
 #midas-table-creator td.selected {
   background-color: blue;
+  }
+#midas_table_attributes label {
+  display: block;
+  }
+#midas_table_attributes em {
+  font-style: normal;
+  width: 110px;
+  display: block;
+  float: left;
   }
 </style>
 
