@@ -46,7 +46,7 @@ Object.extend(Midas.modal, {
     });
 
     var documents = [document];
-    var iframe = $$('iframe.midas-iframe-window')[0];
+    var iframe = $('midas-iframe-window');
     if (iframe) documents.push(iframe.contentWindow.document);
     documents.each(function(doc) {
       Event.observe(doc, 'keydown', function(e) {
