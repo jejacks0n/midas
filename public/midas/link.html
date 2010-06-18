@@ -1,4 +1,24 @@
 <script type="text/javascript">
+  // init
+  var selection = $('midas-iframe-window').contentWindow.getSelection();
+  if (selection.rangeCount) {
+    var range = selection.getRangeAt(0);
+    console.debug(range);
+    var node = range.commonAncestorContainer;
+
+    var contents = range.cloneContents();
+    var anchor;
+    console.debug(contents);
+    if (contents.childNodes.length == 1 && contents.childNodes[0].tagName == 'A') {
+      anchor = contents.childNodes[0];
+    } else {
+      anchor = Element.up(node, 'a');
+    }
+    $('midas_link_url').value = anchor.href;
+
+    console.debug(anchor);
+  }
+
   window['midas_modal_submit'] = function(e) {
     generator = $('midas_link_generator');
 
