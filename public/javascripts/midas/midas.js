@@ -74,7 +74,7 @@ var Midas = Class.create({
 
     var body = this.contentWindow.document.body;
     if (typeof(body.select) == 'function') {
-      this.regionElements = body.select('div.' + this.options['classname']);
+      this.regionElements = body.select('.' + this.options['classname']);
     } else {
       this.regionElements = body.getElementsByClassName(this.options['classname']);
     }
@@ -175,7 +175,7 @@ var Midas = Class.create({
 
     if (toolbar && this.toolbar != toolbar) return;
 
-    if (this.actionsToHandle.indexOf(action) < 0) {
+    if (this.actionsToHandle.indexOf(action) > -1) {
       if (Object.isFunction(this[action])) {
         var handled = this[action].apply(this, arguments);
         if (handled) return handled;
