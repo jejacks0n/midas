@@ -42,13 +42,16 @@
       left: 0;
       width: 100%;
       }
+    #region1 a {
+      color: green !important;
+      }
   </style>
 </head>
 <body onload="Midas.debugMode = true; midas = new Midas({useIframe: true}, {appendTo: 'toolbar'}, {inline: true});">
 
   <div id="toolbar"></div>
 
-  <h3></h3>
+  <h3 class="editable"></h3>
 
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
@@ -71,6 +74,7 @@
         </tr>
       </tbody>
     </table>
+    <a href="http://google.com">this is a link</a>
   </div>
 
   <div id="region2" class="editable">
@@ -78,7 +82,7 @@
 
   <strong>this <em>is</em> a test</strong><br/>
   <a href="http://cnn.com">cnn.com</a><br/>
-  <a href='/index.html' target="_self">internal link</a><br/>
+  <a href='/midas/examples/iframe.html' target="_self">internal link</a><br/>
   <a href="#" onclick="Midas.modal('/midas/table.html', {title: 'Insert Table'})">Midas.Modal</a>
 
 </body>
