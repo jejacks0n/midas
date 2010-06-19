@@ -11,26 +11,26 @@ describe('Midas.Statusbar', function() {
     } catch(e) {}
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.statusbar = new Midas.Statusbar({lettuce: 'banana'});
 
     expect(this.statusbar.options['lettuce']).toEqual('banana');
   });
 
-  it('should make a statusbar', function() {
+  it('makes a statusbar', function() {
     this.statusbar = new Midas.Statusbar();
 
     expect(this.statusbar.element).not.toBeFalsy();
     expect($$('.midas-statusbar').length).toEqual(1);
   });
 
-  it('should be able to put the statusbar inside an existing element', function() {
+  it('handles putting the statusbar inside an existing element', function() {
     this.statusbar = new Midas.Statusbar({appendTo: 'statusbar'});
 
     expect($('statusbar').innerHTML).not.toEqual('statusbar');
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.statusbar = new Midas.Statusbar();
     this.statusbar.destroy();
 
@@ -40,7 +40,7 @@ describe('Midas.Statusbar', function() {
 
   describe('panels that are default', function() {
 
-    it('should display a path', function() {
+    it('displays a path', function() {
       runs(function() {
         this.statusbar = new Midas.Statusbar({appendTo: 'statusbar'});
 

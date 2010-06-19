@@ -11,20 +11,20 @@ describe('Midas.Dialog', function() {
     } catch(e) {}
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')}, {lettuce: 'banana'});
 
     expect(this.dialog.options['lettuce']).toEqual('banana');
   });
 
-  it('should make a dialog', function() {
+  it('makes a dialog', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     expect(this.dialog.element).not.toBeFalsy();
     expect($$('.midas-dialog').length).toEqual(1);
   });
 
-  it('should show when the button is clicked', function() {
+  it('shows when the button is clicked', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
@@ -37,7 +37,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('block');
   });
 
-  it('should not show if the button is disabled', function() {
+  it('does not show if the button is disabled', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     var button = $('dialog_button');
@@ -53,7 +53,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('none');
   });
 
-  it('should add and remove a class for the active region', function() {
+  it('adds and removes a class for the active region', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
@@ -65,7 +65,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.hasClassName('region1')).toEqual(true);
   });
 
-  it('should hide', function() {
+  it('hides', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
@@ -78,7 +78,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('none');
   });
 
-  it('should know if it is visible or not', function() {
+  it('knows if it is visible or not', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
@@ -91,7 +91,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.visible()).toEqual(false);
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
     this.dialog.destroy();
 

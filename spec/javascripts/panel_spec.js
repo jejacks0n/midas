@@ -12,13 +12,13 @@ describe('Midas.Panel', function() {
     } catch(e) {}
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar, {lettuce: 'banana'});
 
     expect(this.panel.options['lettuce']).toEqual('banana');
   });
 
-  it('should make a palette', function() {
+  it('makes a palette', function() {
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     expect(this.panel.element).not.toBeFalsy();
@@ -27,7 +27,7 @@ describe('Midas.Panel', function() {
     expect($$('.midas-panel').length).toEqual(1);
   });
 
-  it('should load when the button is clicked', function() {
+  it('loads when the button is clicked', function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
@@ -37,7 +37,7 @@ describe('Midas.Panel', function() {
     expect(this.panel.element.getStyle('display')).toEqual('block');
   });
 
-  it('should behave as a toggle button', function() {
+  it('makes the button behave as a toggle button', function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
@@ -50,7 +50,7 @@ describe('Midas.Panel', function() {
     expect($('panel_button').hasClassName('pressed')).toEqual(false);
   });
 
-  it('should create a draggable object with the element', function() {
+  it('creates a draggable object with the element', function() {
     var spy = spyOn(Ajax, 'Request');
     var spy1 = spyOn(window, 'Draggable');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
@@ -60,7 +60,7 @@ describe('Midas.Panel', function() {
     expect(spy1.callCount).toEqual(1);
   });
 
-  it('should display a title in the panel', function() {
+  it('displays a title in the panel', function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar, {title: 'Hamburgers'});
 
@@ -69,7 +69,7 @@ describe('Midas.Panel', function() {
     expect(this.panel.element.down('h3.title').innerHTML).toEqual('Hamburgers');
   });
 
-  it('should not show if the button is disabled', function() {
+  it("doesn't show if the button is disabled", function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
@@ -88,7 +88,7 @@ describe('Midas.Panel', function() {
     expect(this.panel.element.getStyle('display')).toEqual('none');
   });
 
-  it('should hide', function() {
+  it('hides', function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
@@ -99,11 +99,11 @@ describe('Midas.Panel', function() {
     expect(this.panel.element.getStyle('display')).toEqual('none');
   });
 
-  stub('should position itself properly', function() {
+  stub('positions itself properly', function() {
     
   });
 
-  it('should know if it is visible or not', function() {
+  it('knows if it is visible or not', function() {
     var spy = spyOn(Ajax, 'Request');
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
@@ -114,7 +114,7 @@ describe('Midas.Panel', function() {
     expect(this.panel.visible()).toEqual(false);
   });
 
-  it('should load contents from a url', function() {
+  it('loads contents from a url', function() {
     var url = '';
     var spy = spyOn(Ajax, 'Request').andCallFake(function() {
       url = arguments[0];
@@ -125,7 +125,7 @@ describe('Midas.Panel', function() {
     expect(url).toEqual('pizzas/cheese');
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
     this.panel.destroy();
 

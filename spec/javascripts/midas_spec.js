@@ -13,27 +13,27 @@ describe('Midas', function () {
     jasmine.unloadCSS('midas_styles');
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.midas = new Midas({classname: 'not-editable'});
 
     expect($('region1').contentEditable).not.toEqual('true');
     expect($('region3').contentEditable).toEqual('true');
   });
 
-  it('should use the default configuration', function() {
+  it('uses the default configuration', function() {
     this.midas = new Midas();
 
     expect(this.midas.options.configuration).toEqual(Midas.Config);
   });
 
-  it('should allow the configuration to be provided in the options', function() {
+  it('allows the configuration to be provided in the options', function() {
     var config = { actions: {}, buttons: {} };
     this.midas = new Midas({configuration: config});
 
     expect(this.midas.options.configuration).toEqual(config);
   });
 
-  it("should pass it's configuration along to the toolbar and regions", function() {
+  it("passes it's configuration along to the toolbar and regions", function() {
     var config = { actions: {}, buttons: {} };
     this.midas = new Midas({configuration: config});
 
@@ -41,7 +41,7 @@ describe('Midas', function () {
     expect(this.midas.regions[0].options.configuration).toEqual(config);
   });
 
-  it('should only instantiate if a browser has contentEditable features', function() {
+  it('only instantiates if a browser has contentEditable features', function() {
     spyOn(Midas, 'agentIsCapable').andCallFake(function() {
       return false;
     });
@@ -52,7 +52,7 @@ describe('Midas', function () {
     expect(this.midas).toBeUndefined();
   });
 
-  it('should only instantiate if the window is top (when using an iframe)', function() {
+  it('only instantiates if the window is top (when using an iframe)', function() {
     var spy1 = spyOn(Midas, 'trace');
     var spy2 = spyOn(window, 'isTop').andCallFake(function() {
       return false;
@@ -64,7 +64,7 @@ describe('Midas', function () {
     expect(spy2.callCount).toEqual(1);
   });
 
-  it('should make all regions with the editable class editable', function() {
+  it('makes all regions with the editable class editable', function() {
     this.midas = new Midas();
 
     expect($('region1').contentEditable).toEqual('true');
@@ -72,7 +72,7 @@ describe('Midas', function () {
     expect($('region3').contentEditable).not.toEqual('true'); // will default to 'inherit' if not specified
   });
 
-  it('should assign all editable regions to member variables', function() {
+  it('assigns all editable regions to member variables', function() {
     this.midas = new Midas();
 
     expect(this.midas.regions.length).toEqual($$('.editable').length);
@@ -80,7 +80,7 @@ describe('Midas', function () {
     expect(this.midas.regionElements).toContain($('region2'));
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.midas = new Midas();
     this.midas.destroy();
 
@@ -90,7 +90,7 @@ describe('Midas', function () {
 
   describe('static methods', function () {
 
-    it('should track instances of itself', function() {
+    it('tracks instances of itself', function() {
       var midas1 = new Midas();
       var midas2 = new Midas();
       var midas3 = new Midas();
@@ -111,7 +111,7 @@ describe('Midas', function () {
       midas3 = null;
     });
 
-    it('should prompt before leaving the page if any changes were made', function() {
+    it('prompts before leaving the page if any changes were made', function() {
       expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
 
       expect(Midas.onBeforeUnload()).toEqual(null);
@@ -131,11 +131,11 @@ describe('Midas', function () {
       // be broken if these two fail in a given browser, because most of the
       // features require a level of support in the browser.
 
-      it('should return that it knows what browser is being used', function() {
+      it('returns that it knows what browser is being used', function() {
         expect(Midas.agent()).not.toEqual(false);
       });
 
-      it('should detect if the browser is capible of editing', function() {
+      it('detects if the browser is capible of editing', function() {
         expect(Midas.agentIsCapable()).toEqual(true);
       });
 
@@ -151,7 +151,7 @@ describe('Midas', function () {
       });
     });
 
-    it('should call serialize on the regions', function () {
+    it('calls serialize on the regions', function () {
       this.midas = new Midas();
       spyOn(this.midas.regions[1], 'serialize').andCallFake(function() {
         return {name: 'banana', content: 'juice'};
@@ -163,7 +163,7 @@ describe('Midas', function () {
 
     describe('using put (updating)', function() {
 
-      it('should generate an ajax request', function () {
+      it('generates an ajax request', function () {
         this.midas = new Midas({
           saveUrl: '/peanuts',
           saveMethod: 'put'
@@ -183,7 +183,7 @@ describe('Midas', function () {
 
     describe('using post (creating)', function() {
 
-      it('should generate an ajax request', function () {
+      it('generates an ajax request', function () {
         this.midas = new Midas({
           saveUrl: '/oranges',
           saveMethod: 'post'
@@ -205,7 +205,7 @@ describe('Midas', function () {
 
   describe('events that are observed', function () {
 
-    it('should understand context and highlight buttons', function() {
+    it('understands context and highlight buttons', function() {
       this.midas = new Midas();
       this.midas.regions[2].focused = true;
       this.midas.activeRegion = this.midas.regions[2];
@@ -225,7 +225,7 @@ describe('Midas', function () {
       expect(this.midas.toolbar.element.down('.midas-button-italic').hasClassName('active')).toEqual(true);
     });
 
-    it('should know which region has focus', function() {
+    it('knows which region has focus', function() {
 
       // focus() doesn't seem to work well in ci.. works fine in browser though.
       // I tried runs, waits, and changing the element that was being observed /
@@ -240,7 +240,7 @@ describe('Midas', function () {
       expect(this.midas.activeRegion.name).toEqual(this.midas.regions[0].name);
     });
 
-    it('should handle and pass any button clicks to the active region', function() {
+    it('handles and passes any button clicks to the active region', function() {
       this.midas = new Midas();
 
       this.midas.activeRegion = this.midas.regions[0];
@@ -253,7 +253,7 @@ describe('Midas', function () {
       expect(spy2.callCount).toEqual(1);
     });
 
-    it('should handle switching modes', function() {
+    it('handles switching modes', function() {
       this.midas = new Midas();
       this.midas.activeRegion = this.midas.regions[0];
 
@@ -267,14 +267,14 @@ describe('Midas', function () {
 
   describe('when using an iframe', function() {
 
-    it('should create an iframe', function() {
+    it('creates an iframe', function() {
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
       expect($('midas-iframe-window')).not.toBeNull();
     });
     
-    it('should not prompt twice before leaving the page if any changes were made', function() {
+    it("doesn't prompt twice before leaving the page if any changes were made", function() {
       expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
     
       expect(Midas.onBeforeUnload()).toEqual(null);
@@ -288,7 +288,7 @@ describe('Midas', function () {
       midas = null;
     });
     
-    it('should hijax external links within the frame and remove the top frame when clicked', function() {
+    it('hijaxes external links within the frame and removes the top frame when clicked', function() {
       var container = $('external_links');
       Midas.hijaxExternalLinks(container);
       
@@ -304,10 +304,9 @@ describe('Midas', function () {
       expect(container.select('a#relative_link').first().target).not.toEqual('_top');
       expect(container.select('a#same_domain_link').first().className).not.toEqual('external-link');
       expect(container.select('a#same_domain_link').first().target).not.toEqual('_top');
-      
     });
     
-    it('should communicate which contentWindow the toolbar should use', function() {
+    it('communicates which contentWindow the toolbar should use', function() {
 
       // need to figure out a better way to test this...
       // if the expectation runs before the iframe loads 'about:blank' we

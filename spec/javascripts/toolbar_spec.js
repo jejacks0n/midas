@@ -15,13 +15,13 @@ describe('Midas.Toolbar', function() {
     jasmine.unloadCSS('midas_styles');
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.toolbar = new Midas.Toolbar({lettuce: 'banana'});
 
     expect(this.toolbar.options['lettuce']).toEqual('banana');
   });
 
-  it('should make a toolbar', function() {
+  it('makes a toolbar', function() {
     this.toolbar = new Midas.Toolbar();
 
     expect(this.toolbar.element).not.toBeFalsy();
@@ -29,7 +29,7 @@ describe('Midas.Toolbar', function() {
     expect($$('body .midas-toolbar').length).toEqual(1);
   });
 
-  it('should generate an id for the toolbar it creates', function() {
+  it('generates an id for the toolbar it creates', function() {
     this.toolbar = new Midas.Toolbar();
 
     var id = this.toolbar.generateId();
@@ -37,20 +37,20 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.generateId()).toEqual(id);
   });
 
-  it('should be able to put the toolbar inside an existing element', function() {
+  it('handles putting the toolbar inside an existing element', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
     expect($('toolbar').innerHTML).not.toEqual('toolbar');
   });
 
-  it('should fill the toolbar with buttons (based on configuration)', function() {
+  it('fills the toolbar with buttons (based on configuration)', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
     expect($('toolbar').innerHTML).toContain('Save this page');
     expect($('toolbar').innerHTML).toContain('class="midas-flex-separator"');
   });
 
-  it('should make buttons and button groups', function() {
+  it('makes buttons and button groups', function() {
     this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
     
     expect($('toolbar').select('.midas-group').length).toBeGreaterThan(2);
@@ -59,7 +59,7 @@ describe('Midas.Toolbar', function() {
             toEqual(Midas.Config.toolbars['actions']['preview']);
   });
 
-  it('should make separators', function() {
+  it('makes separators', function() {
     this.toolbar = new Midas.Toolbar();
 
     expect(this.toolbar.makeSeparator('-').getAttribute('class')).toEqual('midas-line-separator');
@@ -67,7 +67,7 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.makeSeparator(' ').getAttribute('class')).toEqual('midas-separator');
   });
 
-  it('should keep track of palettes, selects, and panels that is has', function() {
+  it('keeps track of palettes, selects, and panels that is has', function() {
     this.toolbar = new Midas.Toolbar();
 
     expect(this.toolbar.palettes.length).toEqual(1);
@@ -75,19 +75,19 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.panels.length).toEqual(3);
   });
 
-  stub('should hide all palettes when anything besides a palette is clicked', function() {
+  stub('hides all palettes when anything besides a palette is clicked', function() {
     
   });
 
-  stub('should inactivate any active buttons', function() {
+  stub('deactivates any active buttons when clicking outside regions', function() {
 
   });
 
-  stub('should disable buttons, button groups, and toolbars', function() {
+  stub('disables buttons, button groups, and toolbars', function() {
 
   });
 
-  it('should keep any disabled buttons from being clicked', function() {
+  it('keeps any disabled buttons from being clicked', function() {
     this.toolbar = new Midas.Toolbar();
     var spy = spyOn(Midas, 'fire');
 
@@ -102,27 +102,27 @@ describe('Midas.Toolbar', function() {
     expect(spy.callCount).toEqual(1);
   });
 
-  stub('should keep track of the active region', function() {
+  stub('keeps track of the active region', function() {
 
   });
 
-  stub('should return the bottom offset of the toolbar for positioning', function() {
+  stub('returns the bottom offset of the toolbar for positioning', function() {
     
   });
 
-  stub('should observe keypress and mouseup on document', function() {
+  stub('observes keypress and mouseup on document', function() {
 
   });
 
-  stub('should observe keypress and mouseup on the iframe document when appropriate', function() {
+  stub('observes keypress and mouseup on the iframe document when appropriate', function() {
 
   });
 
-  stub('should add the active classname on mousedown, and remove it on mouseup', function() {
+  stub('adds the active classname on mousedown, and remove it on mouseup', function() {
 
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.toolbar = new Midas.Toolbar();
     this.toolbar.destroy();
 
@@ -141,14 +141,14 @@ describe('Midas.Toolbar', function() {
       });
     });
 
-    it('should handle regular buttons', function() {
+    it('handles regular buttons', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
       
       jasmine.simulate.click(this.toolbar.buttons['bold'].element);
       expect(this.spy.callCount).toEqual(1);
     });
 
-    it('should handle toggle buttons', function() {
+    it('handles toggle buttons', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
       jasmine.simulate.click(this.toolbar.buttons['preview'].element);
@@ -157,13 +157,13 @@ describe('Midas.Toolbar', function() {
       expect(this.spy.callCount).toEqual(2);
     });
 
-    it('should handle context buttons', function() {
+    it('handles context buttons', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
       expect(this.toolbar.contexts.length).toBeGreaterThan(2);
     });
     
-    it('should handle mode buttons, and buttons with more than one type', function() {
+    it('handles mode buttons, and buttons with more than one type', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
       jasmine.simulate.click(this.toolbar.buttons['preview'].element);
@@ -180,7 +180,7 @@ describe('Midas.Toolbar', function() {
       });
     });
 
-    it('should fire at least one event when a button is clicked', function() {
+    it('fires at least one event when a button is clicked', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
       jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);

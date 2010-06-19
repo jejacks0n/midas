@@ -11,20 +11,20 @@ describe('Midas.Palette', function() {
     } catch(e) {}
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')}, {lettuce: 'banana'});
 
     expect(this.palette.options['lettuce']).toEqual('banana');
   });
 
-  it('should make a palette', function() {
+  it('makes a palette', function() {
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
     expect(this.palette.element).not.toBeFalsy();
     expect($$('.midas-palette').length).toEqual(1);
   });
 
-  it('should show when the button is clicked', function() {
+  it('shows when the button is clicked', function() {
     var spy = spyOn(Ajax, 'Request');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
@@ -34,7 +34,7 @@ describe('Midas.Palette', function() {
     expect(this.palette.element.getStyle('display')).toEqual('block');
   });
 
-  it('should not show if the button is disabled', function() {
+  it("doesn't show if the button is disabled", function() {
     var spy = spyOn(Ajax, 'Request');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
@@ -53,7 +53,7 @@ describe('Midas.Palette', function() {
     expect(this.palette.element.getStyle('display')).toEqual('none');
   });
   
-  it('should hide', function() {
+  it('hides', function() {
     var spy = spyOn(Ajax, 'Request');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
@@ -64,7 +64,7 @@ describe('Midas.Palette', function() {
     expect(this.palette.element.getStyle('display')).toEqual('none');
   });
 
-  it('should position itself properly', function() {
+  it('positions itself properly', function() {
     var spy = spyOn(Ajax, 'Request');
     $('palette_button').setStyle('position:absolute;top:100px;left:100px');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
@@ -84,7 +84,7 @@ describe('Midas.Palette', function() {
     $('palette_button').setStyle('position:static');
   });
 
-  it('should know if it is visible or not', function() {
+  it('knows if it is visible or not', function() {
     var spy = spyOn(Ajax, 'Request');
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
@@ -95,7 +95,7 @@ describe('Midas.Palette', function() {
     expect(this.palette.visible()).toEqual(false);
   });
 
-  it('should load contents from a url', function() {
+  it('loads contents from a url', function() {
     var url = '';
     var spy = spyOn(Ajax, 'Request').andCallFake(function() {
       url = arguments[0];
@@ -106,7 +106,7 @@ describe('Midas.Palette', function() {
     expect(url).toEqual('pizzas/cheese');
   });
 
-  it('should call a setup function when it loads a panel', function() {
+  it('calls a setup function when it loads a panel', function() {
     window.callCount = 0;
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: "<script>window['midas_setup_backcolor'] = function() { window.callCount++ }</script>"});
@@ -117,7 +117,7 @@ describe('Midas.Palette', function() {
     expect(callCount).toEqual(1);
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
     this.palette.destroy();
 

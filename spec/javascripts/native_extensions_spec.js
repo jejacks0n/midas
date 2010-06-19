@@ -4,7 +4,7 @@ describe('Native Extensions', function () {
     jasmine.loadFixture('native_extensions_fixture');
   });
 
-  it('should compare two NodeLists', function() {
+  it('compares two NodeLists', function() {
     var div = $('div1');
     expect(typeof(div.childNodes.equals)).toEqual('function');
 
@@ -13,7 +13,7 @@ describe('Native Extensions', function () {
     expect(div.childNodes.equals($('div3').childNodes)).toEqual(false);
   });
 
-  it('should convert numbers to hex', function() {
+  it('converts numbers to hex', function() {
     var number1 = 15;
     var number2 = 0;
 
@@ -21,7 +21,7 @@ describe('Native Extensions', function () {
     expect(number2.toHex()).toEqual('00');
   });
   
-  it('should convert rgb strings to hex', function() {
+  it('converts rgb strings to hex', function() {
     var string1 = 'RGB(255, 255, 255)';
     var string2 = 'rgb(0 0 0)';
 
@@ -29,11 +29,12 @@ describe('Native Extensions', function () {
     expect(string2.toHex()).toEqual('#000000');
   });
 
-  it('should have a isTop() function on window', function() {
+  it('has an isTop() function on window', function() {
     var iframe = $('iframe1');
     iframe.contentWindow.isTop = window.isTop;
 
     expect(window.isTop()).toEqual(true);
     expect(iframe.contentWindow.isTop()).toEqual(false);
   });
+
 });

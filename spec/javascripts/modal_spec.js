@@ -13,20 +13,20 @@ describe('Midas.Modal', function() {
     } catch(e) {}
   });
 
-  it('should initialize when methods (show) are called', function() {
+  it('initializes when methods (show) are called', function() {
     var spy = spyOn(Midas.modal, '_initialize').andCallThrough();
     Midas.modal();
 
     expect(spy.callCount).toEqual(1);
   });
 
-  it('should handle options in the initialize function', function() {
+  it('handles options in the initialize function', function() {
     var modal = Midas.modal('', {title: 'Banana'});
 
     expect(modal.options['title']).toEqual('Banana');
   });
 
-  it('should build an element structure', function() {
+  it('builds an element structure', function() {
     Midas.modal();
 
     expect($('midas_modal')).not.toBeFalsy();
@@ -34,7 +34,7 @@ describe('Midas.Modal', function() {
     expect($$('.midas-modal-content').length).toEqual(1);
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     var modal = Midas.modal();
     modal.destroy();
 
@@ -43,7 +43,7 @@ describe('Midas.Modal', function() {
     expect($$('.midas-modal-content').length).toEqual(0);
   });
 
-  it('should fire events, and call callbacks', function() {
+  it('fires events, and calls callbacks', function() {
     var callCount = 0;
     var callback = function() { callCount++ };
     var modal = Midas.modal('', {beforeHide: callback});
@@ -53,7 +53,7 @@ describe('Midas.Modal', function() {
     expect(callCount).toEqual(1);
   });
 
-  it('should hide', function() {
+  it('hides', function() {
     var modal = Midas.modal();
 
     expect($('midas_modal_overlay').getStyle('display')).toEqual('block');
@@ -65,14 +65,14 @@ describe('Midas.Modal', function() {
     expect($('midas_modal_overlay').getStyle('display')).toEqual('none');
   });
 
-  it('should copy controls into the frame', function() {
+  it('copies controls into the control area (frame)', function() {
     var modal = Midas.modal('/bananas');
 
     expect(modal.frameElement.innerHTML).toContain('<div class="midas-modal-controls">bananas</div>');
     expect(modal.contentElement.innerHTML).not.toContain('<div class="midas-modal-controls">bananas</div>');
   });
 
-  it('should remove the controls from the frame when hiding', function() {
+  it('removes the controls from the frame when hiding', function() {
     var modal = Midas.modal();
 
     expect(modal.frameElement.innerHTML).toContain('<div class="midas-modal-controls">bananas</div>');
@@ -82,13 +82,13 @@ describe('Midas.Modal', function() {
     expect(modal.frameElement.innerHTML).not.toContain('<div class="midas-modal-controls">bananas</div>');
   });
 
-  it('should have a form', function() {
+  it('has a form', function() {
     var modal = Midas.modal();
 
     expect(modal.element.down('form')).toBeDefined();
   });
 
-  it('should call a predefined method on form submission', function() {
+  it('calls a predefined method on form submission', function() {
     var modal = Midas.modal();
     var callCount = 0;
     window['midas_modal_submit'] = function(e) { callCount++; e.stop(); };
@@ -102,13 +102,15 @@ describe('Midas.Modal', function() {
   });
 
   describe('pane navigation buttons', function() {
+
     beforeEach(function() {
       this.removeAllSpies();
       jasmine.loadFixture('modal_fixture');
     });
 
     describe('with one pane', function() {
-      it('should not create pane navigation buttons', function() {
+
+      it("doesn't create pane navigation buttons", function() {
         this.spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
           options.onSuccess({responseText: $('with_one_pane').innerHTML});
         });
@@ -116,9 +118,11 @@ describe('Midas.Modal', function() {
 
         expect(modal.controls).not.toBeDefined();
       });
+
     });
 
     describe('with multiple panes', function() {
+
       beforeEach(function() {
         this.spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
           options.onSuccess({responseText: $('with_two_panes').innerHTML});
@@ -126,21 +130,21 @@ describe('Midas.Modal', function() {
         this.modal = Midas.modal();
       });
 
-      it('should create pane navigation buttons', function() {
+      it('creates pane navigation buttons', function() {
         expect(this.modal.element.down('.midas-modal-controls')).toBeDefined();
       });
 
-      it('should hide all but the first pane', function() {
+      it('hides all but the first pane', function() {
         var panes = this.modal.element.select('.midas-modal-pane');
         expect(panes[0].getStyle('display')).toEqual('block');
         expect(panes[1].getStyle('display')).toEqual('none');
       });
 
-      it('should disable the previous button by default', function() {
+      it('disables the previous button by default', function() {
         expect(this.modal.prevButton.disabled).toBeTruthy();
       });
 
-      it('should take you to the next and previous pane', function() {
+      it('navigates to the next and previous pane', function() {
         expect(this.modal.paneIndex).toEqual(0);
         var panes = this.modal.element.select('.midas-modal-pane');
 
@@ -157,7 +161,7 @@ describe('Midas.Modal', function() {
         expect(panes[1].getStyle('display')).toEqual('none');
       });
 
-      it('should disable the previous button when moved to first pane', function() {
+      it('disables the previous button when moving to the first pane', function() {
         this.modal.showPane(1);
         expect(this.modal.prevButton.disabled).toBeFalsy();
 
@@ -165,14 +169,14 @@ describe('Midas.Modal', function() {
         expect(this.modal.prevButton.disabled).toBeTruthy();
       });
 
-      it('should enable the previous button when moved beyond the first pane', function() {
+      it('enables the previous button when movining beyond the first pane', function() {
         expect(this.modal.prevButton.disabled).toBeTruthy();
 
         jasmine.simulate.click(this.modal.nextButton);
         expect(this.modal.prevButton.disabled).toBeFalsy();
       });
 
-      it('should disable the next button when moved to last pane', function() {
+      it('disables the next button when moving to the last pane', function() {
         expect(this.modal.nextButton.disabled).toBeFalsy();
 
         jasmine.simulate.click(this.modal.nextButton);
@@ -180,7 +184,7 @@ describe('Midas.Modal', function() {
         expect(this.modal.nextButton.disabled).toBeTruthy();
       });
 
-      it('should enable the next button when moved away from the last pane', function() {
+      it('enables the next button when moving away from the last pane', function() {
         this.modal.showPane(this.modal.panes.length - 1);
         expect(this.modal.nextButton.disabled).toBeTruthy();
 
@@ -191,26 +195,26 @@ describe('Midas.Modal', function() {
 
   });
 
-  stub('should set the title', function() {
+  stub('sets the title', function() {
   });
 
-  stub('should update', function() {
-
-  });
-
-  stub('should hide on escape key', function() {
+  stub('updates the content', function() {
 
   });
 
-  stub('should hide when the close button is pressed', function() {
+  stub('hides on escape key', function() {
 
   });
 
-  stub('should load contents from a url', function() {
+  stub('hides when the close button is pressed', function() {
 
   });
 
-  stub('should position itself properly', function() {
+  stub('loads contents from a url', function() {
+
+  });
+
+  stub('positions itself properly', function() {
 
   });
 });

@@ -13,14 +13,14 @@ describe('Midas.Region', function() {
     jasmine.unloadCSS('midas_styles');
   });
 
-  it('should make an element editable', function() {
+  it('makes an element editable', function() {
     this.region = new Midas.Region('region1');
 
     expect($('region1').contentEditable).toEqual('true');
     expect($('region1').hasClassName('midas-region')).toEqual(true);
   });
 
-  it('should make an empty region contain a &nbsp;, and reset that on focus', function() {
+  it('makes an empty region contain a &nbsp;, and resets that on focus', function() {
 
     // this seems like a weird test, but it's for firefox, and is relatively unnoticable.
     // firefox doesn't like to give focus to a complely blank contentEditable region, so
@@ -38,13 +38,13 @@ describe('Midas.Region', function() {
     }
   });
 
-  it('should accept options in the constructor', function() {
+  it('accepts options in the constructor', function() {
     this.region = new Midas.Region('region1', {sandwich: 'icecream'});
 
     expect(this.region.options['sandwich']).toEqual('icecream');
   });
 
-  it('should allow retrieval and update of the regions contents', function() {
+  it('allows retrieval and update of the regions contents', function() {
     this.region = new Midas.Region('region1');
 
     expect(this.region.getContents()).toEqual('region1');
@@ -53,7 +53,7 @@ describe('Midas.Region', function() {
     expect(this.region.getContents()).toEqual('bacon');
   });
 
-  it('should toggle preview on and off', function() {
+  it('toggles preview on and off', function() {
     this.region = new Midas.Region('region1');
 
     expect(this.region.previewing).toEqual(false);
@@ -71,7 +71,7 @@ describe('Midas.Region', function() {
     expect(this.region.element.hasClassName('midas-region')).toEqual(true);
   });
 
-  it('should serialize', function() {
+  it('serializes', function() {
     this.region = new Midas.Region('region1');
     var serialized = this.region.serialize();
 
@@ -79,7 +79,7 @@ describe('Midas.Region', function() {
     expect(serialized['content']).toEqual('region1');
   });
 
-  it('should destroy', function() {
+  it('destroys', function() {
     this.region = new Midas.Region('region1');
     this.region.destroy();
 
@@ -87,9 +87,34 @@ describe('Midas.Region', function() {
     expect($('region1').hasClassName('midas-region')).toEqual(false);
   });
 
+  it('tracks selections on mousedown, and on mouseup updates them', function() {
+    this.region = new Midas.Region('region1');
+    var spy = spyOn(this.region, 'updateSelections').andCallThrough();
+
+    window.getSelection().selectAllChildren(this.region.element);
+
+    jasmine.simulate.mousedown(this.region.element);
+    expect(this.region.selecting).toEqual(true);
+
+    jasmine.simulate.mouseup(this.region.element);
+    expect(spy.callCount).toEqual(1);
+  });
+
+  it('removes any midas-regions when content is pasted in', function() {
+
+    // tried using the metaKey+v in the tests, but we're observing the
+    // paste event, and I couldn't figure out how to simulate that.
+
+    this.region = new Midas.Region('region1');
+    this.region.setContents('<div class="midas-region">content inside region</div>');
+    this.region.afterPaste();
+
+    expect(this.region.element.innerHTML).toEqual('content inside region');
+  }),
+
   describe('behave according to options', function() {
 
-    it('should support the inline option: true', function() {
+    it('supports the inline option: true', function() {
       this.region = new Midas.Region('region1', {inline: true});
 
       var height = this.region.element.getHeight();
@@ -98,7 +123,7 @@ describe('Midas.Region', function() {
       expect(this.region.element.getHeight()).not.toEqual(height);
     });
 
-    it('should support the inline option: false', function() {
+    it('supports the inline option: false', function() {
       this.region = new Midas.Region('region1', {inline: false});
 
       var height = this.region.element.getHeight();
@@ -111,7 +136,7 @@ describe('Midas.Region', function() {
 
   describe('keys that have special behaviors', function() {
 
-    it('should indent li elements when pressing tab', function() {
+    it('indents li elements when pressing tab', function() {
       this.region = new Midas.Region('region4');
 
       expect($('div5').down('ul').down('ul')).toBeUndefined();
@@ -137,14 +162,14 @@ describe('Midas.Region', function() {
       this.region = new Midas.Region('region1');
     });
 
-    it('should fall back to the standard execCommand', function() {
+    it('falls back to the standard execCommand', function() {
       var spy = spyOn(document, 'execCommand').andCallThrough();
       this.region.handleAction('delete');
 
       expect(spy).wasCalledWith('delete', false, null);
     });
 
-    it('should throw an exception when the action is unknown', function() {
+    it('throws an exception when the action is unknown', function() {
 
       // this test doesn't work in webkit because execCommand doesn't
       // return false ever, so it's impossible to tell if the command
@@ -178,28 +203,28 @@ describe('Midas.Region', function() {
         Midas.Config.behaviors = this.oldBehaviors;
       });
 
-      it('should handle execCommand actions', function() {
+      it('handles execCommand actions', function() {
         var spy = spyOn(this.region, 'execCommand').andCallThrough();
         this.region.handleAction('bold');
 
         expect(spy).wasCalledWith('italic', undefined);
       });
 
-      it('should handle execCommand actions with array', function() {
+      it('handles execCommand actions with array', function() {
         var spy = spyOn(this.region, 'execCommand').andCallThrough();
         this.region.handleAction('underline');
 
         expect(spy).wasCalledWith('insertHTML', '<div>peanut<div>');
       });
 
-      it('should handle insertHTML actions', function() {
+      it('handles insertHTML actions', function() {
         var spy = spyOn(this.region.handle, 'insertHTML').andCallThrough();
         this.region.handleAction('pagebreak');
 
         expect(spy.argsForCall[0]).toContain(Midas.Config.behaviors['pagebreak']['insertHTML']);
       });
 
-      it('should throw an exception when the behavior is unknown', function() {
+      it('throws an exception when the behavior is unknown', function() {
         try {
           this.region.handleAction('bagel');
         } catch(e) {
@@ -211,7 +236,7 @@ describe('Midas.Region', function() {
 
     describe('expecting special cases', function() {
 
-      it('should handle indent', function() {
+      it('handles indent', function() {
         this.region = new Midas.Region('region4');
         jasmine.simulate.selection($('region4').down('#div1'));
         this.region.updateSelections();
@@ -224,7 +249,7 @@ describe('Midas.Region', function() {
         }
       });
 
-      it('should handle removeformatting', function() {
+      it('handles removeformatting', function() {
         this.region = new Midas.Region('region4');
         jasmine.simulate.selection($('region4').down('#div3'));
         this.region.updateSelections();
@@ -250,7 +275,7 @@ describe('Midas.Region', function() {
 
       var actions = $w('bold italic underline strikethrough subscript superscript justifyleft justifycenter justifyright justifyfull insertorderedlist insertunorderedlist');
       actions.each(function(action) {
-        it('should handle ' + action, function() {
+        it('handles the ' + action + 'action', function() {
           var resultDiv = $('region4').down('#action');
 
           this.region.handleAction(action);
@@ -268,7 +293,7 @@ describe('Midas.Region', function() {
             expect(resultDiv.select('i').length).toEqual(1);
             break;
           case 'underline':
-			expect(resultDiv.select('u').length).toEqual(1);
+            expect(resultDiv.select('u').length).toEqual(1);
             break;
           case 'strikethrough':
             if (jasmine.browser.WebKit) {
@@ -330,7 +355,7 @@ describe('Midas.Region', function() {
 
       }.bind(this));
 
-      it('should handle undo and redo', function() {
+      it('handles undo and redo', function() {
         this.div = $('region4').down('#action');
         jasmine.simulate.selection(this.div.childNodes[0]);
         this.region.updateSelections();
@@ -351,7 +376,7 @@ describe('Midas.Region', function() {
         }
       });
 
-      it('should handle outdent', function() {
+      it('handles outdent', function() {
         this.region.handleAction('indent');
         this.region.handleAction('indent');
 
@@ -384,7 +409,7 @@ describe('Midas.Region', function() {
       });
     });
 
-    it('should fire an event when it gets focus', function() {
+    it('fires an event when it gets focus', function() {
       this.region = new Midas.Region('region1');
 
       // this doesn't work in ci, but it seems like it should
@@ -394,40 +419,27 @@ describe('Midas.Region', function() {
       expect(this.spy.callCount).toEqual(1);
     });
 
-    it('should fire an event when it gets clicked', function() {
+    it('fires an event when it gets clicked', function() {
       this.region = new Midas.Region('region1');
 
       jasmine.simulate.click(this.region.element);
       expect(this.spy.callCount).toEqual(1);
     });
 
-    it('should fire an event when a key is pressed', function() {
+    it('fires an event when a key is pressed', function() {
       this.region = new Midas.Region('region1');
 
       jasmine.simulate.keypress(this.region.element);
       expect(this.spy.callCount).toEqual(1);
     });
 
-    it('should update selections on keyup', function() {
+    it('fires update selections on keyup', function() {
       this.region = new Midas.Region('region1');
       var spy = spyOn(this.region, 'updateSelections').andCallThrough();
 
       jasmine.simulate.keydown(this.region.element, {keyCode: 65});
       jasmine.simulate.keyup(this.region.element, {keyCode: 65});
 
-      expect(spy.callCount).toEqual(1);
-    });
-
-    it('should track selections on mousedown, and on mouseup update them', function() {
-      this.region = new Midas.Region('region1');
-      var spy = spyOn(this.region, 'updateSelections').andCallThrough();
-
-      window.getSelection().selectAllChildren(this.region.element);
-
-      jasmine.simulate.mousedown(this.region.element);
-      expect(this.region.selecting).toEqual(true);
-
-      jasmine.simulate.mouseup(this.region.element);
       expect(spy.callCount).toEqual(1);
     });
 
