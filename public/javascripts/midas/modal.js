@@ -64,7 +64,8 @@ Object.extend(Midas.modal, {
 		if (!this.showing) {
       this.showing = true;
       this.overlayElement.show();
-      this.element.show();
+      this.element.setStyle({display: 'block', visibility: 'visible', position: null});
+      this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
 			this.fire('onShow');
 		} else {
 			this.update();
@@ -135,6 +136,8 @@ Object.extend(Midas.modal, {
     this.contentElement.setStyle('height:auto');
     this.contentContainerElement.setStyle('height:auto');
 
+    this.frameElement.setStyle({display: 'block'});
+
     var dimensions = this.frameElement.getDimensions();
 
     this.element.setStyle({width: dimensions.width + 'px'});
@@ -143,7 +146,7 @@ Object.extend(Midas.modal, {
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20) {
       var titleHeight = this.element.down('h1').getHeight();
-      var controlsHeight = (this.controls ? this.controls.offsetHeight : 0);
+      var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
       this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
     }
   },

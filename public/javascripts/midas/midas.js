@@ -29,7 +29,6 @@ var Midas = Class.create({
     this.statusbarOptions = statusbarOptions || {};
     this.regionOptions = regionOptions || {};
     
-    
     this.initializeInterface();        
   },
 
