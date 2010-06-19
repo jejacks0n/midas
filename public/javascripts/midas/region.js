@@ -67,13 +67,14 @@ Midas.Region = Class.create({
 
     this.element.observe('keyup', function(event) {
       if (this.previewing) return;
+
       Midas.fire('region:update', {region: this, name: this.name, event: event, changed: true});
     }.bind(this));
     this.element.observe('keypress', function(event) {
       if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: event});
 
-      switch(event.keyCode) {
+      switch (event.keyCode) {
         case 9: // tab
           this.selections.each(function(selection) {
             var container = selection.commonAncestorContainer;
@@ -87,7 +88,11 @@ Midas.Region = Class.create({
         case 13: // enter
           break;
       }
+    }.bind(this));
 
+    // clipboard tracking
+    this.element.observe('paste', function() {
+      setTimeout(this.afterPaste.bind(this), 1);
     }.bind(this));
 
     // selection tracking
@@ -126,6 +131,21 @@ Midas.Region = Class.create({
     }
   },
 
+  afterPaste: function() {
+    console.debug('afterpaste')
+    var pastedRegion = this.element.down('.midas-region');
+    if (pastedRegion) {
+      var selection = this.options['contentWindow'].getSelection();
+      selection.removeAllRanges();
+
+      var range = this.doc.createRange();
+      range.selectNode(pastedRegion);
+      selection.addRange(range);
+      this.doc.execCommand('undo', false, null);
+      this.doc.execCommand('insertHTML', false, pastedRegion.innerHTML);
+    }
+  },
+
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
     
@@ -151,13 +171,13 @@ Midas.Region = Class.create({
 
   togglePreview: function() {
     if (this.previewing) {
-      this.element.contentEditable = true;
       this.element.removeClassName('midas-region-preview');
-      this.element.addClassName('midas-region');
+      this.makeEditable();
       this.previewing = false;
     } else {
       this.element.contentEditable = false;
       this.element.addClassName('midas-region-preview');
+      this.element.setStyle({height: null, minHeight: null, minWidth: null, maxWidth: null, overflow: null});
       this.element.removeClassName('midas-region');
       this.previewing = true;
     }
