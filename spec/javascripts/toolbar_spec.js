@@ -70,7 +70,7 @@ describe('Midas.Toolbar', function() {
   it('keeps track of palettes, selects, and panels that is has', function() {
     this.toolbar = new Midas.Toolbar();
 
-    expect(this.toolbar.palettes.length).toEqual(1);
+    expect(this.toolbar.palettes.length).toEqual(2);
     expect(this.toolbar.selects.length).toEqual(2);
     expect(this.toolbar.panels.length).toEqual(3);
   });

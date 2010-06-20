@@ -10,7 +10,8 @@ Midas.Config = {
    *
    * button format: [label, description, [type, action], [type, action], etc]
    * type can be:
-   *   'button' (default) calls handleCommand and passes the key of the object (eg. save, preview, undo etc.)
+   *   'button' (default) calls handleCommand and passes the key of the object
+   *            (eg. save, preview, undo etc.)
    *   'toggle' will toggle on or off when clicked (and otherwise behaves like a button)
    *   'modal' will open a modal window, expects the action to be:
    *     a string url
@@ -83,7 +84,7 @@ Midas.Config = {
       style:                 ['Style', '', ['select', '/midas/style.html']],
       formatblock:           ['Block Format', '', ['select', '/midas/formatblock.html']],
       sep1:                  '-',
-      //backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
+      backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
       forecolor:             ['Text Color', '', ['palette', '/midas/forecolor.html'], ['context']],
       sep2:                  '-',
       decoration:            {
@@ -134,7 +135,7 @@ Midas.Config = {
       }
     },
 
-  /* Behaviors
+  /* Behaviors for htmleditor
    *
    * Behaviors are used to change the default behaviors of the editor when a given button is
    * clicked.  For example, we prefer to add HR tags using an HR wrapped within a div with a
@@ -142,30 +143,18 @@ Midas.Config = {
    * behaviors just prototype them onto Midas.Region.handle.
    *
    * An example behavior would be to add a new button, called buynowbutton, and providing a
-   * behavior like:
+   * behavior something like the following:
    *
    * buynowbutton: {insertElement: function() {
    *   return new Element('a', {href: '/buy-now', class: 'buy-now'}).update('Buy Now!');
    * }}
    *
-   * It's important to note that the this keyword inside of the callback functions applies to an
-   * instance of Midas.Region.
-   *
-   * Behavior Methods, and expected arguments (arguments can be provided in an array when there
-   * is more than one expected):
-   *   execCommand: a string of the action to take, or an array [action to take, argument]
-   *   insertHTML: a callback function that returns a string
-   *   ...
+   * It's important to note that the this keyword inside the callback functions is an instance of
+   * Midas.Region.
    */
   behaviors: {
     horizontalrule:      {insertHTML: function() {
                             return '<div class="hr"><hr/></div>';
-                         }},
-    style:               {insertHTML: function(event, toolbar, options) {
-                            //console.debug(arguments);
-                            var value = this.doSomething();
-                            console.debug(value);
-                            return value;
                          }}
     }
 };
