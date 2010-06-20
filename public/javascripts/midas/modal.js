@@ -132,6 +132,8 @@ Object.extend(Midas.modal, {
   },
 
   position: function() {
+    if (!this.element) return;
+    
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
     this.contentContainerElement.setStyle('height:auto');
