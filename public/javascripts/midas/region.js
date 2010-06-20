@@ -122,7 +122,7 @@ Midas.Region = Class.create({
   },
 
   updateSelections: function() {
-    var selection = window.getSelection();
+    var selection = this.options['contentWindow'].getSelection();
     this.selections = [];
 
     for (var i = 0; i <= selection.rangeCount - 1; ++i) {
@@ -238,17 +238,15 @@ Midas.Region = Class.create({
   wrap: function(tagName, newElementCallback, updateElementCallback) {
     var range = this.selections[0];
     var fragment = range.cloneContents();
+
     if (fragment.containsTags('div table tr td')) {
-      this.wrapTextnodes(tagName, newElementCallback, updateElementCallback);
+      this.wrapTextnodes(fragment, tagName, newElementCallback, updateElementCallback);
     } else {
-      this.wrapEverything(newElementCallback, updateElementCallback);
+      this.wrapFragment(fragment, newElementCallback, updateElementCallback);
     }
   },
 
-  wrapTextnodes: function(tagName, newElementCallback, updateElementCallback) {
-    var range = this.selections[0];
-    var fragment = range.cloneContents();
-
+  wrapTextnodes: function(fragment, tagName, newElementCallback, updateElementCallback) {
     var textnodes = fragment.getTextNodes();
     for (var i = 0; i < textnodes.length; ++i) {
       if (textnodes[i].parentNode.tagName != tagName.toUpperCase()) {
@@ -265,10 +263,7 @@ Midas.Region = Class.create({
     this.execCommand('insertHTML', html);
   },
 
-  wrapEverything: function(newElementCallback) {
-    var range = this.selections[0];
-    var fragment = range.cloneContents();
-
+  wrapFragment: function(fragment, newElementCallback) {
     var container = newElementCallback.call(this);
     container.appendChild(fragment);
 
