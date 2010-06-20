@@ -41,3 +41,41 @@ String.prototype.toHex = function() {
 window.isTop = function() {
   return (this == top);
 };
+
+DocumentFragment.prototype.getTextNodes = function(element, textnodes) {
+  element = element || this;
+  textnodes = textnodes || [];
+
+  Element.cleanWhitespace(element);
+
+  for (var i = 0; i <= element.childNodes.length - 1; ++i) {
+    if (element.childNodes[i].nodeType == 3) {
+      textnodes.push(element.childNodes[i]);
+    } else {
+      this.getTextNodes(element.childNodes[i], textnodes);
+    }
+  }
+
+  return textnodes;
+};
+
+DocumentFragment.prototype.containsTags = function(tags, element) {
+  element = element || this;
+
+  var i;
+  for (i = 0; i <= element.childNodes.length - 1; ++i) {
+    if (element.childNodes[i].nodeType == 3) continue;
+    if (tags.indexOf(element.childNodes[i].tagName.toLowerCase()) > -1) {
+      return true;
+    }
+  }
+
+  for (i = 0; i <= element.childNodes.length - 1; ++i) {
+    if (element.childNodes[i].nodeType == 3) continue;
+    if (this.containsTags(tags, element.childNodes[i])) {
+      return true;
+    }
+  }
+
+  return false;
+};

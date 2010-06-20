@@ -29,7 +29,7 @@ describe('Native Extensions', function () {
     expect(string2.toHex()).toEqual('#000000');
   });
 
-  it('has an isTop() function on window', function() {
+  it('prototypes isTop() on window', function() {
     var iframe = $('iframe1');
     iframe.contentWindow.isTop = window.isTop;
 
@@ -37,4 +37,25 @@ describe('Native Extensions', function () {
     expect(iframe.contentWindow.isTop()).toEqual(false);
   });
 
+  it('gets textnodes for DocumentFragments', function() {
+    var selection = jasmine.simulate.selection($('div3'));
+    var range = selection.getRangeAt(0);
+    var fragment = range.cloneContents();
+
+    var textnodes = fragment.getTextNodes();
+    expect(textnodes.length).toEqual(4);
+  });
+
+  it('can find tags inside a DocumentFragment', function() {
+    var selection = jasmine.simulate.selection($('div3'));
+    var range = selection.getRangeAt(0);
+    var fragment = range.cloneContents();
+
+    var hasTag;
+    hasTag = fragment.containsTags('span em');
+    expect(hasTag).toEqual(true);
+
+    hasTag = fragment.containsTags('font');
+    expect(hasTag).toEqual(false);
+  });
 });

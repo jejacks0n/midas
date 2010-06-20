@@ -469,6 +469,7 @@ jasmine.simulate = {
     range.selectNode(target);
     selection.removeAllRanges();
     selection.addRange(range);
+    return selection;
   },
 
   /**
