@@ -195,6 +195,7 @@ var Midas = Class.create({
     switch(mode) {
       case 'preview':
         window.getSelection().removeAllRanges();
+        if (this.iframe) this.iframe.contentWindow.getSelection().removeAllRanges();
         this.toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
         this.regions.each(function(region) {
           region.togglePreview();
