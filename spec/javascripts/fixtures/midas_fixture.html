@@ -8,18 +8,17 @@
 </div>
 
 <div id="external_links">
-  <!-- should: change target to top and class to 'external-link' -->
-  <a id="external_link" href="http://www.google.com">google</a>
-  <!-- should: change target to _top and add class of 'external-link' -->
-  <a id="external_link_target_self" href="http://www.cnn.com" target='_self'>cnn.com</a>
-  
-  <!-- should: leave target alone, but add 'external-link' class -->
-  <a id="external_link_target_blank" href="http://www.yahoo.com" target='_blank'>yahoo.com</a>
-  
-  <!-- should: not open from top and not add 'external-link' class -->
-  <a id="relative_link" href="/" target='_blank'>Index</a>
-  <!-- should: not open from top and not add 'external-link' class -->
-  <a id="same_domain_link" href="http://localhost/index.html" target='_blank'>same domain</a>
+  <a href="http://www.google.com">google</a>
+  <a href="http://www.cnn.com" target='_self'>cnn.com</a>
+  <a href="http://www.cnn.com" target='_parent'>cnn.com</a>
+  <a href="http://www.yahoo.com" target='_blank'>yahoo.com</a>
+  <a href="/" target='_blank'>index</a>
+  <a href="http://localhost/index.html">same domain</a>
+  <a href="http://localhost:8888/index.html">same domain</a>
+  <div class="midas-region">
+    <a href="http://www.cnn.com">cnn.com</a>
+    <a href="http://www.cnn.com" target='_parent'>cnn.com</a>
+  </div>
 </div>
 
 <div id="region1" class="editable">

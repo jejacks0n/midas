@@ -49,17 +49,15 @@ var Midas = Class.create({
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
-        Midas.hijaxExternalLinks(this.iframe.contentWindow.document.body);
+        Midas.hijackLinks(this.iframe.contentWindow.document.body);
       }.bind(this));
 
       this.iframe.src = src;
       this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});      
       this.iframeContainer.appendChild(this.iframe);
-      
 
       document.body.setStyle('overflow:hidden');
       document.body.appendChild(this.iframeContainer);
-      
     } else {
       this.initializeRegions(this.contentWindow);
       window.onbeforeunload = Midas.onBeforeUnload;
@@ -326,6 +324,22 @@ Object.extend(Midas, {
     return (agent && document.getElementById && document.designMode && agent != 'konqueror' && agent != 'msie') ? true : false;
   },
 
+  hijackLinks: function(element) {
+    var links = element.select('a');
+
+    for (var i = 0; i < links.length; ++i) {
+      var uri = links[i].getAttribute('href');
+      var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
+      if (host &&
+          host != window.location.host &&
+          host != window.location.hostname &&
+          ((links[i].target == '' || links[i].target == '_self')) &&
+          !links[i].up('.midas-region')) {
+        links[i].writeAttribute('target', '_top');
+      }
+    }
+  },
+
   fire: function(event, memo) {
     event = 'midas:' + event;
     Midas.trace('Midas.fire', event, memo);
@@ -333,19 +347,6 @@ Object.extend(Midas, {
     Event.fire(document, event, memo);
   },
   
-  hijaxExternalLinks: function(container) {
-    links = container.select('a');    
-    for (var a=0; a < links.length; a++) {
-      uri = links[a].getAttribute('href');      
-      if (uri.match(/^http:\/\//) && uri.split('://')[1].split('/')[0] != window.location.hostname) {
-        if (links[a].target === '' || links[a].target == '_self' || links[a].target == '_parent') {
-          links[a].writeAttribute('target', '_top');
-        }        
-        links[a].addClassName('external-link');
-      }
-    };
-  },
-
   trace: function() {
     var args = [];
     for (var i = 0; i < arguments.length; ++i) args.push(arguments[i]);

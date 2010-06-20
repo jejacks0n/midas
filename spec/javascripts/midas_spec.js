@@ -288,22 +288,23 @@ describe('Midas', function () {
       midas = null;
     });
     
-    it('hijaxes external links within the frame and removes the top frame when clicked', function() {
+    it('hijacks external links to set their targets to _top', function() {
       var container = $('external_links');
-      Midas.hijaxExternalLinks(container);
-      
-      expect(container.select('a#external_link').first().className).toEqual('external-link');
-      expect(container.select('a#external_link').first().target).toEqual('_top');      
-      expect(container.select('a#external_link_target_self').first().target).toEqual('_top');
-      expect(container.select('a#external_link_target_self').first().className).toEqual('external-link');
-      
-      expect(container.select('a#external_link_target_blank').first().className).toEqual('external-link');
-      expect(container.select('a#external_link_target_blank').first().target).not.toEqual('_top');
-      
-      expect(container.select('a#relative_link').first().className).not.toEqual('external-link');
-      expect(container.select('a#relative_link').first().target).not.toEqual('_top');
-      expect(container.select('a#same_domain_link').first().className).not.toEqual('external-link');
-      expect(container.select('a#same_domain_link').first().target).not.toEqual('_top');
+      Midas.hijackLinks(container);
+      var links = container.select('a');
+
+      expect(links[0].getAttribute('target')).toEqual('_top');
+      expect(links[1].getAttribute('target')).toEqual('_top');
+      expect(links[2].getAttribute('target')).toEqual('_parent');
+
+      expect(links[3].getAttribute('target')).toEqual('_blank');
+
+      expect(links[4].getAttribute('target')).toEqual('_blank');
+      expect(links[5].getAttribute('target')).toEqual(null);
+      expect(links[6].getAttribute('target')).toEqual(null);
+
+//      expect(links[7].getAttribute('target')).toEqual(null);
+//      expect(links[8].getAttribute('target')).toEqual(null);
     });
     
     it('communicates which contentWindow the toolbar should use', function() {
