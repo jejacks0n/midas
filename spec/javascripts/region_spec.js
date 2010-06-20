@@ -188,11 +188,6 @@ describe('Midas.Region', function() {
         this.oldBehaviors = Midas.Config.behaviors;
         Midas.Config.behaviors = {
           bagel:          {havati: 'lettuce'},
-          bold:           {execCommand: 'italic'},
-          underline:      {execCommand: ['insertHTML', '<div>peanut<div>']},
-          horizontalrule: {insertElement: function() {
-                            return new Element('hr');
-                          }},
           pagebreak:      {insertHTML: function() {
                             return '<div>walnut</div>';
                           }}
@@ -201,20 +196,6 @@ describe('Midas.Region', function() {
 
       afterEach(function() {
         Midas.Config.behaviors = this.oldBehaviors;
-      });
-
-      it('handles execCommand actions', function() {
-        var spy = spyOn(this.region, 'execCommand').andCallThrough();
-        this.region.handleAction('bold');
-
-        expect(spy).wasCalledWith('italic', undefined);
-      });
-
-      it('handles execCommand actions with array', function() {
-        var spy = spyOn(this.region, 'execCommand').andCallThrough();
-        this.region.handleAction('underline');
-
-        expect(spy).wasCalledWith('insertHTML', '<div>peanut<div>');
       });
 
       it('handles insertHTML actions', function() {

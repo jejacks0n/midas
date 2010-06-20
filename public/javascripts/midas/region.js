@@ -65,9 +65,12 @@ Midas.Region = Class.create({
       Midas.fire('region:update', {region: this, name: this.name, event: event});
     }.bind(this));
 
+    this.element.observe('keydown', function(event) {
+      if (Midas.modal.showing) event.stop();
+    }.bind(this));
+
     this.element.observe('keyup', function(event) {
       if (this.previewing) return;
-
       Midas.fire('region:update', {region: this, name: this.name, event: event, changed: true});
     }.bind(this));
     this.element.observe('keypress', function(event) {
@@ -91,7 +94,8 @@ Midas.Region = Class.create({
     }.bind(this));
 
     // clipboard tracking
-    this.element.observe('paste', function() {
+    this.element.observe('paste', function(event) {
+      if (Midas.modal.showing) event.stop();
       setTimeout(this.afterPaste.bind(this), 1);
     }.bind(this));
 
@@ -132,7 +136,6 @@ Midas.Region = Class.create({
   },
 
   afterPaste: function() {
-    console.debug('afterpaste')
     var pastedRegion = this.element.down('.midas-region');
     if (pastedRegion) {
       var selection = this.options['contentWindow'].getSelection();
@@ -197,7 +200,7 @@ Midas.Region = Class.create({
 
       for (var behavior in behaviors) {
         if (Object.isFunction(this.handle[behavior])) {
-          this.handle[behavior].apply(this, Object.isArray(behaviors[behavior]) ? behaviors[behavior] : [behaviors[behavior], event, toolbar, options]);
+          this.handle[behavior].call(this, action, toolbar, options, behaviors[behavior]);
 
           var sel = window.getSelection();
           this.selections.each(function(selection) {
@@ -211,8 +214,20 @@ Midas.Region = Class.create({
     } else {
       switch (action) {
         case 'removeformatting':
-          this.handle['insertHTML'].call(this, function() {
-            return (this.selections[0]) ? this.selections[0].cloneContents().textContent : '';
+          this.execCommand('insertHTML', this.selections[0].cloneContents().textContent);
+          break;
+        case 'style':
+          this.wrap('span', function() {
+            return new Element('span', {'class': options['value']});
+          }, function(element) {
+            element.addClassName(options['value']);
+          });
+          break;
+        case 'backcolor':
+          this.wrap('font', function() {
+            return new Element('font', {style: 'background-color:' + options['value']});
+          }, function(element) {
+            element.setStyle('background-color:' + options['value']);
           });
           break;
         default: this.execCommand(action, options['value']);
@@ -220,37 +235,62 @@ Midas.Region = Class.create({
     }
   },
 
-  handle: {
-
-    insertHTML: function(callback, event, toolbar, options) {
-      this.execCommand('insertHTML', callback.call(this, event, toolbar, options));
-    },
-
-    execCommand: function(action, argument) {
-      this.execCommand(action, argument);
+  wrap: function(tagName, newElementCallback, updateElementCallback) {
+    var range = this.selections[0];
+    var fragment = range.cloneContents();
+    if (fragment.containsTags('div table tr td')) {
+      this.wrapTextnodes(tagName, newElementCallback, updateElementCallback);
+    } else {
+      this.wrapEverything(newElementCallback, updateElementCallback);
     }
-
   },
 
+  wrapTextnodes: function(tagName, newElementCallback, updateElementCallback) {
+    var range = this.selections[0];
+    var fragment = range.cloneContents();
 
-  doSomething: function() {
-    var container = new Element('span', {'class': 'red'});
+    var textnodes = fragment.getTextNodes();
+    for (var i = 0; i < textnodes.length; ++i) {
+      if (textnodes[i].parentNode.tagName != tagName.toUpperCase()) {
+        Element.wrap(textnodes[i], newElementCallback.call(this));
+      } else {
+        updateElementCallback.call(this, textnodes[i].parentNode);
+      }
+    }
 
-    var rangeFragment = this.selections[0].cloneContents();
+    var wrapper = new Element('div');
+    wrapper.appendChild(fragment);
 
-    console.debug(this.selections[0]);
+    var html = wrapper.innerHTML;
+    this.execCommand('insertHTML', html);
+  },
 
-    container.appendChild(rangeFragment);
+  wrapEverything: function(newElementCallback) {
+    var range = this.selections[0];
+    var fragment = range.cloneContents();
 
-    var newFragment = document.createDocumentFragment();
-    var newContainer = new Element('div');
+    var container = newElementCallback.call(this);
+    container.appendChild(fragment);
 
-    newContainer.appendChild(container);
-    newFragment.appendChild(newContainer);
+    var wrapper = new Element('div');
+    wrapper.appendChild(container);
 
+    var html = wrapper.innerHTML;
+    this.execCommand('insertHTML', html);
+  },
 
+  handle: {
 
-    return newContainer.innerHTML;
+    insertHTML: function(action, toolbar, options, callbackOrValue) {
+      var value = (Object.isFunction(callbackOrValue)) ?
+                  callbackOrValue.call(this, action, toolbar, options) :
+                  callbackOrValue;
+      this.execCommand('insertHTML', value);
+    },
+
+    call: function(action, toolbar, options, callback) {
+      callback.call(this, action, toolbar, options);
+    }
 
   }
 
