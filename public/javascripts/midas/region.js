@@ -49,41 +49,65 @@ Midas.Region = Class.create({
   },
 
   setupObservers: function() {
-    this.element.observe('focus', function(event) {
+    Event.observe(document, 'mouseup', function() {
+      if (!this.selecting) return;
+      this.selecting = false;
+      this.updateSelections();
+    }.bind(this));
+
+    Event.observe(this.element, 'focus', function(e) {
       if (this.previewing) return;
-      Midas.fire('region', {region: this, name: this.name, event: event});
+      Midas.fire('region', {region: this, name: this.name, event: e});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
 
-    this.element.observe('click', function(event) {
-      if (this.previewing) return;
-      Midas.fire('region', {region: this, name: this.name, event: event});
-      if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
-    }.bind(this));
-    this.element.observe('mouseup', function(event) {
-      if (this.previewing) return;
-      Midas.fire('region:update', {region: this, name: this.name, event: event});
+    Event.observe(this.element, 'paste', function(e) {
+      if (Midas.modal.showing) e.stop();
+      setTimeout(this.afterPaste.bind(this), 1);
     }.bind(this));
 
-    this.element.observe('keydown', function(event) {
-      if (Midas.modal.showing) event.stop();
+    Event.observe(this.element, 'mousedown', function() {
+      this.selecting = true;
+    }.bind(this));
+    Event.observe(this.element, 'mouseup', function(e) {
+      if (this.previewing) return;
+      Midas.fire('region:update', {region: this, name: this.name, event: e});
+    }.bind(this));
+    Event.observe(this.element, 'click', function(e) {
+      if (this.previewing) {
+        var element = e.target;
+        if (element.tagName == 'A') {
+          var uri = element.getAttribute('href');
+          var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
+          if (host && host != top.location.host && host != top.location.hostname) {
+            element.writeAttribute('target', '_top');
+          }
+        }
+      } else {
+        Midas.fire('region', {region: this, name: this.name, event: e});
+        if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
+      }
     }.bind(this));
 
-    this.element.observe('keyup', function(event) {
-      if (this.previewing) return;
-      Midas.fire('region:update', {region: this, name: this.name, event: event, changed: true});
+    Event.observe(this.element, 'keydown', function(e) {
+      if (Midas.modal.showing) e.stop();
     }.bind(this));
-    this.element.observe('keypress', function(event) {
+    Event.observe(this.element, 'keyup', function(e) {
       if (this.previewing) return;
-      Midas.fire('region:update', {region: this, name: this.name, event: event});
+      this.updateSelections();
+      Midas.fire('region:update', {region: this, name: this.name, event: e, changed: true});
+    }.bind(this));
+    Event.observe(this.element, 'keypress', function(e) {
+      if (this.previewing) return;
+      Midas.fire('region:update', {region: this, name: this.name, event: e});
 
-      switch (event.keyCode) {
+      switch (e.keyCode) {
         case 9: // tab
           this.selections.each(function(selection) {
             var container = selection.commonAncestorContainer;
             if (container.nodeType == 3) container = container.parentNode;
             if (container.tagName == 'LI' || container.up('li')) {
-              event.stop();
+              e.stop();
               this.handleAction('indent');
             }
           }.bind(this));
@@ -91,25 +115,6 @@ Midas.Region = Class.create({
         case 13: // enter
           break;
       }
-    }.bind(this));
-
-    // clipboard tracking
-    this.element.observe('paste', function(event) {
-      if (Midas.modal.showing) event.stop();
-      setTimeout(this.afterPaste.bind(this), 1);
-    }.bind(this));
-
-    // selection tracking
-    this.element.observe('keyup', function() {
-      this.updateSelections();
-    }.bind(this));
-    this.element.observe('mousedown', function() {
-      this.selecting = true;
-    }.bind(this));
-    Event.observe(document, 'mouseup', function() {
-      if (!this.selecting) return;
-      this.selecting = false;
-      this.updateSelections();
     }.bind(this));
   },
 
