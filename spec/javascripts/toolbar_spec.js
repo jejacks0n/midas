@@ -124,6 +124,8 @@ describe('Midas.Toolbar', function() {
 
   it('destroys', function() {
     this.toolbar = new Midas.Toolbar();
+    var spy = spyOn(this.toolbar, 'removeObservers').andCallThrough();
+
     this.toolbar.destroy();
 
     expect(this.toolbar.palettes.length).toEqual(0);
@@ -131,6 +133,7 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.panels.length).toEqual(0);
     expect(this.toolbar.element).toBeFalsy();
     expect($$('.midas-toolbar').length).toEqual(0);
+    expect(spy.callCount).toEqual(1);
   });
 
   describe('button types and their behaviors', function() {

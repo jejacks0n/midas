@@ -46,10 +46,10 @@ var Midas = Class.create({
       });
 
       Event.observe(this.iframe, 'load', function() {
-        this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
         Midas.hijackLinks(this.iframe.contentWindow.document.body);
+        this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
       this.iframe.src = src;
@@ -60,8 +60,9 @@ var Midas = Class.create({
       document.body.appendChild(this.iframeContainer);
     } else {
       this.initializeRegions(this.contentWindow);
-      window.onbeforeunload = Midas.onBeforeUnload;
       this.finalizeInterface();
+      Midas.hijackLinks(document.body);
+      window.onbeforeunload = Midas.onBeforeUnload;
     }
   },
 
@@ -76,6 +77,7 @@ var Midas = Class.create({
       this.regionElements = body.getElementsByClassName(this.options['classname']);
     }
 
+    this.regions = [];
     for (var i = 0; i < this.regionElements.length; ++i) {
       this.regions.push(new Midas.Region(this.regionElements[i], this.regionOptions, 'midas' + this._id + '_region_' + i));
     }
@@ -90,76 +92,98 @@ var Midas = Class.create({
     if (!this.toolbar && !this.statusbar) {
       this.toolbar = new Midas.Toolbar(this.toolbarOptions);
       this.statusbar = new Midas.Statusbar(this.statusbarOptions);
+      this.setupObservers();
+    } else {
+      if (this.toolbar) this.toolbar.reinitializeObservers();
     }
 
     this.resize();
-
-    this.setupObservers();
   },
 
   setupObservers: function() {
-    Event.observe(window, 'resize', this.resize.bind(this));
+    this.__mouseup = function(e) {
+      var element = Event.element(e);
+      if (element != document) {
+        if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
+        if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
 
-    var observedDocuments = [document];
-    if (this.iframe) observedDocuments.push(this.iframe.contentWindow.document);
-    observedDocuments.each(function(doc) {
-      Event.observe(doc, 'mouseup', function(e) {
-        var element = Event.element(e);
-        if (element != document) {
-          if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
-          if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
-
-          for (var i = 0; i < this.regions.length; ++i) {
-            if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
-          }
+        for (var i = 0; i < this.regions.length; ++i) {
+          if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
         }
+      }
 
-        this.setActiveRegion(null);
-        if (this.toolbar) this.toolbar.unsetActiveButtons();
-      }.bind(this));
-    }.bind(this));
+      this.setActiveRegion(null);
+      if (this.toolbar) this.toolbar.unsetActiveButtons();
+    }.bind(this);
 
-    //{action: action, event: event, toolbar: this, options: {}}
-    Event.observe(document, 'midas:button', function(e) {
+    //memo: {action: action, event: event, toolbar: this, options: {}}
+    this.__midasButton = function(e) {
       var a = e.memo;
       this.handleAction(a['action'], a['event'], a['toolbar'], a['options']);
-    }.bindAsEventListener(this));
-    
-    //{action: action, options: {}}
-    Event.observe(document, 'midas:action', function(e) {
+    }.bind(this);
+
+    //memo: {action: action, options: {}}
+    this.__midasAction = function(e) {
       var a = e.memo;
       this.handleAction(a['action'], e, null, a['options']);
-    }.bindAsEventListener(this));
+    }.bind(this);
 
-    //{mode: mode, toolbar: this}
-    Event.observe(document, 'midas:mode', function(e) {
+    //memo: {mode: mode, toolbar: this}
+    this.__midasMode = function(e) {
       var a = e.memo;
-
       if (this.toolbar != a['toolbar']) return;
 
       this.handleMode(a['mode'], a['toolbar']);
-    }.bindAsEventListener(this));
+    }.bind(this);
 
-    //{region: this, name: this.name, event: event}
-    Event.observe(document, 'midas:region', function(e) {
+    //memo: {region: this, name: this.name, event: event}
+    this.__midasRegion = function(e) {
       var a = e.memo;
       if (this.regions.indexOf(a['region']) < 0) return;
 
       if (a['changed']) this.changed = true;
       this.setActiveRegion(a['region']);
-    }.bindAsEventListener(this));
+    }.bind(this);
 
-    //{region: this, name: this.name, event: event}
-    Event.observe(document, 'midas:region:update', function(e) {
+    //memo: {region: this, name: this.name, event: event}
+    this.__midasRegionUpdate = function(e) {
       var a = e.memo;
 
       Midas.fire('region', e.memo);
 
       if (this.regions.indexOf(a['region']) < 0) return;
-      
+
       if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
       if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+    }.bind(this);
+
+    Event.observe(window, 'resize', this.resize.bind(this));
+    var observedDocuments = [document];
+    if (this.iframe) observedDocuments.push(this.iframe.contentWindow.document);
+    observedDocuments.each(function(doc) {
+      Event.observe(doc, 'mouseup', this.__mouseup);
     }.bind(this));
+
+    Event.observe(document, 'midas:button', this.__midasButton);
+    Event.observe(document, 'midas:action', this.__midasAction);
+    Event.observe(document, 'midas:mode', this.__midasMode);
+    Event.observe(document, 'midas:region', this.__midasRegion);
+    Event.observe(document, 'midas:region:update', this.__midasRegionUpdate);
+  },
+
+  removeObservers: function() {
+    Event.stopObserving(window, 'resize', this.resize.bind(this));
+    var observedDocuments = [document];
+    if (this.iframe) observedDocuments.push(this.iframe.contentWindow.document);
+    observedDocuments.each(function(doc) {
+      Event.stopObserving(doc, 'mouseup', this.__mouseup);
+    }.bind(this));
+
+    Event.stopObserving(document, 'midas:button', this.__midasButton);
+    Event.stopObserving(document, 'midas:action', this.__midasAction);
+    Event.stopObserving(document, 'midas:mode', this.__midasMode);
+    Event.stopObserving(document, 'midas:region', this.__midasRegion);
+    Event.stopObserving(document, 'midas:region:update', this.__midasRegionUpdate);
   },
 
   setActiveRegion: function(region) {
@@ -249,6 +273,8 @@ var Midas = Class.create({
   },
 
   destroy: function() {
+    this.removeObservers();
+
     if (this.toolbar) this.toolbar.destroy();
     if (this.statusbar) this.statusbar.destroy();
     this.regions.each(function(region) {

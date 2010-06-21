@@ -82,10 +82,13 @@ describe('Midas', function () {
 
   it('destroys', function() {
     this.midas = new Midas();
+    var spy = spyOn(this.midas, 'removeObservers').andCallThrough();
+
     this.midas.destroy();
 
     expect(this.midas.toolbar).toEqual(null);
     expect(this.midas.regions).toEqual([]);
+    expect(spy.callCount).toEqual(1);
   });
 
   describe('static methods', function () {
@@ -303,8 +306,8 @@ describe('Midas', function () {
       expect(links[5].getAttribute('target')).toEqual(null);
       expect(links[6].getAttribute('target')).toEqual(null);
 
-//      expect(links[7].getAttribute('target')).toEqual(null);
-//      expect(links[8].getAttribute('target')).toEqual(null);
+      expect(links[7].getAttribute('target')).toEqual(null);
+      expect(links[8].getAttribute('target')).toEqual('_parent');
     });
     
     it('communicates which contentWindow the toolbar should use', function() {

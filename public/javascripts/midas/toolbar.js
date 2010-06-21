@@ -52,20 +52,36 @@ Midas.Toolbar = Class.create({
   },
 
   setupObservers: function() {
-    Event.observe(this.element, 'mousedown', function(e) {
-      e.stop();
-    }.bind(this));
+    this.__mousedown = function(e) { e.stop() }.bind(this);
+    this.__mouseup = function(e) {
+      this.hidePopups(Event.element(e));
+    }.bind(this);
+    this.__keydown = function(e) {
+      if (e.keyCode == 27) this.hidePopups();
+    }.bind(this);
 
+    Event.observe(this.element, 'mousedown', this.__mousedown);
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
     observedDocuments.each(function(doc) {
-      Event.observe(doc, 'mouseup', function(e) {
-        this.hidePopups(Event.element(e));
-      }.bind(this));
-      Event.observe(doc, 'keydown', function(e) {
-        if (e.keyCode == 27) this.hidePopups();
-      }.bind(this));
+      Event.observe(doc, 'mouseup', this.__mouseup);
+      Event.observe(doc, 'keydown', this.__keydown);
     }.bind(this));
+  },
+
+  removeObservers: function() {
+    Event.stopObserving(this.element, 'mousedown', this.__mousedown);
+    var observedDocuments = [document];
+    if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
+    observedDocuments.each(function(doc) {
+      Event.stopObserving(doc, 'mouseup', this.__mouseup);
+      Event.observe(doc, 'keydown', this.__keydown);
+    }.bind(this));
+  },
+
+  reinitializeObservers: function() {
+    this.removeObservers();
+    this.setupObservers();
   },
 
   generateId: function() {
@@ -246,12 +262,15 @@ Midas.Toolbar = Class.create({
   },
 
   destroy: function() {
+    this.removeObservers();
+
     this.palettes.each(function(palette) { if (palette.destroy) palette.destroy(); });
     this.selects.each(function(select) { if (select.destroy) select.destroy(); });
     this.panels.each(function(panel) { if (panel.destroy) panel.destroy(); });
     this.palettes = [];
     this.selects = [];
     this.panels = [];
+    
     if (this.element) this.element.remove();
     if (this.element) this.element = null;
   }
