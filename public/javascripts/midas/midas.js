@@ -7,7 +7,7 @@ var Midas = Class.create({
     configuration: null,
     useIframe: false // boolean true, or a string of the document to load
   },
-  modes: [],
+  modes: {},
   contentWindow: window,
   actionsToHandle: ['save'],
 
@@ -48,6 +48,7 @@ var Midas = Class.create({
       Event.observe(this.iframe, 'load', function() {
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
+        this.resetModes();
         Midas.hijackLinks(this.iframe.contentWindow.document.body);
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
@@ -212,17 +213,31 @@ var Midas = Class.create({
     if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
   },
 
-  handleMode: function(mode, toolbar) {
-    this.modes[mode] = !this.modes[mode];
+  handleMode: function(mode, toolbar, reset) {
+    this.modes[mode] = this.modes[mode] ? false : true;
+    console.debug('handleMode', this.modes);
     switch(mode) {
       case 'preview':
         window.getSelection().removeAllRanges();
         if (this.iframe) this.iframe.contentWindow.getSelection().removeAllRanges();
-        this.toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
+        toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
+        if (reset) {
+          toolbar.buttons['preview'].element.removeClassName('pressed');
+          break;
+        }
         this.regions.each(function(region) {
           region.togglePreview();
         });
         break;
+    }
+  },
+
+  resetModes: function() {
+    for (var i in this.modes) {
+      console.debug(i, this.modes[i]);
+      if (this.modes[i]) {
+        this.handleMode(i, this.toolbar, true);
+      }
     }
   },
 
