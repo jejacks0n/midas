@@ -57,7 +57,12 @@ Midas.Dialog = Class.create({
 
     this.element.setStyle({width: 'auto', height: 'auto'});
     this.position();
-    this.element.show();
+
+//    new Effect.Appear(this.element, {
+//      queue: {scope: 'dialog', limit: 2},
+//      transition: Effect.Transitions.sinoidal,
+//      duration: 1
+//    });
   },
 
   hide: function() {
