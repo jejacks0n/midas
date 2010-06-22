@@ -50,6 +50,7 @@ var Midas = Class.create({
         this.finalizeInterface();
         this.resetModes();
         Midas.hijackLinks(this.iframe.contentWindow.document.body);
+        // doesn't work in webkit
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
@@ -62,8 +63,7 @@ var Midas = Class.create({
     } else {
       this.initializeRegions(this.contentWindow);
       this.finalizeInterface();
-      Midas.hijackLinks(document.body);
-      window.onbeforeunload = Midas.onBeforeUnload;
+      Midas.hijackLinks(document.body);      
     }
   },
 
@@ -377,6 +377,11 @@ Object.extend(Midas, {
           ((links[i].target == '' || links[i].target == '_self')) &&
           !links[i].up('.midas-region')) {
         links[i].writeAttribute('target', '_top');
+      } else {
+        Event.observe(links[i], 'click', function() {
+          // could we confirm that they want to leave here?
+          
+        });
       }
     }
   },
@@ -404,3 +409,5 @@ Object.extend(Midas, {
     }
   }
 });
+
+window.onbeforeunload = Midas.onBeforeUnload;
