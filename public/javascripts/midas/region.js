@@ -167,8 +167,13 @@ Midas.Region = Class.create({
         this.doc.execCommand('undo', false, null);
         this.execCommand('insertHTML', cleaned);
       } catch(e) {
-        alert("Your browser is unable to handle pasting from Microsoft Office / Word properly, and as such appears to have lost it's undo history.\n\nThe contents pasted will be sanitized and placed at the end of the content for you.\n\nTo avoid this in the future, avoid pasting from Microsoft Office / Word directly.");
-        this.setContents(beforeHtml + cleaned);
+        this.setContents(beforeHtml);
+        Midas.modal('/midas/sanitizer.html', {
+          title: 'HTML Sanitizer',
+          afterLoad: function() {
+            $('midas_sanitized_content').value = cleaned.replace(/<br\/>/g, '\n');
+          }
+        });
       }
     }
   },

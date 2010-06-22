@@ -123,6 +123,7 @@ Object.extend(Midas.modal, {
         this.setupControls();
 
         this.position();
+        this.fire('afterLoad');
       }.bind(this),
       onFailure: function() {
         this.hide();
