@@ -60,10 +60,15 @@ Midas.Region = Class.create({
       Midas.fire('region', {region: this, name: this.name, event: e});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
-
+    
     Event.observe(this.element, 'paste', function(e) {
       if (Midas.modal.showing) e.stop();
-      setTimeout(this.afterPaste.bind(this), 1);
+      var html = this.element.innerHTML;
+      setTimeout(function() { this.afterPaste(html); }.bind(this), 1);
+    }.bind(this));
+    Event.observe(this.element, 'drop', function(e) {
+      var html = this.element.innerHTML;
+      setTimeout(function() { this.afterPaste(html); }.bind(this), 1);
     }.bind(this));
 
     Event.observe(this.element, 'mousedown', function() {
@@ -140,7 +145,7 @@ Midas.Region = Class.create({
     }
   },
 
-  afterPaste: function() {
+  afterPaste: function(beforeHtml) {
     var pastedRegion = this.element.down('.midas-region');
     if (pastedRegion) {
       var selection = this.options['contentWindow'].getSelection();
@@ -149,9 +154,34 @@ Midas.Region = Class.create({
       var range = this.doc.createRange();
       range.selectNode(pastedRegion);
       selection.addRange(range);
-      this.doc.execCommand('undo', false, null);
-      this.doc.execCommand('insertHTML', false, pastedRegion.innerHTML);
+
+      this.execCommand('undo', null);
+      this.execCommand('insertHTML', pastedRegion.innerHTML);
     }
+
+    var pastedFromWord = this.element.innerHTML.indexOf('<!--StartFragment-->') > -1 || this.element.innerHTML.indexOf('="mso-') > -1 || this.element.innerHTML.indexOf('<o:') > -1;
+    if (pastedFromWord) {
+      var pasted = beforeHtml.singleDiff(this.element.innerHTML);
+      var cleaned = this.sanitizeHtml(pasted);
+      try {
+        this.execCommand('undo', null);
+        this.execCommand('insertHTML', cleaned);
+      } catch(e) {
+        alert("Your browser is unable to handle pasting from Microsoft Office / Word properly, and as such appears to have lost it's undo history.\n\nThe contents pasted will be sanitized and placed at the end of the content for you.\n\nTo avoid this in the future, avoid pasting from Microsoft Office / Word directly.");
+        this.setContents(beforeHtml + cleaned);
+      }
+    }
+  },
+
+  sanitizeHtml: function(html) {
+    var temp = new Element('div').update(html);
+    temp.select('style').each(function(style) {
+      style.remove();
+    });
+
+    return temp.textContent.replace(/\n\n/g, '<br/>').
+                            replace(/.*<!--.*-->/g, '').
+                            replace(/^(<br\/>)+|(<br\/>\s*)+$/g, '');
   },
 
   execCommand: function(action, argument) {

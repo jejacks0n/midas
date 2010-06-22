@@ -106,11 +106,28 @@ describe('Midas.Region', function() {
     // paste event, and I couldn't figure out how to simulate that.
 
     this.region = new Midas.Region('region1');
+    var spy = spyOn(this.region, 'execCommand').andCallFake(function(action, value) {
+      console.debug(action, value);
+      if (action == 'insertHTML') this.region.setContents(value);
+    }.bind(this));
+
     this.region.setContents('<div class="midas-region">content inside region</div>');
-    this.region.afterPaste();
+    this.region.afterPaste('');
 
     expect(this.region.element.innerHTML).toEqual('content inside region');
   }),
+
+  it('sanitizes html pasted from microsoft word etc', function() {
+    this.region = new Midas.Region('region1');
+    var spy = spyOn(this.region, 'execCommand').andCallFake(function(action, value) {
+      if (action == 'insertHTML') this.region.setContents(value);
+    }.bind(this));
+
+    this.region.setContents($('word_crap_container').innerHTML);
+    this.region.afterPaste('');
+
+    expect(this.region.getContents()).toEqual('Microsoft blows  &nbsp;');
+  });
 
   describe('behave according to options', function() {
 
