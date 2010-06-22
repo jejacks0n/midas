@@ -164,7 +164,7 @@ Midas.Region = Class.create({
       var pasted = beforeHtml.singleDiff(this.element.innerHTML);
       var cleaned = this.sanitizeHtml(pasted);
       try {
-        this.execCommand('undo', null);
+        this.doc.execCommand('undo', false, null);
         this.execCommand('insertHTML', cleaned);
       } catch(e) {
         alert("Your browser is unable to handle pasting from Microsoft Office / Word properly, and as such appears to have lost it's undo history.\n\nThe contents pasted will be sanitized and placed at the end of the content for you.\n\nTo avoid this in the future, avoid pasting from Microsoft Office / Word directly.");
