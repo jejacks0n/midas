@@ -313,8 +313,8 @@ Object.extend(Midas, {
   version: 0.2,
   instances: [],
   agentId: null,
-  debugMode: false,
-  silentMode: false,
+  debug: false,
+  silent: false,
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -333,7 +333,7 @@ Object.extend(Midas, {
         break;
       }
     }
-    if (!Midas.silentMode && prompt) return message;
+    if (!Midas.silent && prompt) return message;
   },
 
   agent: function() {
@@ -366,7 +366,7 @@ Object.extend(Midas, {
   },
 
   hijackLinks: function(element) {
-    var links = element.select('a');
+    var links = Element.select(element, 'a');
 
     for (var i = 0; i < links.length; ++i) {
       var uri = links[i].getAttribute('href');
@@ -391,7 +391,7 @@ Object.extend(Midas, {
   trace: function() {
     var args = [];
     for (var i = 0; i < arguments.length; ++i) args.push(arguments[i]);
-    if (Midas.debugMode && typeof(console) != 'undefined') {
+    if (Midas.debug && typeof(console) != 'undefined') {
       try {
         console.debug(args);
       } catch(e1) {
