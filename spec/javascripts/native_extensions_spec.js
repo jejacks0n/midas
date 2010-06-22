@@ -58,4 +58,22 @@ describe('Native Extensions', function () {
     hasTag = fragment.containsTags('font');
     expect(hasTag).toEqual(false);
   });
+
+  it('does a simple diff to find inserted text/html on a string', function() {
+    var string1 = 'this is a& normal string with some (sp/ec&nbsp;ia[l] cha.racters)';
+    var string2 = 'this is a& normal yeah man, this is new! string with some (sp/ec&nbsp;ia[l] cha.racters)';
+
+    var string3 = '111 111';
+    var string4 = '111Asdasd<br>\n<!--StartFragment-->\n\n\n\n<!--EndFragment-->\n\n\n&nbsp;111';
+
+    expect(string1.singleDiff(string2)).toEqual('yeah man, this is new! ');
+    expect(string3.singleDiff(string4)).toEqual('Asdasd<br>\n<!--StartFragment-->\n\n\n\n<!--EndFragment-->\n\n\n&nbsp;');
+  });
+
+  it('can escape a string for regex', function() {
+    var string = '[](){}.*+?|\\/';
+
+    expect(string.regExEscape()).toEqual('\\[\\]\\(\\)\\{\\}\\.\\*\\+\\?\\|\\\\\\/');
+  });
+
 });

@@ -79,3 +79,27 @@ DocumentFragment.prototype.containsTags = function(tags, element) {
 
   return false;
 };
+
+String.prototype.singleDiff = function(that) {
+  var diff = '';
+  var thisLength = this.length;
+  var thatLength = that.length;
+  for (var i = 0; i < thatLength; ++i) {
+    if (this[i] != that[i]) {
+      var regExEscape = this.substr(i).regExEscape().replace(/^\s+|^(&nbsp;)+/g, '');
+      var re = new RegExp(regExEscape + '$', 'm');
+      diff = that.substr(i).replace(re, '');
+      break;
+    }
+  }
+
+  return diff;
+};
+
+String.prototype.regExEscape = function() {
+  if (!arguments.callee.sRE) {
+    var specials = ['/','.','*','+','?','|','(',')','[',']','{','}','\\'];
+    arguments.callee.sRE = new RegExp('(\\' + specials.join('|\\') + ')', 'g');
+  }
+  return this.replace(arguments.callee.sRE, '\\$1');
+};
