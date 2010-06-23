@@ -49,15 +49,25 @@ Midas.Dialog = Class.create({
       this.load(this.show.bind(this));
       return;
     }
+    
 
     if (this.toolbar.activeRegion) {
       this.contextClass = this.toolbar.activeRegion.name;
       this.element.addClassName(this.contextClass);
     }
-
     this.element.setStyle({width: 'auto', height: 'auto'});
     this.position();
-    this.element.show();
+
+    this.element.hide();
+    this.element.slideDown({
+      queue: {scope: 'dialog', limit: 1}
+    });
+
+    // new Effect.Appear(this.element, {
+    //   queue: {scope: 'dialog', limit: 2},
+    //   transition: Effect.Transitions.sinoidal,
+    //   duration: 1
+    // });
   },
 
   hide: function() {
@@ -81,6 +91,7 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
+    // setTimeout(function() {
     new Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
@@ -99,6 +110,7 @@ Midas.Dialog = Class.create({
         alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" dialog');
       }.bind(this)
     });
+    // }.bind(this), 3000);
   },
 
   execute: function(action, options, event) {
