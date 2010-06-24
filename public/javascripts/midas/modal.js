@@ -67,7 +67,7 @@ Object.extend(Midas.modal, {
 		if (!this.showing) {
       // this.element.setStyle({visibility: 'visible', position: null});
       this.showing = true;
-      this.overlayElement.show();
+//      this.overlayElement.show();
       // this.element.setStyle({display: 'block', visibility: 'visible', position: null});
       // this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
 
