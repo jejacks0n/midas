@@ -147,10 +147,11 @@ Object.extend(Midas.modal, {
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
     var viewportDimensions = document.viewport.getDimensions();
-    if (dimensions.height >= viewportDimensions.height - 20) {
+    if (dimensions.height >= viewportDimensions.height - 20 || this.options['fullHeight']) {
       var titleHeight = this.element.down('h1').getHeight();
       var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
       this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
+      this.contentElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 60) + 'px'});
     }
   },
 

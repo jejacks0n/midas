@@ -68,7 +68,7 @@
 #midas_modal .midas-modal-content {
   color: #000;
   height: 25px;
-  margin: 20px 20px 10px;
+  padding: 20px 20px 10px;
   font-family: Helvetica, Tahoma, Arial, sans-serif;
   }
 #midas_modal .midas-modal-content:after {
@@ -85,4 +85,8 @@
   margin: 0 20px;
   border-top: 1px solid #CCC;
   text-align: right;
+  }
+
+#midas_modal td.midas-modal-pane {
+  height: 100%;
   }
