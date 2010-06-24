@@ -107,7 +107,6 @@ describe('Midas.Region', function() {
 
     this.region = new Midas.Region('region1');
     var spy = spyOn(this.region, 'execCommand').andCallFake(function(action, value) {
-      console.debug(action, value);
       if (action == 'insertHTML') this.region.setContents(value);
     }.bind(this));
 

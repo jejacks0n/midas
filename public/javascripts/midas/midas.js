@@ -218,7 +218,6 @@ var Midas = Class.create({
 
   handleMode: function(mode, toolbar, reset) {
     this.modes[mode] = this.modes[mode] ? false : true;
-    console.debug('handleMode', this.modes);
     switch(mode) {
       case 'preview':
         window.getSelection().removeAllRanges();
