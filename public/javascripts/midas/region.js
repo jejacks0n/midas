@@ -97,7 +97,7 @@ Midas.Region = Class.create({
     }.bind(this));
 
     Event.observe(this.element, 'keydown', function(e) {
-      if (Midas.modal.showing) e.stop();
+      if (Midas.modal.showing && e.keyCode != 27) e.stop();
     }.bind(this));
     Event.observe(this.element, 'keyup', function(e) {
       if (this.previewing) return;
