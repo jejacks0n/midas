@@ -244,7 +244,7 @@ Midas.Region = Class.create({
 
           var sel = window.getSelection();
           this.selections.each(function(selection) {
-            sel.removeRange(selection);
+            //sel.removeRange(selection);
             sel.addRange(selection);
           })
         } else {
@@ -269,6 +269,13 @@ Midas.Region = Class.create({
           }, function(element) {
             element.setStyle('background-color:' + options['value']);
           });
+          break;
+        case 'replaceHTML':
+          var selection = this.options['contentWindow'].getSelection();
+          var range = this.doc.createRange();
+          range.selectNodeContents(this.element);
+          selection.addRange(range);
+          this.execCommand('insertHTML', options['value']);
           break;
         default: this.execCommand(action, options['value']);
       }
