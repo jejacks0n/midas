@@ -1,12 +1,3 @@
-<script type="text/javascript">
-  window['midas_modal_submit'] = function(e) {
-    var innerHTML = display.down('em').innerHTML;
-    Midas.fire('action', {action: 'insertHTML', options: {value: innerHTML}});
-    Midas.modal.hide();
-    e.stop();
-  };
-</script>
-
 <div id="midas_sanitizer" class="midas-modal-pane">
   <img src="/images/midas/clippy.png" align="left"/>
   <p>Your browser is unable to handle pasting from Microsoft Office / Word properly.  We've sanitized it for you.</p>
@@ -31,5 +22,4 @@
     font-family: monospace;
     white-space: pre;
     }
-
 </style>
