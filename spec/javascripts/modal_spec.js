@@ -23,7 +23,7 @@ describe('Midas.Modal', function() {
   it('handles options in the initialize function', function() {
     var modal = Midas.modal('', {title: 'Banana'});
 
-    expect(modal.options['title']).toEqual('Banana');
+    expect(modal._options['title']).toEqual('Banana');
   });
 
   it('builds an element structure', function() {

@@ -13,7 +13,8 @@ Object.extend(Midas.modal, {
   },
 
   _initialize: function(options) {
-    Object.extend(this.options, options || {});
+    this._options = Object.clone(this.options);
+    Object.extend(this._options, options || {});
 
     if (this.initialized) return false;
 
@@ -58,6 +59,7 @@ Object.extend(Midas.modal, {
   show: function(url, options) {
     this._initialize(options);
 
+    this.contentElement.innerHTML = '';
     this.load(url);
     this.updateTitle();
 
@@ -81,7 +83,10 @@ Object.extend(Midas.modal, {
   hide: function(options) {
     if (!this.initialized) throw("Midas.Modal cannot hide before it's been initialized");
 
-    Object.extend(this.options, options);
+    if (options) {
+      this._options = Object.clone(this.options);
+      Object.extend(this._options, options);
+    }
 
     this.fire('beforeHide');
     this.showing = false;
@@ -98,22 +103,25 @@ Object.extend(Midas.modal, {
     if (!this.initialized) throw("Midas.Modal cannot update the title before it's been initialized");
 
     var titleElement = this.element.down('h1 span');
-    if (this.options['title']) {
+    if (this._options['title']) {
       titleElement.show();
-      titleElement.update(this.options['title']);
+      titleElement.update(this._options['title'] || '&nbsp;');
     } else {
       titleElement.hide();
     }
   },
 
   load: function(url, options) {
-    Object.extend(this.options, options);
+    if (options) {
+      this._options = Object.clone(this.options);
+      Object.extend(this._options, options);
+    }
 
     this.element.addClassName('loading');
 
     new Ajax.Request(url, {
-      method: this.options['method'] || 'get',
-      parameters: this.options['parameters'] || {},
+      method: this._options['method'] || 'get',
+      parameters: this._options['parameters'] || {},
       onSuccess: function(transport) {
         this.loaded = true;
         this.element.removeClassName('loading');
@@ -147,7 +155,7 @@ Object.extend(Midas.modal, {
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
     var viewportDimensions = document.viewport.getDimensions();
-    if (dimensions.height >= viewportDimensions.height - 20 || this.options['fullHeight']) {
+    if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {
       var titleHeight = this.element.down('h1').getHeight();
       var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
       this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
@@ -215,10 +223,10 @@ Object.extend(Midas.modal, {
 
   fire: function(eventName) {
     var r = true;
-    if (this.options[eventName]) {
-      var returnValue = this.options[eventName].call(this);
+    if (this._options[eventName]) {
+      var returnValue = this._options[eventName].call(this);
       if (!Object.isUndefined(returnValue)) r = returnValue;
-      this.options[eventName] = null;
+      this._options[eventName] = null;
     }
     Midas.fire('modal:' + eventName);
     return r;
