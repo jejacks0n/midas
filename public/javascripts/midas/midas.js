@@ -49,6 +49,7 @@ var Midas = Class.create({
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
         this.resetModes();
+
         Midas.hijackLinks(this.iframe.contentWindow.document.body);
         // doesn't work in webkit
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
@@ -63,7 +64,9 @@ var Midas = Class.create({
     } else {
       this.initializeRegions(this.contentWindow);
       this.finalizeInterface();
-      Midas.hijackLinks(document.body);      
+
+      Midas.hijackLinks(document.body);
+      window.onbeforeunload = Midas.onBeforeUnload;
     }
   },
 
@@ -325,8 +328,7 @@ Object.extend(Midas, {
   },
 
   onBeforeUnload: function() {
-    var prompt = false,
-        message = "You have unsaved changes.  Are you sure you want to leave without saving them first?";
+    var prompt = false, message = "You have unsaved changes.  Are you sure you want to leave without saving them first?";
     for (var i = 0; i < Midas.instances.length; ++i) {
       if (Midas.instances[i].changed) {
         prompt = true;
@@ -377,11 +379,6 @@ Object.extend(Midas, {
           ((links[i].target == '' || links[i].target == '_self')) &&
           !links[i].up('.midas-region')) {
         links[i].writeAttribute('target', '_top');
-      } else {
-        Event.observe(links[i], 'click', function() {
-          // could we confirm that they want to leave here?
-          
-        });
       }
     }
   },
@@ -409,5 +406,3 @@ Object.extend(Midas, {
     }
   }
 });
-
-window.onbeforeunload = Midas.onBeforeUnload;

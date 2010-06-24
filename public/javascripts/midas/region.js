@@ -85,7 +85,9 @@ Midas.Region = Class.create({
           var uri = element.getAttribute('href');
           var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
           if (host && host != top.location.host && host != top.location.hostname) {
-            window.location.href = uri;
+            this.options['contentWindow'].onbeforeunload = Midas.onBeforeUnload;
+            top.location.href = uri;
+            e.stop();
           }
         }
       } else {
