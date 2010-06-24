@@ -131,7 +131,7 @@ Midas.Config = {
         sep:                 '-'
         },
       removeformatting:      ['Remove Formatting', ''],
-      html:                  ['Edit HTML', '', ['modal', '/midas/html.html']]
+      htmleditor:            ['Edit HTML', '']
       }
     },
 
@@ -154,7 +154,16 @@ Midas.Config = {
    */
   behaviors: {
     horizontalrule:      {insertHTML: function() {
-                            return '<div class="hr"><hr/></div>';
+                           return '<div class="hr"><hr/></div>';
+                         }},
+    htmleditor:          {call: function() {
+                           Midas.modal('/midas/htmleditor.html', {
+                             title: 'HTML Editor',
+                             fullHeight: true,
+                             afterLoad: function() {
+                               $('midas_html_editor_content').value = this.getContents();
+                             }.bind(this)
+                           });
                          }}
     }
 };

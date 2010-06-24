@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  window['midas_modal_submit'] = function(e) {
+    var value = $('midas_html_editor_content').value.replace(/\n/g, '');
+    Midas.fire('action', {action: 'replaceHTML', options: {value: value}});
+    Midas.modal.hide();
+    e.stop();
+  };
+</script>
+
+<table id="midas_html_editor">
+<tr>
+  <td class="midas-modal-pane">
+    <textarea rows="10" id="midas_html_editor_content" wrap="off"></textarea>
+  </td>
+</tr>
+</table>
+
+<div id="midas_html_editor_controls" class="midas-modal-controls">
+  <input type="submit" value="Save">
+</div>
+
+<style type="text/css">
+  #midas_html_editor {
+    height: 100%;
+    }
+  #midas_html_editor textarea {
+    width: 600px;
+    height: 100%;
+    font-family: monospace;
+    white-space: pre;
+    resize: none;
+    }
+</style>

@@ -207,8 +207,8 @@
 .midas-htmleditorbar .midas-button-pagebreak.active           { background-position: -565px -18px }
 .midas-htmleditorbar .midas-button-removeformatting           { background-position: -588px 0 }
 .midas-htmleditorbar .midas-button-removeformatting.active    { background-position: -588px -18px }
-.midas-htmleditorbar .midas-button-html                       { background-position: -612px 0 }
-.midas-htmleditorbar .midas-button-html.active                { background-position: -612px -18px }
+.midas-htmleditorbar .midas-button-htmleditor                 { background-position: -612px 0 }
+.midas-htmleditorbar .midas-button-htmleditor.active          { background-position: -612px -18px }
 
 /* color palette buttons */
 .midas-htmleditorbar .midas-palette-button,
