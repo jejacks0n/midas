@@ -67,14 +67,14 @@ Object.extend(Midas.modal, {
 		if (!this.showing) {
       // this.element.setStyle({visibility: 'visible', position: null});
       this.showing = true;
-//      this.overlayElement.show();
+      this.overlayElement.show();
       // this.element.setStyle({display: 'block', visibility: 'visible', position: null});
       // this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
 
-      // this.contentElement.setStyle({visibility: 'hidden'});      
+      // this.contentElement.setStyle({visibility: 'hidden'});
       this.element.show();
 
-      
+
 			this.fire('onShow');
 		} else {
 			this.update();
@@ -157,6 +157,7 @@ Object.extend(Midas.modal, {
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
     this.contentContainerElement.setStyle('height:auto');
+
 
     this.contentElement.setStyle({display: 'false', visibility: 'visible'});
     this.contentElement.slideDown();
