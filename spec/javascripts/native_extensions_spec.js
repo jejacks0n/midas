@@ -4,7 +4,7 @@ describe('Native Extensions', function () {
     jasmine.loadFixture('native_extensions_fixture');
   });
 
-  it('compares two NodeLists', function() {
+  it('allows NodeLists to compares itself to another NodeList', function() {
     var div = $('div1');
     expect(typeof(div.childNodes.equals)).toEqual('function');
 
@@ -13,7 +13,7 @@ describe('Native Extensions', function () {
     expect(div.childNodes.equals($('div3').childNodes)).toEqual(false);
   });
 
-  it('converts numbers to hex', function() {
+  it('converts numbers to their hex value', function() {
     var number1 = 15;
     var number2 = 0;
 
@@ -21,7 +21,7 @@ describe('Native Extensions', function () {
     expect(number2.toHex()).toEqual('00');
   });
   
-  it('converts rgb strings to hex', function() {
+  it('converts rgb css strings to hex', function() {
     var string1 = 'RGB(255, 255, 255)';
     var string2 = 'rgb(0 0 0)';
 
@@ -29,7 +29,7 @@ describe('Native Extensions', function () {
     expect(string2.toHex()).toEqual('#000000');
   });
 
-  it('prototypes isTop() on window', function() {
+  it('prototypes #isTop on window', function() {
     var iframe = $('iframe1');
     iframe.contentWindow.isTop = window.isTop;
 

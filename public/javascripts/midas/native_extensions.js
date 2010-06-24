@@ -2,16 +2,16 @@ NodeList.prototype.equals = function(that) {
   var length = this.length;
   if (length != that.length) return false;
 
-  var thisItem, thatItem;
+  var thisItem, thatItem, i;
   length = length - 1;
-  for (var i = 0; i <= length; ++i) {
+  for (i = 0; i <= length; ++i) {
     thisItem = this[i];
     thatItem = that.item(i);
 
     if (thisItem.nodeType != thatItem.nodeType || thisItem.nodeName != thatItem.nodeName) return false;
   }
 
-  for (var i = 0; i <= length; ++i) {
+  for (i = 0; i <= length; ++i) {
     thisItem = this.item(i);
     thatItem = that.item(i);
 
@@ -82,7 +82,6 @@ DocumentFragment.prototype.containsTags = function(tags, element) {
 
 String.prototype.singleDiff = function(that) {
   var diff = '';
-  var thisLength = this.length;
   var thatLength = that.length;
   for (var i = 0; i < thatLength; ++i) {
     if (this[i] != that[i]) {
