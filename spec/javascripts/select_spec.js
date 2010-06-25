@@ -54,7 +54,9 @@ describe('Midas.Select', function() {
   });
 
   it('hides', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.select = new Midas.Select($('select_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('select_button'));
@@ -86,7 +88,9 @@ describe('Midas.Select', function() {
   });
 
   it('knows if it is visible or not', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.select = new Midas.Select($('select_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('select_button'));

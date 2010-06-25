@@ -38,7 +38,9 @@ describe('Midas.Panel', function() {
   });
 
   it('makes the button behave as a toggle button', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));
@@ -89,7 +91,9 @@ describe('Midas.Panel', function() {
   });
 
   it('hides', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));
@@ -104,7 +108,9 @@ describe('Midas.Panel', function() {
   });
 
   it('knows if it is visible or not', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));

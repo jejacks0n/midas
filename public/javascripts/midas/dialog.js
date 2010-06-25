@@ -59,7 +59,7 @@ Midas.Dialog = Class.create({
     this.position(this.visible);
 
     this.visible = true;
-    Effect.Appear(this.element, {
+    new Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
       duration: .20
@@ -84,7 +84,7 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
-    Ajax.Request(this.options.url, {
+    new Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
         this.loaded = true;

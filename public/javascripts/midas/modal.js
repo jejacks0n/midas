@@ -61,20 +61,13 @@ Object.extend(Midas.modal, {
 
     this.contentElement.innerHTML = '';
     this.load(url);
-
     this.updateTitle();
 
 		if (!this.showing) {
-      // this.element.setStyle({visibility: 'visible', position: null});
       this.showing = true;
       this.overlayElement.show();
-      // this.element.setStyle({display: 'block', visibility: 'visible', position: null});
-      // this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
-
-      // this.contentElement.setStyle({visibility: 'hidden'});
-      this.element.show();
-
-
+      this.element.setStyle({display: 'block', visibility: 'visible', position: null});
+      this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
 			this.fire('onShow');
 		} else {
 			this.update();
@@ -117,7 +110,7 @@ Object.extend(Midas.modal, {
       titleElement.hide();
     }
   },
-  
+
   load: function(url, options) {
     if (options) {
       this._options = Object.clone(this.options);
@@ -126,21 +119,18 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-    setTimeout(function() {
     new Ajax.Request(url, {
       method: this._options['method'] || 'get',
       parameters: this._options['parameters'] || {},
       onSuccess: function(transport) {
         this.loaded = true;
         this.element.removeClassName('loading');
-        this.contentElement.innerHTML = transport.responseText;        
-        
+        this.contentElement.innerHTML = transport.responseText;
         transport.responseText.evalScripts();
 
         this.setupControls();
-        
+
         this.position();
-        
         this.fire('afterLoad');
       }.bind(this),
       onFailure: function() {
@@ -148,7 +138,6 @@ Object.extend(Midas.modal, {
         alert('Midas was unable to load "' + url + '" for the modal');
       }.bind(this)
     });
-    }.bind(this), 1000);
   },
 
   position: function() {
@@ -157,10 +146,6 @@ Object.extend(Midas.modal, {
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
     this.contentContainerElement.setStyle('height:auto');
-
-
-    this.contentElement.setStyle({display: 'false', visibility: 'visible'});
-    this.contentElement.slideDown();
 
     this.frameElement.setStyle({display: 'block'});
 

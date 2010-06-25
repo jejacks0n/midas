@@ -6,8 +6,8 @@ describe('Midas.Palette', function() {
 
   afterEach(function () {
     try {
-      this.palette.destroy();
-      this.palette = null;
+//      this.palette.destroy();
+//      this.palette = null;
     } catch(e) {}
   });
 
@@ -54,7 +54,9 @@ describe('Midas.Palette', function() {
   });
   
   it('hides', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('palette_button'));
@@ -85,14 +87,16 @@ describe('Midas.Palette', function() {
   });
 
   it('knows if it is visible or not', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('palette_button'));
-    expect(this.palette.visible()).toEqual(true);
+    expect(this.palette.visible).toEqual(true);
 
     jasmine.simulate.click($('palette_button'));
-    expect(this.palette.visible()).toEqual(false);
+    expect(this.palette.visible).toEqual(false);
   });
 
   it('loads contents from a url', function() {
