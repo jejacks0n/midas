@@ -4,12 +4,13 @@ Midas.Dialog = Class.create({
   button: null,
   element: null,
   setupFunction: null,
+  scopeId: Math.random(),
   options: {
     url: null,
     configuration: null
   },
 
-  initialize: function(button, name, toolbar, options) {
+  initialize: function(button, name, toolbar, options) {options
     if (!Midas.version) throw('Midas.Dialog requires Midas');
 
     this.button = button;
@@ -31,14 +32,14 @@ Midas.Dialog = Class.create({
 
   setupObservers: function() {
     Event.observe(window, 'resize', function() {
-      this.position();
+      this.position(this.visible);
     }.bind(this));
-    Event.observe(this.element, 'mousedown', function(event) {
-      event.stop();
+    Event.observe(this.element, 'mousedown', function(e) {
+      e.stop();
     });
     Event.observe(this.button, 'click', function() {
       if (!this.element || this.disabled()) return;
-      if (this.visible()) this.hide();
+      if (this.visible) this.hide();
       else this.show();
     }.bind(this));
   },
@@ -50,24 +51,19 @@ Midas.Dialog = Class.create({
       return;
     }
     
-
     if (this.toolbar.activeRegion) {
       this.contextClass = this.toolbar.activeRegion.name;
       this.element.addClassName(this.contextClass);
     }
     this.element.setStyle({width: 'auto', height: 'auto'});
-    this.position();
+    this.position(this.visible);
 
-    this.element.hide();
-    this.element.slideDown({
-      queue: {scope: 'dialog', limit: 1}
+    this.visible = true;
+    new Effect.Appear(this.element, {
+      queue: {scope: 'dialog:' + this.scopeId, limit: 2},
+      transition: Effect.Transitions.sinoidal,
+      duration: .20
     });
-
-    // new Effect.Appear(this.element, {
-    //   queue: {scope: 'dialog', limit: 2},
-    //   transition: Effect.Transitions.sinoidal,
-    //   duration: 1
-    // });
   },
 
   hide: function() {
@@ -77,13 +73,10 @@ Midas.Dialog = Class.create({
     }
 
     this.element.hide();
+    this.visible = false;
   },
 
   position: function(keepVisible) {
-  },
-
-  visible: function() {
-    return (!this.element || this.element.getStyle('display') == 'block');
   },
 
   disabled: function() {
@@ -91,7 +84,6 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
-    // setTimeout(function() {
     new Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
@@ -110,7 +102,6 @@ Midas.Dialog = Class.create({
         alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" dialog');
       }.bind(this)
     });
-    // }.bind(this), 3000);
   },
 
   execute: function(action, options, event) {

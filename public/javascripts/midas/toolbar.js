@@ -248,10 +248,14 @@ Midas.Toolbar = Class.create({
 
   hidePopups: function(element) {
     this.palettes.each(function(palette) {
-      if (element != palette.element || !element.descendantOf(palette.element)) palette.hide();
+      if (element != palette.element || !element.descendantOf(palette.element)) {
+        if (element != palette.button) palette.hide();
+      }
     }.bind(this));
     this.selects.each(function(select) {
-      if (element != select.element || !element.descendantOf(select.element)) select.hide();
+      if (element != select.element || !element.descendantOf(select.element)) {
+        if (element != select.button) select.hide();
+      }
     }.bind(this));
   },
 

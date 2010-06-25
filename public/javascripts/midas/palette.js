@@ -9,8 +9,7 @@ Midas.Palette = Class.create(Midas.Dialog, {
 
   position: function(keepVisible) {
     if (!this.element) return;
-    
-    keepVisible = keepVisible || this.visible();
+
     this.element.setStyle({top: 0, left: 0, display: 'block', visibility: 'hidden'});
     var position = this.button.cumulativeOffset();
     var dimensions = this.element.getDimensions();

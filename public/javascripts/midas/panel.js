@@ -15,7 +15,6 @@ Midas.Panel = Class.create(Midas.Dialog, {
   position: function(keepVisible) {
     if (!this.element) return;
 
-    keepVisible = keepVisible || this.visible();
     this.element.setStyle({display: 'block', visibility: 'hidden', width: 'auto'});
 
     var top = this.toolbar.getBottomOffset();
