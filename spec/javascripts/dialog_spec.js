@@ -33,7 +33,7 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('none');
 
     jasmine.simulate.click($('dialog_button'));
-    
+
     expect(this.dialog.element.getStyle('display')).not.toEqual('none');
   });
 
