@@ -93,7 +93,7 @@ describe('Midas.Panel', function() {
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));
-    expect(this.panel.element.getStyle('display')).toEqual('block');
+    expect(this.panel.element.getStyle('display')).not.toEqual('none');
 
     jasmine.simulate.click($('panel_button'));
     expect(this.panel.element.getStyle('display')).toEqual('none');
@@ -108,10 +108,10 @@ describe('Midas.Panel', function() {
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));
-    expect(this.panel.visible()).toEqual(true);
+    expect(this.panel.visible).toEqual(true);
 
     jasmine.simulate.click($('panel_button'));
-    expect(this.panel.visible()).toEqual(false);
+    expect(this.panel.visible).toEqual(false);
   });
 
   it('loads contents from a url', function() {

@@ -10,7 +10,7 @@ Midas.Dialog = Class.create({
     configuration: null
   },
 
-  initialize: function(button, name, toolbar, options) {
+  initialize: function(button, name, toolbar, options) {options
     if (!Midas.version) throw('Midas.Dialog requires Midas');
 
     this.button = button;

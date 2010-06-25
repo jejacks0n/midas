@@ -58,7 +58,7 @@ describe('Midas.Select', function() {
     this.select = new Midas.Select($('select_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('select_button'));
-    expect(this.select.element.getStyle('display')).toEqual('block');
+    expect(this.select.element.getStyle('display')).not.toEqual('none');
 
     jasmine.simulate.click($('select_button'));
     expect(this.select.element.getStyle('display')).toEqual('none');
@@ -90,10 +90,10 @@ describe('Midas.Select', function() {
     this.select = new Midas.Select($('select_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('select_button'));
-    expect(this.select.visible()).toEqual(true);
+    expect(this.select.visible).toEqual(true);
 
     jasmine.simulate.click($('select_button'));
-    expect(this.select.visible()).toEqual(false);
+    expect(this.select.visible).toEqual(false);
   });
 
   it('loads contents from a url', function() {
