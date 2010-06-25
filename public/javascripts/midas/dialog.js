@@ -57,7 +57,6 @@ Midas.Dialog = Class.create({
     }
     this.element.setStyle({width: 'auto', height: 'auto'});
     this.position(this.visible);
-
     this.visible = true;
     new Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},

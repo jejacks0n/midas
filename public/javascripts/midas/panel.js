@@ -59,6 +59,9 @@ Midas.Panel = Class.create(Midas.Dialog, {
       });
     }
 
+//  we need to hide this so that we may fade it in...   
+    this.element.hide();
+
     var paddingHeight = parseInt(this.panelElement.getStyle('padding-top')) + parseInt(this.panelElement.getStyle('padding-bottom'));
     var titleHeight = parseInt(this.titleElement.getStyle('padding-top')) + parseInt(this.titleElement.getStyle('padding-bottom')) + parseInt(this.titleElement.getStyle('height'));
     this.panelElement.setStyle({height: (height - paddingHeight - titleHeight) + 'px'});
@@ -94,7 +97,6 @@ Midas.Panel = Class.create(Midas.Dialog, {
 
   hide: function($super) {
     this.button.removeClassName('pressed');
-    
     $super();
   }
 

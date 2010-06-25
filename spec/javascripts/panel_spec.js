@@ -28,13 +28,16 @@ describe('Midas.Panel', function() {
   });
 
   it('loads when the button is clicked', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
+    
     this.panel = new Midas.Panel($('panel_button'), 'history', this.toolbar);
 
     jasmine.simulate.click($('panel_button'));
 
     expect(spy.callCount).toEqual(1);
-    expect(this.panel.element.getStyle('display')).toEqual('block');
+    expect(this.panel.element.getStyle('display')).not.toEqual('none');
   });
 
   it('makes the button behave as a toggle button', function() {
