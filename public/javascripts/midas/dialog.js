@@ -10,7 +10,7 @@ Midas.Dialog = Class.create({
     configuration: null
   },
 
-  initialize: function(button, name, toolbar, options) {options
+  initialize: function(button, name, toolbar, options) {
     if (!Midas.version) throw('Midas.Dialog requires Midas');
 
     this.button = button;
@@ -50,7 +50,7 @@ Midas.Dialog = Class.create({
       this.load(this.show.bind(this));
       return;
     }
-    
+
     if (this.toolbar.activeRegion) {
       this.contextClass = this.toolbar.activeRegion.name;
       this.element.addClassName(this.contextClass);
@@ -59,7 +59,7 @@ Midas.Dialog = Class.create({
     this.position(this.visible);
 
     this.visible = true;
-    new Effect.Appear(this.element, {
+    Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
       duration: .20
@@ -84,7 +84,7 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
-    new Ajax.Request(this.options.url, {
+    Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
         this.loaded = true;

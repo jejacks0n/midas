@@ -33,8 +33,8 @@ describe('Midas.Dialog', function() {
     expect(this.dialog.element.getStyle('display')).toEqual('none');
 
     jasmine.simulate.click($('dialog_button'));
-
-    expect(this.dialog.element.getStyle('display')).toEqual('block');
+    
+    expect(this.dialog.element.getStyle('display')).not.toEqual('none');
   });
 
   it('does not show if the button is disabled', function() {
@@ -72,7 +72,8 @@ describe('Midas.Dialog', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('dialog_button'));
-    expect(this.dialog.element.getStyle('display')).toEqual('block');
+
+    expect(this.dialog.element.getStyle('display')).not.toEqual('none');
 
     jasmine.simulate.click($('dialog_button'));
     expect(this.dialog.element.getStyle('display')).toEqual('none');
@@ -85,10 +86,10 @@ describe('Midas.Dialog', function() {
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('dialog_button'));
-    expect(this.dialog.visible()).toEqual(true);
+    expect(this.dialog.visible).toEqual(true);
 
     jasmine.simulate.click($('dialog_button'));
-    expect(this.dialog.visible()).toEqual(false);
+    expect(this.dialog.visible).toEqual(false);
   });
 
   it('destroys', function() {
