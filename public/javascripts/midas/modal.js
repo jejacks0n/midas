@@ -149,10 +149,14 @@ Object.extend(Midas.modal, {
 
     this.frameElement.setStyle({display: 'block'});
 
+
     var dimensions = this.frameElement.getDimensions();
 
     this.element.setStyle({width: dimensions.width + 'px'});
     this.frameElement.setStyle({width: dimensions.width + 'px'});
+
+    this.contentElement.hide();
+    this.contentElement.slideDown();
 
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {
