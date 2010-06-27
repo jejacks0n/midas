@@ -317,6 +317,7 @@ Object.extend(Midas, {
   agentId: null,
   debug: false,
   silent: false,
+  preloadedView: {},
 
   registerInstance: function(instance) {
     this.instances.push(instance);
@@ -379,6 +380,15 @@ Object.extend(Midas, {
           !links[i].up('.midas-region')) {
         links[i].writeAttribute('target', '_top');
       }
+    }
+  },
+
+  loadView: function(url, options) {
+    if (Midas.preloadedView[url]) {
+      Midas.trace('Midas.loadView', url);
+      if (options.onSuccess) options.onSuccess({responseText: Midas.preloadedView[url]});
+    } else {
+      new Ajax.Request(url, options);
     }
   },
 

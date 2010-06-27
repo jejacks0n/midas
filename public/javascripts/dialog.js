@@ -67,7 +67,6 @@ Midas.Dialog = Class.create({
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
       duration: .20,
-      from: 0,
       to: .95,
       afterFinish: function() {
         var callback = (this.resize || this.show).bind(this);
@@ -94,7 +93,8 @@ Midas.Dialog = Class.create({
   },
 
   load: function(callback) {
-    new Ajax.Request(this.options.url, {
+    Midas.loadView(this.options.url, {
+//    new Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
         this.loaded = true;
