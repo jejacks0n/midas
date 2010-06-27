@@ -17,6 +17,9 @@
   font-size: 9.5pt;
   z-index: 10003;
   }
+.midas-panel.loading {
+  background-image: url(../images/midas/loading-dark.gif);
+  }
 
 .midas-panel h3 {
   font-size: 11pt;

@@ -16,7 +16,7 @@
   margin: 0 auto;
   }
 #midas_modal.loading .midas-modal-content {
-  background: url(../images/midas/toolbars/loading.gif) no-repeat center;
+  background: url(../images/midas/loading-light.gif) no-repeat center;
   }
 #midas_modal .midas-modal-frame {
   position: fixed;
@@ -61,7 +61,6 @@
 #midas_modal h1 a:hover {
   color: #333;
   }
-
 #midas_modal .midas-modal-content-container {
   overflow: auto;
   }
@@ -79,14 +78,96 @@
 	line-height: 0;
 	height: 0;
   }
-
 #midas_modal .midas-modal-controls {
   padding: 15px 0 5px;
   margin: 0 20px;
   border-top: 1px solid #CCC;
   text-align: right;
   }
-
 #midas_modal td.midas-modal-pane {
   height: 100%;
+  }
+
+/* Specific Modals
+ *----------------------------------------------------------------------------*/
+/* character selector */
+#midas_character_selector {
+  width: 456px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  }
+#midas_character_selector div {
+  border: 1px solid #999;
+  background: #FFF;
+  margin: 0 2px 2px 0;
+  float: left;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-size: 11pt;
+  line-height: 23px;
+  cursor: pointer;
+  }
+#midas_character_selector div:hover {
+  background: #DDD;
+  }
+#midas_character_selector #midas_character_display {
+  clear: both;
+  height: auto;
+  border: none;
+  width: 100%;
+  margin: 10px auto;
+  cursor: default;
+  background: none;
+  }
+#midas_character_selector #midas_character_display:hover {
+  background: none;
+  }
+#midas_character_selector #midas_character_display span {
+  display: block;
+  font-size: 14pt;
+  text-align: right;
+  float: left;
+  height: 60px;
+  line-height: 65px;
+  width: 85%;
+  }
+#midas_character_selector #midas_character_display em {
+  display: block;
+  float: right;
+  width: 60px;
+  height: 60px;
+  line-height: 68px;
+  font-size: 36pt;
+  border: 1px solid #999;
+  font-style: normal;
+  background: #FFF;
+  }
+
+/* html editor */
+#midas_html_editor {
+  height: 100%;
+  }
+#midas_html_editor textarea {
+  width: 600px;
+  height: 100%;
+  font-family: monospace;
+  white-space: pre;
+  resize: none;
+  }
+
+/* sanitizer (when pasting from office) */
+#midas_sanitizer {
+  width: 456px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 9pt;
+  }
+#midas_sanitizer .midas-information {
+  background: url(../images/midas/clippy.png) no-repeat top left;
+  min-height: 65px;
+  padding-left: 50px;
+  }
+#midas_sanitizer textarea {
+  width: 454px;
+  font-family: monospace;
+  white-space: pre;
   }
