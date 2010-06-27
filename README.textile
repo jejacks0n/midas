@@ -79,7 +79,7 @@ To save successfully an id attribute is required on any editable element (by def
 
 h2. Development
 
-The project is basically broken into three parts.. Javascript, the HTML views (palettes, panels etc), and the rake tasks.  To get started run @bundle install@, which will give you all the gems you'll need for testing etc.
+The project is basically broken into three parts.. Javascript, the HTML views (palettes, panels etc), and the rake tasks.  To get started run @gem install bundler@, and then @bundle install@, which will give you all the gems you'll need for testing etc.
 
 h3. Rake Tasks
 
