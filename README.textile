@@ -6,15 +6,13 @@ The important difference is that it uses the HTML5 contentEditable feature on di
 
 h2. The Story
 
-I wrote and used a similar editor in the past (written in 2005, and utilized up until now).  It was getting pretty outdated, used iframes, and did some lame hackery to pull css in and apply it to the contents of the editable iframe.  The methodology has some downsides in how the css can be created and managed.
+I wrote and used a similar editor in the past (written in 2005, and utilized up until now).  It was getting pretty outdated, used iframes for contentEditable, and did some lame hackery to pull css in and apply it to the contents of the editable iframe.  The methodology has some downsides in how the css can be created and managed.
 
-So a lot of things have changed in that time, and it seemed time for a re-write.  I decided to open source it so the community could build on it, and maybe help out if it's successful.  This time it's fully tested (using jasmine), which should make it easier to jump in and make changes should you want to do so.
+So a lot of things have changed in that time, and it seemed time for a re-write.  I decided to open source it so the community could build on it, and maybe help out if it's successful.  It's fully tested using jasmine and cucumber.
 
-My plan is to build it out fully, so it can boast the same, or close to the same feature set that editors like TinyMCE currently have.  But until then, it has some features that the other editors don't provide at this point, and lacks some that they do.
+The plan is to build it out to the same, or close to the same level as the other editors.  But until then, it has some features that the other editors don't provide at this point, and lacks some that they do.
 
-For now, it requires Prototype, but after development slows down, there are plans to make it library agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which means Gecko and Webkit at this point.
-
-Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all versions).  More support for other browsers will be added over time, in theory, or we could wait until all the browsers support the W3C spec, which is my personal hope.
+For now, it requires Prototype, but after development slows down, there are plans to make it library agnostic.  Midas only supports W3C compatible implementations of the contentEditable spec, which means Gecko and Webkit.  Officially supported browsers are Firefox 3.6+, Safari 4.0+, and Chrome (it would seem all versions).  More support for other browsers will be added over time, in theory, or we could wait until all the browsers support the W3C spec, which is my personal pipe dream.
 
 h2. Installation and Usage
 
@@ -75,29 +73,27 @@ h3. Supported Options
 
 h2. Midas and Saving
 
-Midas assumes that saves will be "updates", so it uses the rails standard POST with the _method parameter set to "put".  It's unlikely that Midas will be used to create pages, so by default the method is considered to be PUT, however, as outlined above in the Midas Options section you can override this to be a "create" action by specifying "post" instead.
+Midas assumes that saves will be "updates", so it uses the RESTful standard POST with the _method parameter set to "put".  It's unlikely that Midas will be used to create pages, so the default save method is considered PUT, however, as outlined above in the Midas Options section you can override this to be a CREATE action by specifying "post" instead.
 
-To save successfully an id attribute is required on any element with the "editable" classname (or whatever classname you provide).  The POST comes through with fields the name of the id attribute of the elements that were editable.
+To save successfully an id attribute is required on any editable element (by default this is any element with the "editable" classname.  The POST comes through with fields the name of the id attribute of the elements that were editable.
 
 h2. Development
 
-The project is basically broken into three parts.. Javascript, the rake tasks, and rails stuff.  To get started run @bundle install@, which will give you all the gems you'll need for testing etc.
+The project is basically broken into three parts.. Javascript, the HTML views (palettes, panels etc), and the rake tasks.  To get started run @bundle install@, which will give you all the gems you'll need for testing etc.
 
 h3. Javascript
 
-The javascript is broken into several different files in the gems /public/javascripts/midas path.. midas.js is the controller more or less, and the other files are different aspects of the system.  These get combined into a single file by running @rake midas:build@.  The same is true for the CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
+The javascript is broken into several different files in the /public/javascripts/midas path.. midas.js is the controller more or less, and the other files are different aspects of the system.  These get combined into a single file by running @rake midas:build@.  The same is true for the CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
 
 The following four files are generated after running the rake task:
 
-* /public/javascripts/midas.js
-* /public/javascripts/midas.min.js
-* /public/stylesheets/midas.css
-* /public/stylesheets/midas.bundle.css
-
-These files will be copied to the Rails project by the @rake midas:install@ command.
+* /public/distro/javascripts/midas.js
+* /public/distro/javascripts/midas.min.js
+* /public/distro/stylesheets/midas.css
+* /public/distro/stylesheets/midas.bundle.css
 
 h4. Testing with Jasmine:
-* run @rake jasmine:server@
+* run @rake jasmine@
 * navigate to @http://localhost:8888/@
 
 h4. Testing with Cucumber:
@@ -106,21 +102,13 @@ h4. Testing with Cucumber:
 h4. Regression testing (something I often do):
 * after runing @rake jasmine:server@ you can navigate to the following urls and confirm things are still in working order:
 * @http://localhost:8888/midas/examples/index.html@
-* @http://localhost:8888/midas/examples/iframe.html@
-* @http://localhost:8888/midas/examples/bundled.html@
+* @http://localhost:8888/midas/examples/distro.html@
 
 You can also run @rake jasmine:ci@ if you're using a CI system.
 
 h3. Rake Tasks
 
-* @midas:build@ - builds the installed files
-* @midas:install@ - builds the installed files, and copies them into the Rails project
+* @midas:build@ - builds the installable files into the public/distro path
 
 * @midas:minify_js@ - generates midas.js and midas.min.js (configuration doesn't get minified)
 * @midas:bundle_css@ - generates midas.css and midas.bundled.css
-* @midas:copy_assets@ - copies all css, and js files into the Rails project
-* @midas:copy_images@ - copies all the images into the Rails project (not useful if using midas.bundle.css)
-
-h3. Rails Stuff
-
-Haven't gotten there just yet.

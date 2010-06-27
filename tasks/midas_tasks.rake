@@ -4,36 +4,8 @@ require 'base64'
 javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select panel modal]
 stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel modal]
 
-def copy(filename, from_dir, to_dir)
-  from = File.expand_path(File.join(from_dir, filename))
-  to = File.expand_path(File.join(to_dir, filename))
-
-  if File.exist?(File.expand_path(to_dir))
-    puts "   exists: #{to_dir}"
-  else
-    puts " creating: #{to_dir}"
-    FileUtils.mkdir(to_dir)
-  end
-
-  if File.exist?(to)
-    puts "   exists: #{to}"
-  else
-    puts " creating: #{to}"
-    FileUtils.cp(from, to)
-  end
-end
-
 namespace :midas do
-  desc "Install midas into your project"
-  task :install => [:minify_js, :bundle_css, :copy_assets] do
-    
-  end
-
-  task :install_js => [:minify_js, :bundle_css, :copy_assets] do
-
-  end
-
-  desc "Build install files, but don't install"
+  desc "Build midas into the distro"
   task :build => [:minify_js, :bundle_css] do
 
   end
@@ -83,28 +55,6 @@ namespace :midas do
       # remove more whitespace
       code.gsub!(/^\s+/, '')
       file.write(code)
-    end
-  end
-
-  task :copy_assets do
-    raise 'This task expects a RAILS_ROOT variable.' unless RAILS_ROOT
-
-    %w[stylesheets/*.css javascripts/*.js].each do |path|
-      Dir[File.join(File.dirname(__FILE__), "/../public/#{path}")].sort.each do |filename|
-        to = File.join(RAILS_ROOT, 'public', File.dirname(path))
-        copy(File.basename(filename), File.dirname(filename), to)
-      end
-    end
-  end
-
-  task :copy_images do
-    raise 'This task expects a RAILS_ROOT variable.' unless RAILS_ROOT
-
-    %w[images/*].each do |path|
-      Dir[File.join(File.dirname(__FILE__), "/../public/#{path}")].sort.each do |filename|
-        to = File.join(RAILS_ROOT, 'public', File.dirname(path))
-        copy(File.basename(filename), File.dirname(filename), to)
-      end
     end
   end
 
