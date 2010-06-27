@@ -11,11 +11,11 @@
 #   - dist/**/*.js
 #
 src_files:
-  - distro/lib/prototype.js
-  - distro/lib/effects.js
-  - distro/lib/dragdrop.js
-#  - distro/midas.js
-#  - distro/midas.min.js
+  - distro/javascripts/lib/prototype.js
+  - distro/javascripts/lib/effects.js
+  - distro/javascripts/lib/dragdrop.js
+#  - distro/javascripts/midas.js
+#  - distro/javascripts/midas.min.js
   - javascripts/native_extensions.js
   - javascripts/midas.js
   - javascripts/region.js
