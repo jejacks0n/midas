@@ -72,26 +72,26 @@ Midas.Config = {
         sep2:                ' '
         },
       insert:                {
-        insertlink:          ['Link', 'Insert a hyperlink', ['modal', '/midas/link.html']],
-        insertmedia:         ['Media', 'Insert media', ['modal', '/midas/media.html']],
-        inserttable:         ['Table', 'Insert a table', ['modal', '/midas/table.html']],
-        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['modal', '/midas/object.html']],
-        insertcharacter:     ['Character', 'Insert special characters', ['modal', '/midas/character.html']],
+        insertlink:          ['Link', 'Insert a hyperlink', ['modal', '/midas/modals/link.html']],
+        insertmedia:         ['Media', 'Insert media', ['modal', '/midas/modals/media.html']],
+        inserttable:         ['Table', 'Insert a table', ['modal', '/midas/modals/table.html']],
+        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['modal', '/midas/modals/object.html']],
+        insertcharacter:     ['Character', 'Insert special characters', ['modal', '/midas/modals/character.html']],
         sep3:                '*'
         },
       inspector:             {
-        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/inspector.html']],
+        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
         sep3:                '*'
-        },
-      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/notes.html', 'Page Notes']],
-      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/history.html']]
+        }
+//      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
+//      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
       },
     htmleditor: {
-      style:                 ['Style', '', ['select', '/midas/style.html']],
-      formatblock:           ['Block Format', '', ['select', '/midas/formatblock.html']],
+      style:                 ['Style', '', ['select', '/midas/selects/style.html']],
+      formatblock:           ['Block Format', '', ['select', '/midas/selects/formatblock.html']],
       sep1:                  '-',
-      backcolor:             ['Background Color', '', ['palette', '/midas/backcolor.html'], ['context']],
-      forecolor:             ['Text Color', '', ['palette', '/midas/forecolor.html'], ['context']],
+      backcolor:             ['Background Color', '', ['palette', '/midas/palettes/backcolor.html'], ['context']],
+      forecolor:             ['Text Color', '', ['palette', '/midas/palettes/forecolor.html'], ['context']],
       sep2:                  '-',
       decoration:            {
         bold:                ['Bold', '', ['context']],
@@ -163,7 +163,7 @@ Midas.Config = {
                            return '<div class="hr"><hr/></div>';
                          }},
     htmleditor:          {call: function() {
-                           Midas.modal('/midas/htmleditor.html', {
+                           Midas.modal('/midas/modals/htmleditor.html', {
                              title: 'HTML Editor',
                              fullHeight: true,
                              afterLoad: function() {

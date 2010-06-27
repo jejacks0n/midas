@@ -170,7 +170,7 @@ Midas.Region = Class.create({
         this.execCommand('insertHTML', cleaned);
       } catch(e) {
         this.setContents(beforeHtml);
-        Midas.modal('/midas/sanitizer.html', {
+        Midas.modal('/midas/modals/sanitizer.html', {
           title: 'HTML Sanitizer',
           afterLoad: function() {
             $('midas_sanitized_content').value = cleaned.replace(/<br\/>/g, '\n');
