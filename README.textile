@@ -80,6 +80,13 @@ h2. Adding Additional Editor Features
 
 ... coming soon ...
 
+h2. Additional Items
+
+Midas has a few additional options, which are not in configuration or options.
+
+* @Midas.debug = true@ will enable debug loggin, which is mostly events and loading of views.
+* @Midas.silent = true@ will disable alerts, and other chrome level popups -- which helps with CI testing etc.
+
 h2. Development
 
 The project is basically broken into three parts.. Javascript, the HTML views (dialogs, modals, etc), and the rake tasks.  To get started run @gem install bundler@, and then @bundle install@, which should give you all the gems you'll need for development and testing.
