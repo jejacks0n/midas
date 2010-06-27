@@ -6,8 +6,8 @@ describe('Midas.Palette', function() {
 
   afterEach(function () {
     try {
-//      this.palette.destroy();
-//      this.palette = null;
+      this.palette.destroy();
+      this.palette = null;
     } catch(e) {}
   });
 
@@ -25,12 +25,13 @@ describe('Midas.Palette', function() {
   });
 
   it('shows when the button is clicked', function() {
-    var spy = spyOn(Ajax, 'Request');
+    var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
+      options.onSuccess({responseText: ''});
+    });
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
 
     jasmine.simulate.click($('palette_button'));
 
-    expect(spy.callCount).toEqual(1);
     expect(this.palette.element.getStyle('display')).toEqual('block');
   });
 
@@ -102,12 +103,13 @@ describe('Midas.Palette', function() {
   it('loads contents from a url', function() {
     var url = '';
     var spy = spyOn(Ajax, 'Request').andCallFake(function() {
-      url = arguments[0];
+      this.url = arguments[0];
     }.bind(this));
     this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')}, {url: 'pizzas/cheese'});
-
+    
     jasmine.simulate.click($('palette_button'));
-    expect(url).toEqual('pizzas/cheese');
+
+    expect(this.url).toEqual('pizzas/cheese');
   });
 
   it('calls a setup function when it loads a panel', function() {

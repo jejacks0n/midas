@@ -12,6 +12,24 @@ Midas.Panel = Class.create(Midas.Dialog, {
     this.panelElement = this.element.down('div.midas-panel-pane');
   },
 
+  setupObservers: function() {
+    Event.observe(window, 'resize', function() {
+      this.position(this.visible);
+    }.bind(this));
+    Event.observe(this.element, 'mousedown', function(e) {
+      e.stop();
+    });
+    Event.observe(this.button, 'click', function() {
+      if (!this.element || this.disabled()) return;
+      if (this.visible) this.hide();
+      else {
+        this.toolbar.hidePanels();
+        this.button.addClassName('pressed');
+        this.show();
+      }
+    }.bind(this));
+  },
+
   position: function(keepVisible) {
     if (!this.element) return;
 
@@ -59,12 +77,35 @@ Midas.Panel = Class.create(Midas.Dialog, {
       });
     }
 
-//  we need to hide this so that we may fade it in...   
-    this.element.hide();
-
     var paddingHeight = parseInt(this.panelElement.getStyle('padding-top')) + parseInt(this.panelElement.getStyle('padding-bottom'));
     var titleHeight = parseInt(this.titleElement.getStyle('padding-top')) + parseInt(this.titleElement.getStyle('padding-bottom')) + parseInt(this.titleElement.getStyle('height'));
+
+    if (!keepVisible) this.element.hide();
     this.panelElement.setStyle({height: (height - paddingHeight - titleHeight) + 'px'});
+  },
+
+  resize: function() {
+    var oldWidth = this.panelElement.getWidth();
+    this.panelElement.setStyle({width: 'auto'});
+    var newWidth = this.panelElement.getWidth();
+    this.panelElement.setStyle({width: oldWidth + 'px'});
+    var position = this.element.cumulativeOffset();
+
+    if (newWidth <= oldWidth) {
+      this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
+      return;
+    }
+
+    new Effect.Parallel([
+      new Effect.Morph(this.panelElement, { style: {width: newWidth + 'px'} }),
+      new Effect.Morph(this.element, { style: {left: position.left - (newWidth - oldWidth) + 'px'} })
+      ], {
+      transition: Effect.Transitions.sinoidal,
+      duration: .2,
+      afterFinish: function() {
+        this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
+      }.bind(this)
+    });
   },
 
   load: function(callback) {
@@ -73,6 +114,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
       onSuccess: function(transport) {
         this.loaded = true;
         this.element.removeClassName('loading');
+        this.panelElement.setStyle({visibility: 'hidden', width: this.panelElement.getWidth() + 'px'});
         this.panelElement.innerHTML = transport.responseText;
         transport.responseText.evalScripts();
 
@@ -83,16 +125,22 @@ Midas.Panel = Class.create(Midas.Dialog, {
       }.bind(this),
       onFailure: function() {
         this.hide();
-        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" select menu');
+        alert('Midas was unable to load "' + this.options.url + '" for the "' + this.name + '" panel');
       }.bind(this)
     });
   },
 
-  show: function($super) {
-    this.toolbar.hidePanels();
-    this.button.addClassName('pressed');
-
-    $super();
+  appear: function() {
+    this.visible = true;
+    new Effect.Appear(this.element, {
+      transition: Effect.Transitions.sinoidal,
+      duration: .2,
+      from: 0,
+      to: .85,
+      afterFinish: function() {
+        if (!this.loaded) this.load(this.resize.bind(this));
+      }.bind(this)
+    });
   },
 
   hide: function($super) {

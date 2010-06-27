@@ -58,7 +58,8 @@ describe('Midas.Dialog', function() {
       options.onSuccess({responseText: ''});
     });
     this.dialog = new Midas.Dialog($('dialog_button'), 'backcolor', {element: $('toolbar'), activeRegion: {name: 'region1'}});
-
+    this.dialog.loaded = true;
+    
     var button = $('dialog_button');
     jasmine.simulate.click(button);
 

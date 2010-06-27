@@ -10,7 +10,7 @@ Midas.Dialog = Class.create({
     configuration: null
   },
 
-  initialize: function(button, name, toolbar, options) {options
+  initialize: function(button, name, toolbar, options) {
     if (!Midas.version) throw('Midas.Dialog requires Midas');
 
     this.button = button;
@@ -46,8 +46,8 @@ Midas.Dialog = Class.create({
 
   show: function() {
     if (!this.loaded) {
-      this.position(true);
-      this.load(this.show.bind(this));
+      this.position();
+      this.appear();
       return;
     }
 
@@ -56,12 +56,21 @@ Midas.Dialog = Class.create({
       this.element.addClassName(this.contextClass);
     }
     this.element.setStyle({width: 'auto', height: 'auto'});
+
     this.position(this.visible);
+    this.appear();
+  },
+
+  appear: function() {
     this.visible = true;
     new Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
-      duration: .20
+      duration: .20,
+      afterFinish: function() {
+        var callback = (this.resize || this.show).bind(this);
+        if (!this.loaded) this.load(callback);
+      }.bind(this)
     });
   },
 
@@ -77,7 +86,7 @@ Midas.Dialog = Class.create({
 
   position: function(keepVisible) {
   },
-
+  
   disabled: function() {
     return (this.button.hasClassName('disabled') || this.button.up('.disabled'));
   },
