@@ -5,7 +5,7 @@ Midas.Palette = Class.create(Midas.Dialog, {
   build: function() {
     this.element = new Element('div', {'class': 'midas-palette loading', style: 'display:none;'});
     this.toolbar.element.appendChild(this.element);
-    if (Midas.Config.preloadPalettes) this.load();
+    if (Midas.Config.preload['palettes']) this.load();
   },
 
   position: function(keepVisible) {

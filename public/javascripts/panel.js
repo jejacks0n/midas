@@ -10,6 +10,12 @@ Midas.Panel = Class.create(Midas.Dialog, {
 
     this.titleElement = this.element.down('h3.title');
     this.panelElement = this.element.down('div.midas-panel-pane');
+    if (Midas.Config.preload['panels']) {
+      this.load(function() {
+        this.resize();
+        this.hide();
+      }.bind(this));
+    }
   },
 
   setupObservers: function() {
@@ -109,7 +115,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
   },
 
   load: function(callback) {
-    new Ajax.Request(this.options.url, {
+    Midas.loadView(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
         this.loaded = true;

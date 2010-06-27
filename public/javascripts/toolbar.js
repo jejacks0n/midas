@@ -30,6 +30,13 @@ Midas.Toolbar = Class.create({
   build: function() {
     this.element = new Element('div', {id: this.options['id'] || this.generateId()}).addClassName('midas-toolbar');
 
+    var appendTo = document.body;
+    if (this.options['appendTo']) {
+      appendTo = $(this.options['appendTo']);
+      this.element.setStyle('position:static;top:0;left:0');
+    }
+    appendTo.appendChild(this.element);
+
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {
         var element = new Element('div').addClassName('midas-' + toolbar + 'bar');
@@ -42,13 +49,6 @@ Midas.Toolbar = Class.create({
     }
     this.positioningElement = new Element('div', {style: 'clear:both;height:0;overflow:hidden'});
     this.element.appendChild(this.positioningElement);
-
-    var appendTo = document.body;
-    if (this.options['appendTo']) {
-      appendTo = $(this.options['appendTo']);
-      this.element.setStyle('position:static;top:0;left:0');
-    }
-    appendTo.appendChild(this.element);
   },
 
   setupObservers: function() {

@@ -5,7 +5,7 @@ Midas.Select = Class.create(Midas.Dialog, {
   build: function() {
     this.element = new Element('div', {'class': 'midas-select loading', style: 'display:none;'});
     this.toolbar.element.appendChild(this.element);
-    if (Midas.Config.preloadSelects) this.load();
+    if (Midas.Config.preload['selects']) this.load();
   },
 
   position: function(keepVisible) {
