@@ -6,14 +6,31 @@ stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel
 
 namespace :midas do
   desc "Build midas into the distro"
-  task :build => [:minify_js, :bundle_css] do
+  task :build => [:combine_dialogs, :minify_js, :bundle_css] do
 
+  end
+
+  desc "Combines all dialog and model views into one js file"
+  task :combine_dialogs do
+    thisfile = File.dirname(__FILE__)
+    output_path = "#{thisfile}/../public/distro/javascripts"
+    input_path = "#{thisfile}/../public/midas"
+
+    FileUtils.cd(input_path) do
+      File.open("#{output_path}/midas_views.js", 'w') do |file|
+        Dir["**/*.html"].sort.each do |filename|
+          file.write %Q{Midas.preloadedView['/midas/#{filename}'] = "}
+          File.foreach(filename) { |line| file.write line.chomp.gsub('"', '\\"') }
+          file.write %Q{";\n}
+        end
+      end
+    end
   end
 
   desc "Combine, minify, and pack development js files into midas.js and midas.min.js"
   task :minify_js do
     thisfile = File.dirname(__FILE__)
-    output_path = "#{thisfile}/../public/distro"
+    output_path = "#{thisfile}/../public/distro/javascripts"
     input_path = "#{thisfile}/../public/javascripts"
 
     code = ''
@@ -24,7 +41,7 @@ namespace :midas do
 
     File.open("#{output_path}/midas.js", 'wb') { |file| file.write(code + config_code) }
     File.open("#{output_path}/midas.min.js", 'wb') do |file|
-      file.write(Packr.pack(code, :base62 => true) + ";\n" + config_code)
+      file.write(Packr.pack(code, :base62 => true) + ";\n" + config_code + "\n\n")
     end
   end
 
