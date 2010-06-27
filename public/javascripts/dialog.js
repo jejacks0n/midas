@@ -67,6 +67,8 @@ Midas.Dialog = Class.create({
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
       duration: .20,
+      from: 0,
+      to: .95,
       afterFinish: function() {
         var callback = (this.resize || this.show).bind(this);
         if (!this.loaded) this.load(callback);
