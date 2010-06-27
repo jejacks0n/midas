@@ -1,0 +1,530 @@
+/* Midas IFRAME setup
+ *----------------------------------------------------------------------------*/
+.midas-iframe-container {
+  position: absolute;
+  z-index: 10000;
+  background: #FFF;
+  }
+.midas-iframe-window {
+  }
+/* Region
+ *----------------------------------------------------------------------------*/
+.midas-region {
+  outline: 1px dotted #F00;
+  }
+.midas-region-preview {
+  outline: none;
+  }
+.midas-region table,
+.midas-region td,
+.midas-region th {
+  border: 1px dotted #F00;
+  }
+
+.midas-region .midas-page-break {
+  height: 5px;
+  background: #EEE;
+  overflow: hidden;
+  border: 1px dotted #999;
+  border-width: 1px 0;
+  margin: 2px 0;
+  }
+.midas-region .midas-page-break em {
+  display: none;
+  }
+/* Toolbar
+ *----------------------------------------------------------------------------*/
+.midas-toolbar {
+  position: fixed;
+  z-index: 10002;
+  top: 0;
+  left: 0;
+  width: 100%;
+  }
+.midas-toolbar .loading {
+  background-image: url(../images/midas/toolbars/loading.gif);
+  background-repeat: no-repeat;
+  background-position: center;
+  }
+
+/* Toolbar: Actionbar
+ *----------------------------------------------------------------------------*/
+.midas-actionsbar {
+  text-shadow: #EEE 0 1px 0;
+  height: 60px;
+  padding-right: 10px;
+  background: #E2E1E2 url(../images/midas/toolbars/actions/_background.png) repeat-x bottom;
+  overflow: hidden;
+  }
+.midas-actionsbar .midas-button {
+  display: block;
+  float: left;
+  height: 58px;
+  min-width: 50px;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  outline: none;
+  margin-bottom: 20px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  }
+.midas-actionsbar .midas-button em {
+  display: block;
+  margin: 0 -5px;
+  height: 15px;
+  padding-top: 41px;
+  font-style: normal;
+  color: #222;
+  cursor: default;
+  font-size: 8.5pt;
+  line-height: 15px;
+  background-repeat: no-repeat;
+  background-position: 50% 7px;
+  }
+.midas-actionsbar .midas-button.disabled,
+.midas-actionsbar.disabled .midas-button,
+.midas-actionsbar .midas-group.disabled .midas-button,
+.disabled .midas-actionsbar .midas-button {
+  opacity: 0.33 !important;
+  }
+.midas-actionsbar .midas-separator,
+.midas-actionsbar .midas-line-separator,
+.midas-actionsbar .midas-flex-separator {
+  display: block;
+  float: left;
+  border: 0;
+  height: 58px;
+  padding: 0 15px;
+  margin-bottom: 20px;
+  background: url(../images/midas/toolbars/actions/_separator.png) no-repeat;
+  }
+.midas-actionsbar .pressed {
+  background: url(../images/midas/toolbars/actions/_pressed.png) no-repeat;
+  }
+.midas-actionsbar .active {
+  text-shadow: none;
+  margin-top: 1px;
+  height: 57px;
+  }
+.midas-actionsbar .midas-button.active em {
+  padding-top: 40px;
+  }
+.midas-actionsbar .midas-button-save em            { background-image: url(../images/midas/toolbars/actions/save.png) }
+.midas-actionsbar .midas-button-preview em         { background-image: url(../images/midas/toolbars/actions/preview.png) }
+.midas-actionsbar .midas-button-undo em            { background-image: url(../images/midas/toolbars/actions/undo.png) }
+.midas-actionsbar .midas-button-redo em            { background-image: url(../images/midas/toolbars/actions/redo.png) }
+.midas-actionsbar .midas-button-insertlink em      { background-image: url(../images/midas/toolbars/actions/insertlink.png) }
+.midas-actionsbar .midas-button-insertmedia em     { background-image: url(../images/midas/toolbars/actions/insertmedia.png) }
+.midas-actionsbar .midas-button-inserttable em     { background-image: url(../images/midas/toolbars/actions/inserttable.png) }
+.midas-actionsbar .midas-button-insertobject em    { background-image: url(../images/midas/toolbars/actions/insertobject.png) }
+.midas-actionsbar .midas-button-insertcharacter em { background-image: url(../images/midas/toolbars/actions/insertcharacter.png) }
+.midas-actionsbar .midas-button-inspectorpanel em  { background-image: url(../images/midas/toolbars/actions/inspectorpanel.png) }
+.midas-actionsbar .midas-button-notespanel em      { background-image: url(../images/midas/toolbars/actions/notespanel.png) }
+.midas-actionsbar .midas-button-historypanel em    { background-image: url(../images/midas/toolbars/actions/historypanel.png) }
+
+/* Toolbar: HTMLEditor
+ *----------------------------------------------------------------------------*/
+.midas-htmleditorbar {
+  padding: 3px 13px 1px 10px;
+  background: #D2D2D1 url(../images/midas/toolbars/htmleditor/_background.png) repeat-x bottom;
+  }
+.midas-htmleditorbar:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+  }
+
+.midas-htmleditorbar .midas-separator,
+.midas-htmleditorbar .midas-line-separator,
+.midas-htmleditorbar .midas-flex-separator {
+  display: block;
+  float: left;
+  border: 0;
+  height: 18px;
+  padding: 0;
+  margin: 0 7px 0 0;
+  width: 1px;
+  background: url(../images/midas/toolbars/htmleditor/_separator.png) no-repeat;
+  }
+.midas-htmleditorbar .midas-line-separator {
+  background: url(../images/midas/toolbars/htmleditor/_line_separator.png) no-repeat;
+  }
+.midas-htmleditorbar .midas-button {
+  display: block;
+  outline: none;
+  float: left;
+  height: 18px;
+  width: 23px;
+  margin: 0 7px 4px 0;
+  }
+.midas-htmleditorbar .midas-button em {
+  display: none;
+  }
+.midas-htmleditorbar .midas-button,
+.midas-htmleditorbar .midas-button em {
+  background-image: url(../images/midas/toolbars/htmleditor/buttons.png);
+  }
+.midas-htmleditorbar .midas-button.disabled,
+.midas-htmleditorbar.disabled .midas-button,
+.disabled .midas-htmleditorbar .midas-button {
+  opacity: 0.33 !important;
+  }
+.midas-htmleditorbar .midas-group {
+  float: left;
+  }
+.midas-htmleditorbar .midas-group.disabled .midas-button {
+  opacity: 0.33 !important;
+  }
+.midas-htmleditorbar .midas-group .midas-button {
+  width: 22px;
+  margin-left: 0;
+  margin-right: 0;
+  }
+.midas-htmleditorbar .midas-group .midas-button:first-child {
+  width: 23px;
+  }
+.midas-htmleditorbar .midas-group .midas-separator,
+.midas-htmleditorbar .midas-group .midas-line-separator,
+.midas-htmleditorbar .midas-group .midas-flex-separator {
+  margin-left: 7px;
+  }
+
+/* standard buttons */
+.midas-htmleditorbar .midas-button-bold                       { background-position: -68px 0 }
+.midas-htmleditorbar .midas-button-bold.active                { background-position: -68px -18px }
+.midas-htmleditorbar .midas-button-italic                     { background-position: -91px 0 }
+.midas-htmleditorbar .midas-button-italic.active              { background-position: -91px -18px }
+.midas-htmleditorbar .midas-button-overline                   { background-position: -113px 0 }
+.midas-htmleditorbar .midas-button-overline.active            { background-position: -113px -18px }
+.midas-htmleditorbar .midas-button-strikethrough              { background-position: -135px 0 }
+.midas-htmleditorbar .midas-button-strikethrough.active       { background-position: -135px -18px }
+.midas-htmleditorbar .midas-button-underline                  { background-position: -157px 0 }
+.midas-htmleditorbar .midas-button-underline.active           { background-position: -157px -18px }
+.midas-htmleditorbar .midas-button-subscript                  { background-position: -180px 0 }
+.midas-htmleditorbar .midas-button-subscript.active           { background-position: -180px -18px }
+.midas-htmleditorbar .midas-button-superscript                { background-position: -203px 0 }
+.midas-htmleditorbar .midas-button-superscript.active         { background-position: -203px -18px }
+.midas-htmleditorbar .midas-button-justifyleft                { background-position: -226px 0 }
+.midas-htmleditorbar .midas-button-justifyleft.active         { background-position: -226px -18px }
+.midas-htmleditorbar .midas-button-justifycenter              { background-position: -249px 0 }
+.midas-htmleditorbar .midas-button-justifycenter.active       { background-position: -249px -18px }
+.midas-htmleditorbar .midas-button-justifyright               { background-position: -271px 0 }
+.midas-htmleditorbar .midas-button-justifyright.active        { background-position: -271px -18px }
+.midas-htmleditorbar .midas-button-justifyfull                { background-position: -293px 0 }
+.midas-htmleditorbar .midas-button-justifyfull.active         { background-position: -293px -18px }
+.midas-htmleditorbar .midas-button-insertunorderedlist        { background-position: -316px 0 }
+.midas-htmleditorbar .midas-button-insertunorderedlist.active { background-position: -316px -18px }
+.midas-htmleditorbar .midas-button-insertorderedlist          { background-position: -339px 0 }
+.midas-htmleditorbar .midas-button-insertorderedlist.active   { background-position: -339px -18px }
+.midas-htmleditorbar .midas-button-outdent                    { background-position: -362px 0 }
+.midas-htmleditorbar .midas-button-outdent.active             { background-position: -362px -18px }
+.midas-htmleditorbar .midas-button-indent                     { background-position: -385px 0 }
+.midas-htmleditorbar .midas-button-indent.active              { background-position: -385px -18px }
+.midas-htmleditorbar .midas-button-insertrowbefore            { background-position: -408px 0 }
+.midas-htmleditorbar .midas-button-insertrowbefore.active     { background-position: -408px -18px }
+.midas-htmleditorbar .midas-button-insertrowafter             { background-position: -431px 0 }
+.midas-htmleditorbar .midas-button-insertrowafter.active      { background-position: -431px -18px }
+.midas-htmleditorbar .midas-button-deleterow                  { background-position: -453px 0 }
+.midas-htmleditorbar .midas-button-deleterow.active           { background-position: -453px -18px }
+.midas-htmleditorbar .midas-button-insertcolumnbefore         { background-position: -475px 0 }
+.midas-htmleditorbar .midas-button-insertcolumnbefore.active  { background-position: -475px -18px }
+.midas-htmleditorbar .midas-button-insertcolumnafter          { background-position: -497px 0 }
+.midas-htmleditorbar .midas-button-insertcolumnafter.active   { background-position: -497px -18px }
+.midas-htmleditorbar .midas-button-deletecolumn               { background-position: -519px 0 }
+.midas-htmleditorbar .midas-button-deletecolumn.active        { background-position: -519px -18px }
+.midas-htmleditorbar .midas-button-horizontalrule             { background-position: -542px 0 }
+.midas-htmleditorbar .midas-button-horizontalrule.active      { background-position: -542px -18px }
+.midas-htmleditorbar .midas-button-pagebreak                  { background-position: -565px 0 }
+.midas-htmleditorbar .midas-button-pagebreak.active           { background-position: -565px -18px }
+.midas-htmleditorbar .midas-button-removeformatting           { background-position: -588px 0 }
+.midas-htmleditorbar .midas-button-removeformatting.active    { background-position: -588px -18px }
+.midas-htmleditorbar .midas-button-htmleditor                 { background-position: -612px 0 }
+.midas-htmleditorbar .midas-button-htmleditor.active          { background-position: -612px -18px }
+
+/* color palette buttons */
+.midas-htmleditorbar .midas-palette-button,
+.midas-htmleditorbar .midas-palette-button {
+  background-position: 0 -36px;
+  }
+
+/* select buttons */
+.midas-htmleditorbar .midas-select-button {
+  width: auto;
+  background-position: -24px -36px;
+  overflow: hidden;
+  padding-left: 6px;
+  }
+.midas-htmleditorbar .midas-select-button em {
+  background-position: right -36px;
+  display: block;
+  white-space: nowrap;
+  padding-right: 15px;
+  font-style: normal;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 8.5pt;
+  line-height: 19px;
+  cursor: pointer;
+  color: #222;
+  }
+/* Statusbar
+ *----------------------------------------------------------------------------*/
+.midas-statusbar {
+  position: fixed;
+  z-index: 10001;
+  padding: 5px 10px 4px 10px;
+  background: #E2E1E2;
+  border-top: 1px solid #727272;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 8.5pt;
+  line-height: 12px;
+  text-align: left;
+  cursor: default;
+  height: 12px;
+  color: #222;
+  }
+.midas-statusbar span {
+  margin-right: 25px;
+  }
+.midas-statusbar span a {
+  color: #000;
+  }
+/* Dialog
+ *----------------------------------------------------------------------------*/
+/* Palette
+ *----------------------------------------------------------------------------*/
+.midas-palette {
+  position: fixed;
+  z-index: 10003;
+  width: 30px;
+  height: 30px;
+  background-color: #E2E1E2;
+  border: 1px solid #727272;
+  margin-top: -1px;
+	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  }
+
+/* Specific Palettes
+ *----------------------------------------------------------------------------*/
+#midas_forecolor_selector,
+#midas_backcolor_selector {
+  width: 170px;
+  padding: 1px;
+  }
+#midas_forecolor_selector div,
+#midas_backcolor_selector div {
+  float: left;
+  border: 1px solid #E2E1E2;
+  width: 15px;
+  height: 15px;
+  cursor: default;
+  }
+#midas_forecolor_selector div:hover,
+#midas_backcolor_selector div:hover {
+  border: 1px solid #333;
+  }
+#midas_forecolor_selector div#midas_forecolor_last_picked,
+#midas_backcolor_selector div#midas_backcolor_last_picked {
+  border: 1px solid #333;
+  width: 166px;
+  clear: left;
+  text-align: center;
+  margin: 1px 1px 2px 1px;
+  position: relative;
+  top: 1px;
+  float: none;
+  line-height: 15px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 8.5pt;
+  }
+/* Select
+ *----------------------------------------------------------------------------*/
+.midas-select {
+  position: fixed;
+  z-index: 10003;
+  width: 30px;
+  height: 30px;
+  background-color: #FFF;
+  margin-top: -1px;
+	-moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  overflow: auto;
+  }
+
+/* Specific Selects
+ *----------------------------------------------------------------------------*/
+#midas_formatblock_selector,
+#midas_style_selector {
+  padding: 10px 0;
+  }
+#midas_formatblock_selector *,
+#midas_style_selector *{
+  cursor: default;
+  padding: 0 10px;
+  }
+#midas_formatblock_selector *:hover,
+#midas_style_selector *:hover {
+  background-color: #E2E1E2 !important;
+  color: #000 !important;
+  }
+#midas_formatblock_selector h1 { margin: 0 }
+#midas_formatblock_selector h2 { margin: 0 }
+#midas_formatblock_selector h3 { margin: 0 }
+#midas_formatblock_selector h4 { margin: 0 }
+#midas_formatblock_selector h5 { margin: 0 }
+#midas_formatblock_selector h6 { margin: 0 }
+#midas_formatblock_selector .-paragraph { }
+#midas_formatblock_selector .-blockquote { }
+#midas_formatblock_selector .-pre { font-family: monospace }
+/* Panel
+ *----------------------------------------------------------------------------*/
+.midas-panel {
+  position: absolute;
+  background-color: #111;
+  opacity: 0.85;
+  width: 0;
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  color: #FFF;
+  float: left;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 9.5pt;
+  z-index: 10003;
+  }
+
+.midas-panel h3 {
+  font-size: 11pt;
+  padding: 10px 60px 8px 15px;
+  margin: 0;
+  background: #333;
+  }
+.midas-panel h3.title {
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  height: 17px;
+  cursor: move;
+  }
+.midas-panel .midas-panel-pane {
+  padding: 15px;
+  overflow: auto;
+  }
+.midas-panel .midas-panel-pane h3 {
+  margin: 10px -15px;
+  font-size: 9.5pt;
+  font-weight: normal;
+  padding: 8px;
+  background: #333;
+  }
+.midas-panel .midas-panel-pane .midas-panel-content {
+  overflow: hidden;
+  }/* Modal
+ *----------------------------------------------------------------------------*/
+#midas_modal_overlay {
+  position: fixed;
+  z-index: 10010;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  opacity: 0.65;
+  height: 100%;
+  }
+
+#midas_modal {
+  width: 500px;
+  margin: 0 auto;
+  }
+#midas_modal.loading .midas-modal-content {
+  background: url(../images/midas/toolbars/loading.gif) no-repeat center;
+  }
+#midas_modal .midas-modal-frame {
+  position: fixed;
+  top: 0;
+  z-index: 10011;
+  width: 500px;
+  background: #EFEFEF;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -moz-box-shadow: 0 0 40px rgba(0, 0, 0, .9);
+  -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, .9);
+  box-shadow: 0 0 40px rgba(0, 0, 0, .9);
+  display: block;
+  padding: 0 0 10px;
+  margin: 0;
+  }
+#midas_modal h1 {
+  background: #DDD;
+  border-bottom: 1px solid #CCC;
+  margin: 0;
+  padding: 2px 10px 0 10px;
+  font: normal normal bold 14px/23px Helvetica, Tahoma, Arial, sans-serif;
+  }
+#midas_modal h1 span {
+  color: #000;
+  text-shadow: #EEE 1px 1px 0;
+  }
+#midas_modal h1 a {
+  display: block;
+  float: right;
+  font-size: 10px;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  height: 20px;
+  margin-top: -4px;
+  }
+#midas_modal h1 a:hover {
+  color: #333;
+  }
+
+#midas_modal .midas-modal-content-container {
+  overflow: auto;
+  }
+#midas_modal .midas-modal-content {
+  color: #000;
+  height: 25px;
+  padding: 20px 20px 10px;
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  }
+#midas_modal .midas-modal-content:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+  }
+
+#midas_modal .midas-modal-controls {
+  padding: 15px 0 5px;
+  margin: 0 20px;
+  border-top: 1px solid #CCC;
+  text-align: right;
+  }
+
+#midas_modal td.midas-modal-pane {
+  height: 100%;
+  }

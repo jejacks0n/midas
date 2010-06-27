@@ -81,6 +81,13 @@ h2. Development
 
 The project is basically broken into three parts.. Javascript, the HTML views (palettes, panels etc), and the rake tasks.  To get started run @bundle install@, which will give you all the gems you'll need for testing etc.
 
+h3. Rake Tasks
+
+* @midas:build@ - builds the installable files into the public/distro path
+
+* @midas:minify_js@ - generates midas.js and midas.min.js (configuration doesn't get minified)
+* @midas:bundle_css@ - generates midas.css and midas.bundled.css
+
 h3. Javascript
 
 The javascript is broken into several different files in the /public/javascripts/midas path.. midas.js is the controller more or less, and the other files are different aspects of the system.  These get combined into a single file by running @rake midas:build@.  The same is true for the CSS, with the addition that the images are bundled into the CSS using the base64 data url method.
@@ -101,14 +108,7 @@ h4. Testing with Cucumber:
 
 h4. Regression testing (something I often do):
 * after runing @rake jasmine:server@ you can navigate to the following urls and confirm things are still in working order:
-* @http://localhost:8888/midas/examples/index.html@
-* @http://localhost:8888/midas/examples/distro.html@
+* @http://localhost:8888/examples/index.html@
+* @http://localhost:8888/examples/distro.html@
 
 You can also run @rake jasmine:ci@ if you're using a CI system.
-
-h3. Rake Tasks
-
-* @midas:build@ - builds the installable files into the public/distro path
-
-* @midas:minify_js@ - generates midas.js and midas.min.js (configuration doesn't get minified)
-* @midas:bundle_css@ - generates midas.css and midas.bundled.css

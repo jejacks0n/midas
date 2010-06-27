@@ -16,7 +16,7 @@
   margin: 0 auto;
   }
 #midas_modal.loading .midas-modal-content {
-  background: url(../../images/midas/toolbars/loading.gif) no-repeat center;
+  background: url(../images/midas/toolbars/loading.gif) no-repeat center;
   }
 #midas_modal .midas-modal-frame {
   position: fixed;

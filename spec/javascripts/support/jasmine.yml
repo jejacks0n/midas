@@ -11,21 +11,22 @@
 #   - dist/**/*.js
 #
 src_files:
-  - javascripts/prototype.js
-  - javascripts/effects.js
-  - javascripts/dragdrop.js
-#  - javascripts/midas.min.js
-  - javascripts/midas/native_extensions.js
-  - javascripts/midas/midas.js
-  - javascripts/midas/region.js
-  - javascripts/midas/toolbar.js
-  - javascripts/midas/statusbar.js
-  - javascripts/midas/dialog.js
-  - javascripts/midas/palette.js
-  - javascripts/midas/select.js
-  - javascripts/midas/panel.js
-  - javascripts/midas/modal.js
-  - javascripts/midas/config.js
+  - distro/lib/prototype.js
+  - distro/lib/effects.js
+  - distro/lib/dragdrop.js
+#  - distro/midas.js
+#  - distro/midas.min.js
+  - javascripts/native_extensions.js
+  - javascripts/midas.js
+  - javascripts/region.js
+  - javascripts/toolbar.js
+  - javascripts/statusbar.js
+  - javascripts/dialog.js
+  - javascripts/palette.js
+  - javascripts/select.js
+  - javascripts/panel.js
+  - javascripts/modal.js
+  - javascripts/config.js
 
 # stylesheets
 #
