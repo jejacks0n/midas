@@ -68,7 +68,7 @@
       this.element.down('#table_cell_padding').observe('change', function(event) {
         this.tableElement.writeAttribute('cellpadding', event.target.value);
       }.bind(this));
-      
+
       this.element.down('#table_cell_width').observe('change', function(event) {
         this.selectedCell().writeAttribute('width', event.target.value);
       }.bind(this));
