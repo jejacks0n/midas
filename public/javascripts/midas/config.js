@@ -4,6 +4,12 @@ Midas.Config = {
    */
   stylesheet: '/stylesheets/midas.css',
 
+  /* Things like palettes, and select menus can be preloaded when the page loads, instead of
+   * loading the first time the button is clicked.
+   */
+  preloadPalettes: true,
+  preloadSelects: true,
+
   /* Toolbars
    *
    * Any object you put in here will create a new toolbar.
