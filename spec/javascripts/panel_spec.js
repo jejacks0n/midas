@@ -106,7 +106,7 @@ describe('Midas.Panel', function() {
     expect(this.panel.element.getStyle('display')).toEqual('none');
   });
 
-  stub('positions itself properly', function() {
+  pending('positions itself properly', function() {
     
   });
 

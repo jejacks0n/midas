@@ -75,15 +75,15 @@ describe('Midas.Toolbar', function() {
     expect(this.toolbar.panels.length).toEqual(3);
   });
 
-  stub('hides all palettes when anything besides a palette is clicked', function() {
+  pending('hides all palettes when anything besides a palette is clicked', function() {
     
   });
 
-  stub('deactivates any active buttons when clicking outside regions', function() {
+  pending('deactivates any active buttons when clicking outside regions', function() {
 
   });
 
-  stub('disables buttons, button groups, and toolbars', function() {
+  pending('disables buttons, button groups, and toolbars', function() {
 
   });
 
@@ -102,23 +102,23 @@ describe('Midas.Toolbar', function() {
     expect(spy.callCount).toEqual(1);
   });
 
-  stub('keeps track of the active region', function() {
+  pending('keeps track of the active region', function() {
 
   });
 
-  stub('returns the bottom offset of the toolbar for positioning', function() {
+  pending('returns the bottom offset of the toolbar for positioning', function() {
     
   });
 
-  stub('observes keypress and mouseup on document', function() {
+  pending('observes keypress and mouseup on document', function() {
 
   });
 
-  stub('observes keypress and mouseup on the iframe document when appropriate', function() {
+  pending('observes keypress and mouseup on the iframe document when appropriate', function() {
 
   });
 
-  stub('adds the active classname on mousedown, and remove it on mouseup', function() {
+  pending('adds the active classname on mousedown, and remove it on mouseup', function() {
 
   });
 
