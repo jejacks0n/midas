@@ -72,7 +72,7 @@ describe('Midas.Toolbar', function() {
 
     expect(this.toolbar.palettes.length).toEqual(2);
     expect(this.toolbar.selects.length).toEqual(2);
-    expect(this.toolbar.panels.length).toEqual(3);
+    expect(this.toolbar.panels.length).toEqual(1);
   });
 
   pending('hides all palettes when anything besides a palette is clicked', function() {
