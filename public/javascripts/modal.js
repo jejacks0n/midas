@@ -39,9 +39,10 @@ Object.extend(Midas.modal, {
   _setupObservers: function() {
     Event.observe(window, 'resize', this.position.bind(this));
     Event.observe(this.element.down('h1 a'), 'click', this.hide.bind(this));
-    Event.observe(this.overlayElement, 'mousedown', function(event) { event.stop(); });
-    Event.observe(this.overlayElement, 'mouseup', function(event) { event.stop(); });
-    Event.observe(this.element, 'mouseup', function(event) { event.stop(); });
+    Event.observe(this.overlayElement, 'mousedown', function(e) { e.stop(); });
+    Event.observe(this.overlayElement, 'mouseup', function(e) { e.stop(); });
+    Event.observe(this.element, 'mouseup', function(e) { e.stop(); });
+    Event.observe(this.element.down('h1'), 'mousedown', function(e) { e.stop(); });
     Event.observe(this.frameElement, 'submit', function(e) {
       if (window['midas_modal_submit']) window['midas_modal_submit'](e);
     });
