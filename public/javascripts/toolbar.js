@@ -57,7 +57,15 @@ Midas.Toolbar = Class.create({
   },
 
   setupObservers: function() {
+    this.disableToolbar = true;
     this.__mousedown = function(e) { e.stop() }.bind(this);
+    this.__doc_mousedown = function(e) {
+      var element = Event.element(e);
+      if (Element.up(element, '#midas_modal')) {
+        console.debug('modal');
+        this.disableToolbar = false;
+      }
+    }.bind(this);
     this.__mouseup = function(e) {
       this.hidePopups(Event.element(e));
     }.bind(this);
@@ -71,7 +79,10 @@ Midas.Toolbar = Class.create({
           this.element.down('.midas-' + toolbar + 'bar').removeClassName('disabled');
         }.bind(this));
         Event.observe(document, 'midas:' + toolbar + ':blur', function() {
-          this.element.down('.midas-' + toolbar + 'bar').addClassName('disabled');
+          if (this.disableToolbar) {
+            this.element.down('.midas-' + toolbar + 'bar').addClassName('disabled');
+          }
+          this.disableToolbar = true;
         }.bind(this))
       }
     }
@@ -80,6 +91,7 @@ Midas.Toolbar = Class.create({
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
     observedDocuments.each(function(doc) {
+      Event.observe(doc, 'mousedown', this.__doc_mousedown);
       Event.observe(doc, 'mouseup', this.__mouseup);
       Event.observe(doc, 'keydown', this.__keydown);
     }.bind(this));
