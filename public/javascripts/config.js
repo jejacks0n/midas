@@ -4,15 +4,14 @@ Midas.Config = {
    */
   stylesheet: '/stylesheets/midas.css',
 
-  /* Things like palettes, select menus, panels and modals can all be preloaded when the page
-   * loads, instead of loading the first time the button is clicked.  They can also be preloaded
-   * so no Ajax is required if the url exists in Midas.preloadedViews.
+  /* Things like palettes, select menus, and panels can be preloaded when the page loads,
+   * instead of loading the first time the button is clicked.
    */
   preload: {
     'palettes': true,
     'selects': true,
     'panels': true
-  },
+    },
 
   /* Toolbars
    *

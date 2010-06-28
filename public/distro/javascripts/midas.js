@@ -1416,7 +1416,7 @@ Midas.Palette = Class.create(Midas.Dialog, {
   build: function() {
     this.element = new Element('div', {'class': 'midas-palette loading', style: 'display:none;'});
     this.toolbar.element.appendChild(this.element);
-    if (Midas.Config.preload['palettes']) this.load();
+    if (this.toolbar.config.preload['palettes']) this.load();
   },
 
   position: function(keepVisible) {
@@ -1443,7 +1443,7 @@ Midas.Select = Class.create(Midas.Dialog, {
   build: function() {
     this.element = new Element('div', {'class': 'midas-select loading', style: 'display:none;'});
     this.toolbar.element.appendChild(this.element);
-    if (Midas.Config.preload['selects']) this.load();
+    if (this.toolbar.config.preload['selects']) this.load();
   },
 
   position: function(keepVisible) {
@@ -1488,7 +1488,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
 
     this.titleElement = this.element.down('h3.title');
     this.panelElement = this.element.down('div.midas-panel-pane');
-    if (Midas.Config.preload['panels']) {
+    if (this.toolbar.config.preload['panels']) {
       this.load(function() {
         this.resize();
         this.hide();
@@ -1886,15 +1886,14 @@ Midas.Config = {
    */
   stylesheet: '/stylesheets/midas.css',
 
-  /* Things like palettes, select menus, panels and modals can all be preloaded when the page
-   * loads, instead of loading the first time the button is clicked.  They can also be preloaded
-   * so no Ajax is required if the url exists in Midas.preloadedViews.
+  /* Things like palettes, select menus, and panels can be preloaded when the page loads,
+   * instead of loading the first time the button is clicked.
    */
   preload: {
     'palettes': true,
     'selects': true,
     'panels': true
-  },
+    },
 
   /* Toolbars
    *

@@ -18,10 +18,12 @@ namespace :midas do
 
     FileUtils.cd(input_path) do
       File.open("#{output_path}/midas_views.js", 'w') do |file|
-        Dir["**/*.html"].sort.each do |filename|
-          file.write %Q{Midas.preloadedView['/midas/#{filename}'] = "}
-          File.foreach(filename) { |line| file.write line.chomp.gsub('"', '\\"') }
-          file.write %Q{";\n}
+        %w[palettes panels selects].each do |path|
+          Dir["#{path}/*.html"].sort.each do |filename|
+            file.write %Q{Midas.preloadedView['/midas/#{filename}'] = "}
+            File.foreach(filename) { |line| file.write line.chomp.gsub('"', '\\"') }
+            file.write %Q{";\n}
+          end
         end
       end
     end

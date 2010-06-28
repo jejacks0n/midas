@@ -2,6 +2,7 @@ describe('Midas.Palette', function() {
 
   beforeEach(function() {
     jasmine.loadFixture('midas_fixture');
+    this.toolbar = {element: $('toolbar'), config: {preload: {}}, hidePanels: function() {}, getBottomOffset: function() { return 0; }};
   });
 
   afterEach(function () {
@@ -12,13 +13,13 @@ describe('Midas.Palette', function() {
   });
 
   it('accepts options in the constructor', function() {
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')}, {lettuce: 'banana'});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar, {lettuce: 'banana'});
 
     expect(this.palette.options['lettuce']).toEqual('banana');
   });
 
   it('makes a palette', function() {
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     expect(this.palette.element).not.toBeFalsy();
     expect($$('.midas-palette').length).toEqual(1);
@@ -28,7 +29,7 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     jasmine.simulate.click($('palette_button'));
 
@@ -37,7 +38,7 @@ describe('Midas.Palette', function() {
 
   it("doesn't show if the button is disabled", function() {
     var spy = spyOn(Ajax, 'Request');
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     var button = $('palette_button');
     button.addClassName('disabled');
@@ -58,7 +59,7 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     jasmine.simulate.click($('palette_button'));
     expect(this.palette.element.getStyle('display')).toEqual('block');
@@ -70,7 +71,7 @@ describe('Midas.Palette', function() {
   it('positions itself properly', function() {
     var spy = spyOn(Ajax, 'Request');
     $('palette_button').setStyle('position:absolute;top:100px;left:100px');
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
     var spy1 = spyOn(this.palette, 'position').andCallThrough();
 
     jasmine.simulate.click($('palette_button'));
@@ -91,7 +92,7 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: ''});
     });
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     jasmine.simulate.click($('palette_button'));
     expect(this.palette.visible).toEqual(true);
@@ -105,7 +106,7 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function() {
       this.url = arguments[0];
     }.bind(this));
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')}, {url: 'pizzas/cheese'});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar, {url: 'pizzas/cheese'});
     
     jasmine.simulate.click($('palette_button'));
 
@@ -117,14 +118,14 @@ describe('Midas.Palette', function() {
     var spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
       options.onSuccess({responseText: "<script>window['midas_setup_backcolor'] = function() { window.callCount++ }</script>"});
     });
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
 
     jasmine.simulate.click($('palette_button'));
     expect(callCount).toEqual(1);
   });
 
   it('destroys', function() {
-    this.palette = new Midas.Palette($('palette_button'), 'backcolor', {element: $('toolbar')});
+    this.palette = new Midas.Palette($('palette_button'), 'backcolor', this.toolbar);
     this.palette.destroy();
 
     expect(this.palette.element).toBeFalsy();

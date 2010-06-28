@@ -10,7 +10,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
 
     this.titleElement = this.element.down('h3.title');
     this.panelElement = this.element.down('div.midas-panel-pane');
-    if (Midas.Config.preload['panels']) {
+    if (this.toolbar.config.preload['panels']) {
       this.load(function() {
         this.resize();
         this.hide();

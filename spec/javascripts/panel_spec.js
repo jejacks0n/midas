@@ -2,7 +2,7 @@ describe('Midas.Panel', function() {
 
   beforeEach(function() {
     jasmine.loadFixture('midas_fixture');
-    this.toolbar = {element: $('toolbar'), hidePanels: function() {}, getBottomOffset: function() { return 0; }};
+    this.toolbar = {element: $('toolbar'), config: {preload: {}}, hidePanels: function() {}, getBottomOffset: function() { return 0; }};
   });
 
   afterEach(function () {
