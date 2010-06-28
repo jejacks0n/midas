@@ -18,14 +18,16 @@ h2. Installation and Usage
 
 2. Include the Javascript and CSS in the head tag of your HTML file(s).
 Using the minified Javascript and bundled CSS (recommended):
-* all the Javascript files in lib
-* midas.min.js - minified and packed Javascript (configuration is not minified)
-* midas.bundle.css - minified CSS, with image URLs replaced with data URLs (no images are needed when using this CSS, which greatly reduces the number of requests)
+* *all the Javascript files in lib*
+* *midas.min.js* - minified and packed Javascript (configuration is not minified)
+* *midas_bundle.js* - optional include, that keeps the palettes, panels, and select menus from making an ajax request
+* *midas.bundle.css* - minified CSS, with image URLs replaced with data URLs (no images are needed when using this CSS, which greatly reduces the number of requests)
 
 Using the non-minified and non-bundled versions:
-* all the Javascript files in lib
-* midas.js - non-minified / non-packed Javascript
-* midas.css - non-bundled CSS, with image URLs intact
+* *all the Javascript files in lib*
+* *midas.js* - non-minified / non-packed Javascript
+* *midas_bundle.js* - optional include, that keeps the palettes, panels, and select menus from making an ajax request
+* *midas.css* - non-bundled CSS, with image URLs intact
 * you'll also need copy the image assets from the projects public/images path
 
 3. Add some 'editable' classnames to some block elements (div, h1, etc.), making sure that these elements also have proper ID attributes (for saving).
@@ -106,6 +108,7 @@ The following files are generated after running the rake task:
 
 * public/distro/javascripts/midas.js
 * public/distro/javascripts/midas.min.js
+* public/distro/javascripts/midas_bundle.js
 * public/distro/stylesheets/midas.css
 * public/distro/stylesheets/midas.bundle.css
 
