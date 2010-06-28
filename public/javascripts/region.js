@@ -68,7 +68,11 @@ Midas.Region = Class.create({
     Event.observe(this.element, 'paste', function(e) {
       if (Midas.modal.showing) e.stop();
       var html = this.element.innerHTML;
-      setTimeout(function() { this.afterPaste(html); }.bind(this), 1);
+      if (Prototype.Browser.Gecko && this.element.tagName != 'DIV') {
+        e.stop();
+      } else {
+        setTimeout(function() { this.afterPaste(html); }.bind(this), 1);
+      }
     }.bind(this));
     Event.observe(this.element, 'drop', function(e) {
       var html = this.element.innerHTML;
@@ -124,6 +128,10 @@ Midas.Region = Class.create({
           }.bind(this));
           break;
         case 13: // enter
+          if (Prototype.Browser.Gecko && this.element.tagName != 'DIV') {
+            this.execCommand('insertHTML', '<br/>');
+            e.stop();
+          }
           break;
       }
     }.bind(this));
