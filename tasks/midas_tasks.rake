@@ -17,7 +17,7 @@ namespace :midas do
     input_path = "#{thisfile}/../public/midas"
 
     FileUtils.cd(input_path) do
-      File.open("#{output_path}/midas_views.js", 'w') do |file|
+      File.open("#{output_path}/midas_dialogs.js", 'w') do |file|
         %w[palettes panels selects].each do |path|
           Dir["#{path}/*.html"].sort.each do |filename|
             file.write %Q{Midas.preloadedView['/midas/#{filename}'] = "}
