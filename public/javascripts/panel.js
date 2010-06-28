@@ -141,8 +141,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
       duration: .2,
-      from: 0,
-      to: .85,
+      to: .90,
       afterFinish: function() {
         if (!this.loaded) this.load(this.resize.bind(this));
       }.bind(this)
