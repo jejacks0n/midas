@@ -61,18 +61,32 @@ Object.extend(Midas.modal, {
     this._initialize(options);
 
     this.contentElement.innerHTML = '';
-    this.load(url);
     this.updateTitle();
 
 		if (!this.showing) {
       this.showing = true;
-      this.overlayElement.show();
-      this.element.setStyle({display: 'block', visibility: 'visible', position: null});
-      this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
+      this.appear(url);
 			this.fire('onShow');
 		} else {
 			this.update();
 		}
+  },
+
+  appear: function(url) {
+    this.visible = true;
+    new Effect.Appear(this.element, {
+      transition: Effect.Transitions.sinoidal,
+      duration: .2,
+      to: 1, // setting this to less than 100% is buggy
+      afterFinish: function() {
+        this.load(url);
+      }.bind(this)
+    });
+  },
+
+  resize: function() {
+    this.contentElement.hide();
+    this.contentElement.slideDown();
   },
 
   update: function() {
@@ -120,25 +134,27 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-    new Ajax.Request(url, {
-      method: this._options['method'] || 'get',
-      parameters: this._options['parameters'] || {},
-      onSuccess: function(transport) {
-        this.loaded = true;
-        this.element.removeClassName('loading');
-        this.contentElement.innerHTML = transport.responseText;
-        transport.responseText.evalScripts();
+    setTimeout(function() {
+      new Ajax.Request(url, {
+        method: this._options['method'] || 'get',
+        parameters: this._options['parameters'] || {},
+        onSuccess: function(transport) {
+          this.loaded = true;
+          this.element.removeClassName('loading');
+          this.contentElement.innerHTML = transport.responseText;
+          transport.responseText.evalScripts();
+          this.setupControls();
 
-        this.setupControls();
-
-        this.position();
-        this.fire('afterLoad');
-      }.bind(this),
-      onFailure: function() {
-        this.hide();
-        alert('Midas was unable to load "' + url + '" for the modal');
-      }.bind(this)
-    });
+          this.position();
+//          this.resize();
+          this.fire('afterLoad');
+        }.bind(this),
+        onFailure: function() {
+          this.hide();
+          alert('Midas was unable to load "' + url + '" for the modal');
+        }.bind(this)
+      });
+    }.bind(this), 1000);
   },
 
   position: function() {
