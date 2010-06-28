@@ -60,7 +60,11 @@ Midas.Region = Class.create({
       Midas.fire('region', {region: this, name: this.name, event: e});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
-    
+    Event.observe(this.element, 'blur', function(e) {
+      if (this.previewing) return;
+      Midas.fire('region:blur', {region: this, name: this.name, event: e});
+    }.bind(this));
+
     Event.observe(this.element, 'paste', function(e) {
       if (Midas.modal.showing) e.stop();
       var html = this.element.innerHTML;

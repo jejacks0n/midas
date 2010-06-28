@@ -1,9 +1,5 @@
 Midas.Config = {
 
-  /* The stylesheet to load for the skin of the toolbar/editable regions.
-   */
-  stylesheet: '/stylesheets/midas.css',
-
   /* Things like palettes, select menus, and panels can be preloaded when the page loads,
    * instead of loading the first time the button is clicked.
    */
@@ -89,7 +85,7 @@ Midas.Config = {
 //      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
 //      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
       },
-    htmleditor: {
+    region: {
       style:                 ['Style', '', ['select', '/midas/selects/style.html']],
       formatblock:           ['Block Format', '', ['select', '/midas/selects/formatblock.html']],
       sep1:                  '-',

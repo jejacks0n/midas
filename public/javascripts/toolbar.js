@@ -2,8 +2,9 @@ if (!Midas) var Midas = {};
 Midas.Toolbar = Class.create({
   version: 0.2,
   activeRegion: null,
-  contexts: [],
+  toolbars: {},
   buttons: {},
+  contexts: [],
   palettes: [],
   selects: [],
   panels: [],
@@ -45,6 +46,10 @@ Midas.Toolbar = Class.create({
           element.appendChild(this.makeButton(button, buttons[button]));
         }
         this.element.appendChild(element);
+        if (toolbar != 'actions') {
+          element.addClassName('disabled');
+          this.toolbars[toolbar] = {element: element};
+        }
       }
     }
     this.positioningElement = new Element('div', {style: 'clear:both;height:0;overflow:hidden'});
@@ -60,6 +65,17 @@ Midas.Toolbar = Class.create({
       if (e.keyCode == 27) this.hidePopups();
     }.bind(this);
 
+    if (this.config['toolbars']) {
+      for (var toolbar in this.config['toolbars']) {
+        Event.observe(document, 'midas:' + toolbar, function() {
+          this.element.down('.midas-' + toolbar + 'bar').removeClassName('disabled');
+        }.bind(this));
+        Event.observe(document, 'midas:' + toolbar + ':blur', function() {
+          this.element.down('.midas-' + toolbar + 'bar').addClassName('disabled');
+        }.bind(this))
+      }
+    }
+
     Event.observe(this.element, 'mousedown', this.__mousedown);
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
@@ -71,6 +87,12 @@ Midas.Toolbar = Class.create({
 
   removeObservers: function() {
     Event.stopObserving(this.element, 'mousedown', this.__mousedown);
+    if (this.config['toolbars']) {
+      for (var toolbar in this.config['toolbars']) {
+        Event.stopObserving(document, 'midas:' + toolbar);
+        Event.stopObserving(document, 'midas:' + toolbar + ':blur');
+      }
+    }
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
     observedDocuments.each(function(doc) {
@@ -187,6 +209,12 @@ Midas.Toolbar = Class.create({
 
   makeSeparator: function(button) {
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
+  },
+
+  disableToolbars: function() {
+    for (var toolbar in this.toolbars) {
+      this.toolbars[toolbar].element.addClassName('disabled');
+    }
   },
 
   setActiveRegion: function(region) {
