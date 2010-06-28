@@ -83,7 +83,7 @@ var Midas = Class.create({
 
     this.regions = [];
     for (var i = 0; i < this.regionElements.length; ++i) {
-      this.regions.push(new Midas.Region(this.regionElements[i], this.regionOptions, 'midas' + this._id + '_region_' + i));
+      this.regions.push(new Midas.Region(this.regionElements[i], this.regionOptions, 'midas_undefinedregion_' + i));
     }
   },
 
