@@ -222,7 +222,11 @@ var Midas = Class.create({
       case 'preview':
         window.getSelection().removeAllRanges();
         if (this.iframe) this.iframe.contentWindow.getSelection().removeAllRanges();
-        toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
+        if (this.modes[mode]) {
+          toolbar.disableToolbars('region', 'undoredo', 'insert', 'editorpanels');
+        } else {
+          toolbar.enableToolbars('undoredo', 'insert', 'editorpanels');
+        }
         if (reset) {
           toolbar.buttons['preview'].element.removeClassName('pressed');
           break;
@@ -236,7 +240,6 @@ var Midas = Class.create({
 
   resetModes: function() {
     for (var i in this.modes) {
-      console.debug(i, this.modes[i]);
       if (this.modes[i]) {
         this.handleMode(i, this.toolbar, true);
       }

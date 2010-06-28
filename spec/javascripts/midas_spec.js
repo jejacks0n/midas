@@ -251,6 +251,7 @@ describe('Midas', function () {
       var spy1 = spyOn(this.midas.activeRegion, 'handleAction');
       var spy2 = spyOn(this.midas, 'handleAction').andCallThrough();
 
+      this.midas.toolbar.enableToolbars('region');
       jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
       expect(spy1.callCount).toEqual(1);
       expect(spy2.callCount).toEqual(1);

@@ -3,6 +3,7 @@ Midas.Toolbar = Class.create({
   version: 0.2,
   activeRegion: null,
   toolbars: {},
+  groups: {},
   buttons: {},
   contexts: [],
   palettes: [],
@@ -47,8 +48,9 @@ Midas.Toolbar = Class.create({
         }
         this.element.appendChild(element);
         if (toolbar != 'actions') {
-          element.addClassName('disabled');
           this.toolbars[toolbar] = {element: element};
+          this.disableToolbars(toolbar);
+          //element.addClassName('disabled');
         }
       }
     }
@@ -62,7 +64,6 @@ Midas.Toolbar = Class.create({
     this.__doc_mousedown = function(e) {
       var element = Event.element(e);
       if (Element.up(element, '#midas_modal')) {
-        console.debug('modal');
         this.disableToolbar = false;
       }
     }.bind(this);
@@ -76,11 +77,11 @@ Midas.Toolbar = Class.create({
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {
         Event.observe(document, 'midas:' + toolbar, function() {
-          this.element.down('.midas-' + toolbar + 'bar').removeClassName('disabled');
+          this.enableToolbars(toolbar);
         }.bind(this));
         Event.observe(document, 'midas:' + toolbar + ':blur', function() {
           if (this.disableToolbar) {
-            this.element.down('.midas-' + toolbar + 'bar').addClassName('disabled');
+            this.disableToolbars(toolbar);
           }
           this.disableToolbar = true;
         }.bind(this))
@@ -192,12 +193,12 @@ Midas.Toolbar = Class.create({
       element.observe('mousedown', function() { element.addClassName('active'); });
       element.observe('mouseup', function() { element.removeClassName('active'); });
 
-      if (!observed) element.observe('click', function(event) {
-        event.stop();
+      if (!observed) element.observe('click', function(e) {
+        e.stop();
         if (element.hasClassName('disabled') || element.up('.disabled')) return;
         Midas.fire('button', {
           action: action,
-          event: event,
+          event: e,
           toolbar: this
         });
       }.bind(this));
@@ -213,6 +214,7 @@ Midas.Toolbar = Class.create({
 
   makeButtonGroup: function(action, group) {
     var element = new Element('div', {'class': 'midas-group midas-group-' + action});
+    this.groups[action] = {element: element};
     for (var button in group) {
       element.appendChild(this.makeButton(button, group[button]));
     }
@@ -221,12 +223,6 @@ Midas.Toolbar = Class.create({
 
   makeSeparator: function(button) {
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
-  },
-
-  disableToolbars: function() {
-    for (var toolbar in this.toolbars) {
-      this.toolbars[toolbar].element.addClassName('disabled');
-    }
   },
 
   setActiveRegion: function(region) {
@@ -276,13 +272,43 @@ Midas.Toolbar = Class.create({
     return this.positioningElement.cumulativeOffset().top;
   },
 
-  toggleDisabled: function() {
+  disableToolbars: function() {
     for (var i = 0; i < arguments.length; ++i) {
-      var element;
-      element = this.element.down('.midas-' + arguments[i]);
-      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-      if (element) element.toggleClassName('disabled');
+      if (this.toolbars[arguments[i]]) {
+        this.toolbars[arguments[i]]['element'].addClassName('disabled');
+      }
+      if (this.groups[arguments[i]]) {
+        this.groups[arguments[i]]['element'].addClassName('disabled');
+      }
+      if (this.buttons[arguments[i]]) {
+        this.buttons[arguments[i]]['element'].addClassName('disabled');
+      }
+
+//      var element;
+//      element = this.element.down('.midas-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
+//      if (element) element.addClassName('disabled');
+    }
+  },
+
+  enableToolbars: function() {
+    for (var i = 0; i < arguments.length; ++i) {
+      if (this.toolbars[arguments[i]]) {
+        this.toolbars[arguments[i]]['element'].removeClassName('disabled');
+      }
+      if (this.groups[arguments[i]]) {
+        this.groups[arguments[i]]['element'].removeClassName('disabled');
+      }
+      if (this.buttons[arguments[i]]) {
+        this.buttons[arguments[i]]['element'].removeClassName('disabled');
+      }
+//
+//      var element;
+//      element = this.element.down('.midas-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
+//      if (element) element.removeClassName('disabled');
     }
   },
 

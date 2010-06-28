@@ -68,20 +68,21 @@ Midas.Config = {
       undoredo:              {
         undo:                ['Undo', 'Undo your last action'],
         redo:                ['Redo', 'Redo your last action'],
-        sep2:                ' '
+        sep:                 ' '
         },
       insert:                {
         insertlink:          ['Link', 'Insert a hyperlink', ['modal', '/midas/modals/link.html']],
         insertmedia:         ['Media', 'Insert media', ['modal', '/midas/modals/media.html']],
         inserttable:         ['Table', 'Insert a table', ['modal', '/midas/modals/table.html']],
-        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['modal', '/midas/modals/object.html']],
         insertcharacter:     ['Character', 'Insert special characters', ['modal', '/midas/modals/character.html']],
-        sep3:                '*'
+        sep:                 ' '
         },
-      inspector:             {
-        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
-        sep3:                '*'
-        }
+      editorpanels:          {
+        objectspanel:        ['Objects', 'Insert an object (form, widget, etc)', ['panel', '/midas/panels/objects.html']],
+//        sep1:                ' ',
+//        inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
+        sep2:                '*'
+        }//,
 //      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
 //      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
       },
@@ -95,7 +96,7 @@ Midas.Config = {
       decoration:            {
         bold:                ['Bold', '', ['context']],
         italic:              ['Italicize', '', ['context']],
-        //overline:            ['Overline', '', ['context']],
+        overline:            ['Overline', '', ['context']],
         strikethrough:       ['Strikethrough', '', ['context']],
         underline:           ['Underline', '', ['context']],
         sep:                 '-'
@@ -131,10 +132,8 @@ Midas.Config = {
       //  deletecolumn:        ['Delete Column', 'Delete this table column'],
       //  sep:                 '-'
       //  },
-      breaks:                {
-        horizontalrule:      ['Horizontal Rule', ''],
-        sep:                 '-'
-        },
+      horizontalrule:        ['Horizontal Rule', ''],
+      sep:                   '-',
       removeformatting:      ['Remove Formatting', ''],
       htmleditor:            ['Edit HTML', '']
       }

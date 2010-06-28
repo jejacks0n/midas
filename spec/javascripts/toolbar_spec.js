@@ -91,12 +91,12 @@ describe('Midas.Toolbar', function() {
     this.toolbar = new Midas.Toolbar();
     var spy = spyOn(Midas, 'fire');
 
-    this.toolbar.element.down('.midas-htmleditorbar').addClassName('disabled');
+    this.toolbar.element.down('.midas-regionbar').addClassName('disabled');
     jasmine.simulate.click($$('.midas-button-bold')[0]);
 
     expect(spy.callCount).toEqual(0);
 
-    this.toolbar.element.down('.midas-htmleditorbar').removeClassName('disabled');
+    this.toolbar.element.down('.midas-regionbar').removeClassName('disabled');
     jasmine.simulate.click($$('.midas-button-bold')[0]);
 
     expect(spy.callCount).toEqual(1);
@@ -147,7 +147,9 @@ describe('Midas.Toolbar', function() {
     it('handles regular buttons', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
       
+      this.toolbar.enableToolbars('region');
       jasmine.simulate.click(this.toolbar.buttons['bold'].element);
+
       expect(this.spy.callCount).toEqual(1);
     });
 
@@ -186,6 +188,7 @@ describe('Midas.Toolbar', function() {
     it('fires at least one event when a button is clicked', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
+      this.toolbar.enableToolbars('region');
       jasmine.simulate.click($$('.midas-button-insertorderedlist')[0]);
       expect(this.spy.callCount).toBeGreaterThan(0);
     });
