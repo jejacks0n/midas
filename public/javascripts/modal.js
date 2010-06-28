@@ -77,7 +77,7 @@ Object.extend(Midas.modal, {
     this.visible = true;
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
+      duration: .5,
       to: 1, // setting this to less than 100% is buggy
       afterFinish: function() {
         this.overlayElement.show();
@@ -87,8 +87,8 @@ Object.extend(Midas.modal, {
   },
 
   resize: function() {
-//    this.contentElement.hide();
-//    this.contentElement.slideDown();
+    this.contentElement.hide();
+    this.contentElement.slideDown();
   },
 
   update: function() {

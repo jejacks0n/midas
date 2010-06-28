@@ -6,3 +6,7 @@ Effect.Appear = function(element, options) {
 Effect.Fade = function(element, options) {
   element.setStyle('display:none');
 };
+
+Effect.SlideDown = function(element, options) {
+  element.setStyle('display:block');
+};
