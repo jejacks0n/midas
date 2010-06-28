@@ -69,6 +69,7 @@ Object.extend(Midas.modal, {
 			this.fire('onShow');
 		} else {
 			this.update();
+      this.load(url);
 		}
   },
 
