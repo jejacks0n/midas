@@ -80,14 +80,15 @@ Object.extend(Midas.modal, {
       duration: .2,
       to: 1, // setting this to less than 100% is buggy
       afterFinish: function() {
+        this.overlayElement.show();
         this.load(url);
       }.bind(this)
     });
   },
 
   resize: function() {
-    this.contentElement.hide();
-    this.contentElement.slideDown();
+//    this.contentElement.hide();
+//    this.contentElement.slideDown();
   },
 
   update: function() {
@@ -135,7 +136,6 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-    setTimeout(function() {
       new Ajax.Request(url, {
         method: this._options['method'] || 'get',
         parameters: this._options['parameters'] || {},
@@ -147,7 +147,7 @@ Object.extend(Midas.modal, {
           this.setupControls();
 
           this.position();
-//          this.resize();
+          this.resize();
           this.fire('afterLoad');
         }.bind(this),
         onFailure: function() {
@@ -155,7 +155,6 @@ Object.extend(Midas.modal, {
           alert('Midas was unable to load "' + url + '" for the modal');
         }.bind(this)
       });
-    }.bind(this), 1000);
   },
 
   position: function() {
