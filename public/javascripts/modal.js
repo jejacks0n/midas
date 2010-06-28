@@ -156,8 +156,9 @@ Object.extend(Midas.modal, {
     this.element.setStyle({width: dimensions.width + 'px'});
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
-    this.contentElement.hide();
-    this.contentElement.slideDown();
+//    this broke a bunch of tests...
+//    this.contentElement.hide();
+//    this.contentElement.slideDown();
 
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {
