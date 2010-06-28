@@ -75,12 +75,12 @@ Object.extend(Midas.modal, {
 
   appear: function(url) {
     this.visible = true;
+    this.overlayElement.show();
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
-      duration: .5,
+      duration: .2,
       to: 1, // setting this to less than 100% is buggy
       afterFinish: function() {
-        this.overlayElement.show();
         this.load(url);
       }.bind(this)
     });
