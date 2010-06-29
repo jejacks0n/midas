@@ -45,7 +45,7 @@ Midas.Region = Class.create({
     this.element.contentEditable = true;
 
     this.doc.execCommand('styleWithCSS', false, false);
-    //this.doc.execCommand('enableInlineTableEditing', false, false);
+    this.doc.execCommand('enableInlineTableEditing', false, false);
   },
 
   setupObservers: function() {

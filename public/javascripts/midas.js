@@ -158,7 +158,7 @@ var Midas = Class.create({
       if (this.regions.indexOf(a['region']) < 0) return;
 
       if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
-      if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+      if (this.toolbar) this.toolbar.setActiveButtons(this.activeRegion);
     }.bind(this);
 
     Event.observe(window, 'resize', this.resize.bind(this));
@@ -213,7 +213,7 @@ var Midas = Class.create({
     this.activeRegion.handleAction(action, event, toolbar, options);
 
     if (this.statusbar) this.statusbar.update(this.activeRegion, event);
-    if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+    if (this.toolbar) this.toolbar.setActiveButtons(this.activeRegion);
   },
 
   handleMode: function(mode, toolbar, reset) {

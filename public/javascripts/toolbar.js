@@ -44,13 +44,13 @@ Midas.Toolbar = Class.create({
         var element = new Element('div').addClassName('midas-' + toolbar + 'bar');
         var buttons = this.config['toolbars'][toolbar];
         for (var button in buttons) {
-          element.appendChild(this.makeButton(button, buttons[button]));
+          var buttonElement = this.makeButton(button, buttons[button]);
+          if (buttonElement) element.appendChild(buttonElement);
         }
         this.element.appendChild(element);
         if (toolbar != 'actions') {
           this.toolbars[toolbar] = {element: element};
           this.disableToolbars(toolbar);
-          //element.addClassName('disabled');
         }
       }
     }
@@ -147,6 +147,8 @@ Midas.Toolbar = Class.create({
   },
 
   makeButton: function(action, buttonSpec) {
+    if (action == '_context') return;
+    
     var element;
     if (Object.isArray(buttonSpec)) {
       var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
@@ -228,8 +230,16 @@ Midas.Toolbar = Class.create({
   makeButtonGroup: function(action, group) {
     var element = new Element('div', {'class': 'midas-group midas-group-' + action});
     this.groups[action] = {element: element};
+
+    if (group['_context']) {
+      element.addClassName(group['_context'][0]);
+      console.debug('action');
+      this.contexts.push({element: element, callback: action});
+    }
+
     for (var button in group) {
-      element.appendChild(this.makeButton(button, group[button]));
+      var buttonElement = this.makeButton(button, group[button]);
+      if (buttonElement) element.appendChild(buttonElement);
     }
     return element;
   },
@@ -242,7 +252,7 @@ Midas.Toolbar = Class.create({
     this.activeRegion = region;
   },
 
-  setActiveButtons: function(regions, activeRegion) {
+  setActiveButtons: function(activeRegion) {
     var selection = this.options['contentWindow'].getSelection();
     if (!selection.rangeCount) return;
 
@@ -264,6 +274,8 @@ Midas.Toolbar = Class.create({
       } else {
         callback = Midas.Toolbar.contexts[context['callback']];
       }
+      console.debug(i, context['callback'], callback);
+
 
       if (typeof(callback) == 'function') {
         if (callback.call(this, node, activeRegion)) {
@@ -296,12 +308,6 @@ Midas.Toolbar = Class.create({
       if (this.buttons[arguments[i]]) {
         this.buttons[arguments[i]]['element'].addClassName('disabled');
       }
-
-//      var element;
-//      element = this.element.down('.midas-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-//      if (element) element.addClassName('disabled');
     }
   },
 
@@ -316,12 +322,6 @@ Midas.Toolbar = Class.create({
       if (this.buttons[arguments[i]]) {
         this.buttons[arguments[i]]['element'].removeClassName('disabled');
       }
-//
-//      var element;
-//      element = this.element.down('.midas-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-//      if (element) element.removeClassName('disabled');
     }
   },
 
@@ -362,6 +362,14 @@ Midas.Toolbar = Class.create({
 // Midas.Toolbar static methods
 Object.extend(Midas.Toolbar, {
   contexts: {
+    table:               function(node, region) {
+                            var table = node.up('table');
+                            if (table && table.descendantOf(region.element)) this.groups['table']['element'].removeClassName('disabled');
+                            else this.groups['table']['element'].addClassName('disabled');
+      console.debug('~', this.groups['table']['element']);
+
+
+                         },
     backcolor:           function(node) {
                            this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
                          },

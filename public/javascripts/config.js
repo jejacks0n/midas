@@ -123,15 +123,15 @@ Midas.Config = {
         indent:              ['Increase Indentation', ''],
         sep:                 '-'
         },
-      //table:                 {
-      //  insertrowbefore:     ['Insert Row', 'Insert a table row before'],
-      //  insertrowafter:      ['Insert Row', 'Insert a table row after'],
-      //  deleterow:           ['Delete Row', 'Delete this table row'],
-      //  insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
-      //  insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
-      //  deletecolumn:        ['Delete Column', 'Delete this table column'],
-      //  sep:                 '-'
-      //  },
+      table:                 {_context: ['disabled'],
+        insertrowbefore:     ['Insert Row', 'Insert a table row before'],
+        insertrowafter:      ['Insert Row', 'Insert a table row after'],
+        deleterow:           ['Delete Row', 'Delete this table row'],
+        insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
+        insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
+        deletecolumn:        ['Delete Column', 'Delete this table column'],
+        sep:                 '-'
+        },
       horizontalrule:        ['Horizontal Rule', ''],
       sep:                   '-',
       removeformatting:      ['Remove Formatting', ''],

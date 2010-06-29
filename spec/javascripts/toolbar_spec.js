@@ -167,7 +167,32 @@ describe('Midas.Toolbar', function() {
 
       expect(this.toolbar.contexts.length).toBeGreaterThan(2);
     });
-    
+
+    it('displays context groups disabled after creation', function() {
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+
+      expect(this.toolbar.contexts).toContain({element: $$('.midas-group-table')[0], callback: 'table'});
+      expect(this.toolbar.groups['table']['element'].hasClassName('disabled')).toEqual(true);
+    });
+
+    it('handles context groups', function() {
+      this.removeAllSpies();
+      this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
+      var region = {element: $('region4')};
+
+      var em = $('table1').down('em');
+      jasmine.simulate.selection(em);
+
+      this.toolbar.setActiveButtons(region);
+      expect(this.toolbar.groups['table']['element'].hasClassName('disabled')).toEqual(false);
+
+      var span = $('div5').down('span');
+      jasmine.simulate.selection(span);
+
+      this.toolbar.setActiveButtons(region);
+      expect(this.toolbar.groups['table']['element'].hasClassName('disabled')).toEqual(true);
+    });
+
     it('handles mode buttons, and buttons with more than one type', function() {
       this.toolbar = new Midas.Toolbar({appendTo: 'toolbar'});
 
