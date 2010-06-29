@@ -69,12 +69,20 @@
       }
   </style>
 </head>
-<body onload="Midas.debug = false; midas = new Midas({useIframe: true}, {appendTo: 'toolbar'}, {inline: true});">
+<body onload="Midas.debug = true; Midas.silent = true; midas = new Midas({useIframe: true}, {appendTo: 'toolbar'}, {inline: true});">
 
   <div id="toolbar"></div>
 
   <h3 class="editable"></h3>
 
+  <table>
+    <tr>
+      <td class="editable">
+        asdasd
+      </td>
+    </tr>
+  </table>
+  
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
     <div style="border:1px solid green">te<span>s</span>ting</div>
@@ -98,6 +106,7 @@
     </table>
     <a href="http://google.com">external link</a>
     <a href="/midas/examples/iframe.html">internal link</a>
+    <div style="position:absolute;right:0;border:1px solid red;">absolute</div>
   </div>
 
   <div id="region2" class="editable">
