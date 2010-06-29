@@ -129,6 +129,7 @@ Object.extend(Midas.modal, {
   },
 
   load: function(url, options) {
+    var url = (Midas.debug ? url + '?' + Math.random() : url);
     if (options) {
       this._options = Object.clone(this.options);
       Object.extend(this._options, options);

@@ -1671,8 +1671,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
       duration: .2,
-      from: 0,
-      to: .85,
+      to: .90,
       afterFinish: function() {
         if (!this.loaded) this.load(this.resize.bind(this));
       }.bind(this)
@@ -1747,18 +1746,34 @@ Object.extend(Midas.modal, {
     this._initialize(options);
 
     this.contentElement.innerHTML = '';
-    this.load(url);
     this.updateTitle();
 
 		if (!this.showing) {
       this.showing = true;
-      this.overlayElement.show();
-      this.element.setStyle({display: 'block', visibility: 'visible', position: null});
-      this.frameElement.setStyle({display: 'block', visibility: 'visible', position: null});
+      this.appear(url);
 			this.fire('onShow');
 		} else {
 			this.update();
+      this.load(url);
 		}
+  },
+
+  appear: function(url) {
+    this.visible = true;
+    this.overlayElement.show();
+    new Effect.Appear(this.element, {
+      transition: Effect.Transitions.sinoidal,
+      duration: .2,
+      to: 1, // setting this to less than 100% is buggy
+      afterFinish: function() {
+        this.load(url);
+      }.bind(this)
+    });
+  },
+
+  resize: function() {
+    this.contentElement.hide();
+    this.contentElement.slideDown();
   },
 
   update: function() {
@@ -1806,25 +1821,25 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-    new Ajax.Request(url, {
-      method: this._options['method'] || 'get',
-      parameters: this._options['parameters'] || {},
-      onSuccess: function(transport) {
-        this.loaded = true;
-        this.element.removeClassName('loading');
-        this.contentElement.innerHTML = transport.responseText;
-        transport.responseText.evalScripts();
+      new Ajax.Request(url, {
+        method: this._options['method'] || 'get',
+        parameters: this._options['parameters'] || {},
+        onSuccess: function(transport) {
+          this.loaded = true;
+          this.element.removeClassName('loading');
+          this.contentElement.innerHTML = transport.responseText;
+          transport.responseText.evalScripts();
+          this.setupControls();
 
-        this.setupControls();
-
-        this.position();
-        this.fire('afterLoad');
-      }.bind(this),
-      onFailure: function() {
-        this.hide();
-        alert('Midas was unable to load "' + url + '" for the modal');
-      }.bind(this)
-    });
+          this.position();
+          this.resize();
+          this.fire('afterLoad');
+        }.bind(this),
+        onFailure: function() {
+          this.hide();
+          alert('Midas was unable to load "' + url + '" for the modal');
+        }.bind(this)
+      });
   },
 
   position: function() {
@@ -1842,8 +1857,9 @@ Object.extend(Midas.modal, {
     this.element.setStyle({width: dimensions.width + 'px'});
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
-    this.contentElement.hide();
-    this.contentElement.slideDown();
+//    this broke a bunch of tests...
+//    this.contentElement.hide();
+//    this.contentElement.slideDown();
 
     var viewportDimensions = document.viewport.getDimensions();
     if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {

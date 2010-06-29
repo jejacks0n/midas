@@ -392,7 +392,7 @@
 .midas-panel {
   position: absolute;
   background-color: #111;
-  opacity: 0.85;
+  opacity: 0.90;
   width: 0;
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
