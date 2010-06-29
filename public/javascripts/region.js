@@ -56,11 +56,13 @@ Midas.Region = Class.create({
     }.bind(this));
 
     Event.observe(this.element, 'focus', function(e) {
+      this.focused = true;
       if (this.previewing) return;
       Midas.fire('region', {region: this, name: this.name, event: e});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
     Event.observe(this.element, 'blur', function(e) {
+      this.focused = false;
       if (this.previewing) return;
       Midas.fire('region:blur', {region: this, name: this.name, event: e});
     }.bind(this));
@@ -115,6 +117,23 @@ Midas.Region = Class.create({
     Event.observe(this.element, 'keypress', function(e) {
       if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: e});
+
+      if (e.metaKey && this.focused) {
+        switch (e.charCode) {
+          case 98:
+            this.handleAction('bold');
+            e.stop();
+            break;
+          case 105:
+            this.handleAction('italic');
+            e.stop();
+            break;
+          case 117:
+            this.handleAction('underline');
+            e.stop();
+            break;
+        }
+      }
 
       switch (e.keyCode) {
         case 9: // tab

@@ -398,6 +398,36 @@ describe('Midas.Region', function() {
 
   });
 
+  describe('meta keys that are handled', function() {
+
+    beforeEach(function() {
+      this.region = new Midas.Region('region1');
+      this.region.focused = true;
+      this.spy = spyOn(this.region, 'handleAction').andCallFake(function() {
+        jasmine.log('>> Mock Midas.Region.handleAction called with ' + arguments.length + ' arguments...');
+      });
+    });
+
+    it('bolds on metaKey+B', function() {
+      jasmine.simulate.keypress(this.region.element, {metaKey: true, charCode: 'b'.charCodeAt(0)});
+
+      expect(this.spy.argsForCall[0][0]).toEqual('bold');
+    });
+
+    it('italicizes on metaKey+I', function() {
+      jasmine.simulate.keypress(this.region.element, {metaKey: true, charCode: 'i'.charCodeAt(0)});
+
+      expect(this.spy.argsForCall[0][0]).toEqual('italic');
+    });
+
+    it('underlines on metaKey+U', function() {
+      jasmine.simulate.keypress(this.region.element, {metaKey: true, charCode: 'u'.charCodeAt(0)});
+
+      expect(this.spy.argsForCall[0][0]).toEqual('underline');
+    });
+
+  });
+
   describe('events that fire', function() {
 
     beforeEach(function() {
