@@ -303,6 +303,13 @@ Midas.Region = Class.create({
             element.setStyle('background-color:' + options['value']);
           });
           break;
+        case 'overline':
+          this.wrap('span', function() {
+            return new Element('span', {style: 'text-decoration:overline'});
+          }, function(element) {
+            element.setStyle('text-decoration:overline');
+          });
+          break;
         case 'replaceHTML':
           var selection = this.options['contentWindow'].getSelection();
           var range = this.doc.createRange();
@@ -316,6 +323,7 @@ Midas.Region = Class.create({
   },
 
   wrap: function(tagName, newElementCallback, updateElementCallback) {
+    this.updateSelections();
     var range = this.selections[0];
     var fragment = range.cloneContents();
 
