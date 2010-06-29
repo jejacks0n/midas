@@ -193,6 +193,15 @@ describe('Midas.Toolbar', function() {
       expect(this.spy.callCount).toBeGreaterThan(0);
     });
 
+    it('fires an event to save on metaKey+S', function() {
+      var spy = spyOn(Midas, 'fire');
+      this.toolbar = new Midas.Toolbar();
+
+      jasmine.simulate.keypress(document, {metaKey: true, charCode: 's'.charCodeAt(0)});
+
+      expect(spy.argsForCall[0][1]['action']).toEqual('save');
+    });
+
   });
   
 });

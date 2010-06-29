@@ -73,6 +73,16 @@ Midas.Toolbar = Class.create({
     this.__keydown = function(e) {
       if (e.keyCode == 27) this.hidePopups();
     }.bind(this);
+    this.__keypress = function(e) {
+      if (e.metaKey) {
+        switch (e.charCode) {
+          case 115:
+            Midas.fire('button', {action: 'save', event: e, toolbar: this});
+            e.stop();
+            break;
+        }
+      }
+    }.bind(this);
 
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {
@@ -95,6 +105,7 @@ Midas.Toolbar = Class.create({
       Event.observe(doc, 'mousedown', this.__doc_mousedown);
       Event.observe(doc, 'mouseup', this.__mouseup);
       Event.observe(doc, 'keydown', this.__keydown);
+      Event.observe(doc, 'keypress', this.__keypress);
     }.bind(this));
   },
 
@@ -109,8 +120,10 @@ Midas.Toolbar = Class.create({
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
     observedDocuments.each(function(doc) {
+      Event.stopObserving(doc, 'mousedown', this.__doc_mousedown);
       Event.stopObserving(doc, 'mouseup', this.__mouseup);
-      Event.observe(doc, 'keydown', this.__keydown);
+      Event.stopObserving(doc, 'keydown', this.__keydown);
+      Event.stopObserving(doc, 'keypress', this.__keypress);
     }.bind(this));
   },
 
