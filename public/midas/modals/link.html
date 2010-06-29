@@ -1,28 +1,29 @@
 <script type="text/javascript">
+
   var selection = $('midas-iframe-window').contentWindow.getSelection();
+
+  $('midas_link_text').value = selection;
+  // need to have the target select the current target here...
+
   if (selection.rangeCount) {
     var range = selection.getRangeAt(0);
-    console.debug(range);
-    var node = range.commonAncestorContainer;
 
+    var node = range.commonAncestorContainer;
     var contents = range.cloneContents();
     var anchor;
-    console.debug(contents);
     if (contents.childNodes.length == 1 && contents.childNodes[0].tagName == 'A') {
       anchor = contents.childNodes[0];
     } else {
       anchor = Element.up(node, 'a');
     }
     $('midas_link_url').value = anchor.href;
-
-    console.debug(anchor);
   }
+
 
   window['midas_modal_submit'] = function(e) {
     generator = $('midas_link_generator');
 
-    var link = '<a href="' + generator.down('#midas_link_url').value + '">' + generator.down('#midas_link_text').value + '</a>';
-    console.debug(link);
+    var link = '<a href="' + generator.down('#midas_link_url').value + '" target="' + generator.down('#midas_link_target').value + '">' + generator.down('#midas_link_text').value + '</a>';
     Midas.fire('action', {action: 'insertHTML', options: {value: link}});
     Midas.modal.hide();
     e.stop();
