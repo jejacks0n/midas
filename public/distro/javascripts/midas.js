@@ -340,7 +340,6 @@ var Midas = Class.create({
 
   resetModes: function() {
     for (var i in this.modes) {
-      console.debug(i, this.modes[i]);
       if (this.modes[i]) {
         this.handleMode(i, this.toolbar, true);
       }
