@@ -179,6 +179,7 @@ Midas.Region = Class.create({
   },
 
   afterPaste: function(beforeHtml) {
+    beforeHtml = beforeHtml.replace(/^\<br\>/, "");
     var pastedRegion = this.element.down('.midas-region');
     if (pastedRegion) {
       var selection = this.options['contentWindow'].getSelection();
@@ -217,7 +218,8 @@ Midas.Region = Class.create({
       style.remove();
     });
 
-    return temp.textContent.replace(/\n\n/g, '<br/>').
+    return temp.textContent.escapeHTML().
+                            replace(/\n\n/g, '<br/>').
                             replace(/.*<!--.*-->/g, '').
                             replace(/^(<br\/>)+|(<br\/>\s*)+$/g, '');
   },
