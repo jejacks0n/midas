@@ -102,3 +102,7 @@ String.prototype.regExEscape = function() {
   }
   return this.replace(arguments.callee.sRE, '\\$1');
 };
+
+String.prototype.repeat = function(times) {
+  return new Array(times + 1).join(this);  
+};

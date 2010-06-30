@@ -76,4 +76,10 @@ describe('Native Extensions', function () {
     expect(string.regExEscape()).toEqual('\\[\\]\\(\\)\\{\\}\\.\\*\\+\\?\\|\\\\\\/');
   });
 
+  it('allows strings to repeat', function() {
+    var string = '*';
+
+    expect(string.repeat(5)).toEqual('*****');
+  });
+
 });
