@@ -233,7 +233,6 @@ Midas.Toolbar = Class.create({
 
     if (group['_context']) {
       element.addClassName(group['_context'][0]);
-      console.debug('action');
       this.contexts.push({element: element, callback: action});
     }
 
@@ -274,8 +273,6 @@ Midas.Toolbar = Class.create({
       } else {
         callback = Midas.Toolbar.contexts[context['callback']];
       }
-      console.debug(i, context['callback'], callback);
-
 
       if (typeof(callback) == 'function') {
         if (callback.call(this, node, activeRegion)) {
@@ -362,60 +359,72 @@ Midas.Toolbar = Class.create({
 // Midas.Toolbar static methods
 Object.extend(Midas.Toolbar, {
   contexts: {
-    table:               function(node, region) {
-                            var table = node.up('table');
-                            if (table && table.descendantOf(region.element)) this.groups['table']['element'].removeClassName('disabled');
-                            else this.groups['table']['element'].addClassName('disabled');
-      console.debug('~', this.groups['table']['element']);
 
+    table: function(node, region) {
+      var table = node.up('table');
+      if (table && table.descendantOf(region.element)) this.groups['table']['element'].removeClassName('disabled');
+      else this.groups['table']['element'].addClassName('disabled');
+    },
 
-                         },
-    backcolor:           function(node) {
-                           this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
-                         },
-    forecolor:           function(node) {
-                           this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
-                         },
-    bold:                function(node) {
-                           var weight = Element.getStyle(node, 'font-weight');
-                           return weight == 'bold' || weight > 400;
-                         },
-    italic:              function(node) {
-                           return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
-                         },
-    strikethrough:       function(node) {
-                           return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
-                         },
-    underline:           function(node) {
-                           return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
-                         },
-    subscript:           function(node) {
-                           return node.nodeName == 'SUB' || node.up('sub');
-                         },
-    superscript:         function(node) {
-                           return node.nodeName == 'SUP' || node.up('sup');
-                         },
-    justifyleft:         function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('left') > -1;
-                         },
-    justifycenter:       function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('center') > -1;
-                         },
-    justifyright:        function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('right') > -1;
-                         },
-    justifyfull:         function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('justify') > -1;
-                         },
-    insertorderedlist:   function(node, region) {
-                           if (node.nodeName == 'OL') return true;
-                           var ol = Element.up(node, 'ol');
-                           return (ol) ? ol.descendantOf(region.element) : false;
-                         },
+    backcolor: function(node) {
+      this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
+    },
+
+    forecolor: function(node) {
+      this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
+    },
+
+    bold: function(node) {
+      var weight = Element.getStyle(node, 'font-weight');
+      return weight == 'bold' || weight > 400;
+    },
+
+    italic: function(node) {
+      return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
+    },
+
+    strikethrough: function(node) {
+      return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
+    },
+
+    underline: function(node) {
+      return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
+    },
+
+    subscript: function(node) {
+      return node.nodeName == 'SUB' || node.up('sub');
+    },
+
+    superscript: function(node) {
+      return node.nodeName == 'SUP' || node.up('sup');
+    },
+
+    justifyleft: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('left') > -1;
+    },
+
+    justifycenter: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('center') > -1;
+    },
+
+    justifyright: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('right') > -1;
+    },
+
+    justifyfull: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('justify') > -1;
+    },
+
+    insertorderedlist: function(node, region) {
+      if (node.nodeName == 'OL') return true;
+      var ol = Element.up(node, 'ol');
+      return (ol) ? ol.descendantOf(region.element) : false;
+    },
+
     insertunorderedlist: function(node, region) {
-                           if (node.nodeName == 'ul') return true;
-                           var ul = Element.up(node, 'ul');
-                           return (ul) ? ul.descendantOf(region.element) : false;
-                         }
+      if (node.nodeName == 'ul') return true;
+      var ul = Element.up(node, 'ul');
+      return (ul) ? ul.descendantOf(region.element) : false;
+    }
   }
 });
