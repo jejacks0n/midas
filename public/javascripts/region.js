@@ -285,39 +285,11 @@ Midas.Region = Class.create({
         }
       }
     } else {
-      switch (action) {
-        case 'removeformatting':
-          this.execCommand('insertHTML', this.selections[0].cloneContents().textContent);
-          break;
-        case 'style':
-          this.wrap('span', function() {
-            return new Element('span', {'class': options['value']});
-          }, function(element) {
-            element.addClassName(options['value']);
-          });
-          break;
-        case 'backcolor':
-          this.wrap('font', function() {
-            return new Element('font', {style: 'background-color:' + options['value']});
-          }, function(element) {
-            element.setStyle('background-color:' + options['value']);
-          });
-          break;
-        case 'overline':
-          this.wrap('span', function() {
-            return new Element('span', {style: 'text-decoration:overline'});
-          }, function(element) {
-            element.setStyle('text-decoration:overline');
-          });
-          break;
-        case 'replaceHTML':
-          var selection = this.options['contentWindow'].getSelection();
-          var range = this.doc.createRange();
-          range.selectNodeContents(this.element);
-          selection.addRange(range);
-          this.execCommand('insertHTML', options['value']);
-          break;
-        default: this.execCommand(action, options['value']);
+      Midas.trace('Midas.Region.handleAction', action, options);
+      if (this.defaultActions[action]) {
+        this.defaultActions[action].call(this, options);
+      } else {
+        this.execCommand(action, options['value']);
       }
     }
   },
@@ -360,6 +332,260 @@ Midas.Region = Class.create({
 
     var html = wrapper.innerHTML;
     this.execCommand('insertHTML', html);
+  },
+
+  defaultActions: {
+
+    removeformatting: function(options) {
+      this.execCommand('insertHTML', this.selections[0].cloneContents().textContent);
+    },
+
+    style: function(options) {
+      this.wrap('span', function() {
+        return new Element('span', {'class': options['value']});
+      }, function(element) {
+        element.addClassName(options['value']);
+      });
+    },
+
+    backcolor: function(options) {
+      this.wrap('font', function() {
+        return new Element('font', {style: 'background-color:' + options['value']});
+      }, function(element) {
+        element.setStyle('background-color:' + options['value']);
+      });
+    },
+
+    overline: function(options) {
+      this.wrap('span', function() {
+        return new Element('span', {style: 'text-decoration:overline'});
+      }, function(element) {
+        element.setStyle('text-decoration:overline');
+      });
+    },
+
+    replaceHTML: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = this.doc.createRange();
+      range.selectNodeContents(this.element);
+      selection.addRange(range);
+      this.execCommand('insertHTML', options['value']);
+    },
+
+    insertrowafter: function(options) {
+      this.defaultActions['insertRow'].call(this, options, 'after');
+    },
+
+    insertrowbefore: function(options) {
+      this.defaultActions['insertRow'].call(this, options, 'before');
+    },
+
+    insertRow: function(options, position) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+      var columnCount = Element.siblings(baseCell).length + 1;
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, baseCell.tagName, matrix.x);
+
+      var args = {};
+      args[position] = '<tr _midas_dirty="true">' + ('<' + baseCell.tagName + '></' + baseCell.tagName + '>').repeat(columnCount) + '</tr>';
+      Element.insert(row, args);
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      selectNode.up('tr').removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    deleterow: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var nextRow = Element.nextSiblings(row)[0] || Element.previousSiblings(row)[0];
+      if (!nextRow) return;
+
+      Element.writeAttribute(nextRow, '_midas_dirty', 'true');
+      Element.remove(row);
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      console.debug(container.innerHTML);
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      selectNode.up('tr').removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    insertcolumnbefore: function(options) {
+      this.defaultActions['insertColumn'].call(this, options, 'before');
+    },
+
+    insertcolumnafter: function(options) {
+      this.defaultActions['insertColumn'].call(this, options, 'after');
+    },
+
+    insertColumn: function(options, position) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, 'td, th', matrix.x);
+      Element.writeAttribute(cell, '_midas_dirty', 'true');
+
+      Element.select(table, 'tr').each(function(tr) {
+        var cell = Element.down(tr, 'td, th', matrix.x);
+
+        var args = {};
+        args[position] = new Element(cell.tagName);
+        Element.insert(cell, args);
+      });
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    deletecolumn: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, baseCell.tagName, matrix.x);
+      var nextCell = Element.nextSiblings(cell)[0] || Element.previousSiblings(cell)[0];
+      if (!nextCell) return;
+
+      Element.writeAttribute(nextCell, '_midas_dirty', 'true');
+      Element.select(table, 'tr').each(function(tr) {
+        Element.down(tr, 'td, th', matrix.x).remove();
+      });
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      console.debug(container.innerHTML);
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      selectNode.removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse();
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    }
+
   },
 
   handle: {
