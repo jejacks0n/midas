@@ -67,6 +67,7 @@
     .blue {
       background-color: blue;
       }
+
   </style>
 </head>
 <body onload="Midas.debug = true; Midas.silent = true; midas = new Midas({useIframe: true}, {appendTo: 'toolbar'}, {inline: true});">
@@ -104,8 +105,20 @@
         </tr>
       </tbody>
     </table>
-    <a href="http://google.com">external link</a>
-    <a href="/midas/examples/iframe.html">internal link</a>
+
+    <div style="height:0px;overflow:hidden;opacity:0">&nbsp;</div>
+
+    <table>
+      <tr>
+        <td>tr1td1</td>
+        <td>tr1td2</td>
+      </tr>
+      <tr>
+        <td>tr2td1</td>
+        <td>tr2td2</td>
+      </tr>
+    </table>
+
     <div style="position:absolute;right:0;border:1px solid red;">absolute</div>
   </div>
 
