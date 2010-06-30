@@ -1,28 +1,34 @@
 <script type="text/javascript">
-
   var selection = $('midas-iframe-window').contentWindow.getSelection();
+
+  console.log('selection', selection);
 
   $('midas_link_text').value = selection;
   // need to have the target select the current target here...
 
   if (selection.rangeCount) {
-    var range = selection.getRangeAt(0);
 
+    var range = selection.getRangeAt(0);
     var node = range.commonAncestorContainer;
     var contents = range.cloneContents();
+
     var anchor;
+
     if (contents.childNodes.length == 1 && contents.childNodes[0].tagName == 'A') {
       anchor = contents.childNodes[0];
     } else {
       anchor = Element.up(node, 'a');
+      if (!anchor) {
+        // wrap the selection in an anchor
+      }
     }
     $('midas_link_url').value = anchor.href;
   }
 
 
-  window['midas_modal_submit'] = function(e) {
-    generator = $('midas_link_generator');
 
+  window['midas_modal_submit'] = function(e) {    
+    var generator = $('midas_link_generator');
     var link = '<a href="' + generator.down('#midas_link_url').value + '" target="' + generator.down('#midas_link_target').value + '">' + generator.down('#midas_link_text').value + '</a>';
     Midas.fire('action', {action: 'insertHTML', options: {value: link}});
     Midas.modal.hide();

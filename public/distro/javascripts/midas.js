@@ -326,7 +326,11 @@ var Midas = Class.create({
       case 'preview':
         window.getSelection().removeAllRanges();
         if (this.iframe) this.iframe.contentWindow.getSelection().removeAllRanges();
-        toolbar.toggleDisabled('htmleditorbar', 'undoredo', 'insert', 'inspector');
+        if (this.modes[mode]) {
+          toolbar.disableToolbars('region', 'undoredo', 'insert', 'editorpanels');
+        } else {
+          toolbar.enableToolbars('undoredo', 'insert', 'editorpanels');
+        }
         if (reset) {
           toolbar.buttons['preview'].element.removeClassName('pressed');
           break;
@@ -340,7 +344,6 @@ var Midas = Class.create({
 
   resetModes: function() {
     for (var i in this.modes) {
-      console.debug(i, this.modes[i]);
       if (this.modes[i]) {
         this.handleMode(i, this.toolbar, true);
       }
@@ -577,11 +580,13 @@ Midas.Region = Class.create({
     }.bind(this));
 
     Event.observe(this.element, 'focus', function(e) {
+      this.focused = true;
       if (this.previewing) return;
       Midas.fire('region', {region: this, name: this.name, event: e});
       if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
     }.bind(this));
     Event.observe(this.element, 'blur', function(e) {
+      this.focused = false;
       if (this.previewing) return;
       Midas.fire('region:blur', {region: this, name: this.name, event: e});
     }.bind(this));
@@ -636,6 +641,23 @@ Midas.Region = Class.create({
     Event.observe(this.element, 'keypress', function(e) {
       if (this.previewing) return;
       Midas.fire('region:update', {region: this, name: this.name, event: e});
+
+      if (e.metaKey && this.focused) {
+        switch (e.charCode) {
+          case 98:
+            this.handleAction('bold');
+            e.stop();
+            break;
+          case 105:
+            this.handleAction('italic');
+            e.stop();
+            break;
+          case 117:
+            this.handleAction('underline');
+            e.stop();
+            break;
+        }
+      }
 
       switch (e.keyCode) {
         case 9: // tab
@@ -805,6 +827,13 @@ Midas.Region = Class.create({
             element.setStyle('background-color:' + options['value']);
           });
           break;
+        case 'overline':
+          this.wrap('span', function() {
+            return new Element('span', {style: 'text-decoration:overline'});
+          }, function(element) {
+            element.setStyle('text-decoration:overline');
+          });
+          break;
         case 'replaceHTML':
           var selection = this.options['contentWindow'].getSelection();
           var range = this.doc.createRange();
@@ -818,6 +847,7 @@ Midas.Region = Class.create({
   },
 
   wrap: function(tagName, newElementCallback, updateElementCallback) {
+    this.updateSelections();
     var range = this.selections[0];
     var fragment = range.cloneContents();
 
@@ -877,6 +907,7 @@ Midas.Toolbar = Class.create({
   version: 0.2,
   activeRegion: null,
   toolbars: {},
+  groups: {},
   buttons: {},
   contexts: [],
   palettes: [],
@@ -921,8 +952,9 @@ Midas.Toolbar = Class.create({
         }
         this.element.appendChild(element);
         if (toolbar != 'actions') {
-          element.addClassName('disabled');
           this.toolbars[toolbar] = {element: element};
+          this.disableToolbars(toolbar);
+          //element.addClassName('disabled');
         }
       }
     }
@@ -936,7 +968,6 @@ Midas.Toolbar = Class.create({
     this.__doc_mousedown = function(e) {
       var element = Event.element(e);
       if (Element.up(element, '#midas_modal')) {
-        console.debug('modal');
         this.disableToolbar = false;
       }
     }.bind(this);
@@ -946,15 +977,25 @@ Midas.Toolbar = Class.create({
     this.__keydown = function(e) {
       if (e.keyCode == 27) this.hidePopups();
     }.bind(this);
+    this.__keypress = function(e) {
+      if (e.metaKey) {
+        switch (e.charCode) {
+          case 115:
+            Midas.fire('button', {action: 'save', event: e, toolbar: this});
+            e.stop();
+            break;
+        }
+      }
+    }.bind(this);
 
     if (this.config['toolbars']) {
       for (var toolbar in this.config['toolbars']) {
         Event.observe(document, 'midas:' + toolbar, function() {
-          this.element.down('.midas-' + toolbar + 'bar').removeClassName('disabled');
+          this.enableToolbars(toolbar);
         }.bind(this));
         Event.observe(document, 'midas:' + toolbar + ':blur', function() {
           if (this.disableToolbar) {
-            this.element.down('.midas-' + toolbar + 'bar').addClassName('disabled');
+            this.disableToolbars(toolbar);
           }
           this.disableToolbar = true;
         }.bind(this))
@@ -968,6 +1009,7 @@ Midas.Toolbar = Class.create({
       Event.observe(doc, 'mousedown', this.__doc_mousedown);
       Event.observe(doc, 'mouseup', this.__mouseup);
       Event.observe(doc, 'keydown', this.__keydown);
+      Event.observe(doc, 'keypress', this.__keypress);
     }.bind(this));
   },
 
@@ -982,8 +1024,10 @@ Midas.Toolbar = Class.create({
     var observedDocuments = [document];
     if (this.options['contentWindow'].document != document) observedDocuments.push(this.options['contentWindow'].document);
     observedDocuments.each(function(doc) {
+      Event.stopObserving(doc, 'mousedown', this.__doc_mousedown);
       Event.stopObserving(doc, 'mouseup', this.__mouseup);
-      Event.observe(doc, 'keydown', this.__keydown);
+      Event.stopObserving(doc, 'keydown', this.__keydown);
+      Event.stopObserving(doc, 'keypress', this.__keypress);
     }.bind(this));
   },
 
@@ -1066,12 +1110,12 @@ Midas.Toolbar = Class.create({
       element.observe('mousedown', function() { element.addClassName('active'); });
       element.observe('mouseup', function() { element.removeClassName('active'); });
 
-      if (!observed) element.observe('click', function(event) {
-        event.stop();
+      if (!observed) element.observe('click', function(e) {
+        e.stop();
         if (element.hasClassName('disabled') || element.up('.disabled')) return;
         Midas.fire('button', {
           action: action,
-          event: event,
+          event: e,
           toolbar: this
         });
       }.bind(this));
@@ -1087,6 +1131,7 @@ Midas.Toolbar = Class.create({
 
   makeButtonGroup: function(action, group) {
     var element = new Element('div', {'class': 'midas-group midas-group-' + action});
+    this.groups[action] = {element: element};
     for (var button in group) {
       element.appendChild(this.makeButton(button, group[button]));
     }
@@ -1095,12 +1140,6 @@ Midas.Toolbar = Class.create({
 
   makeSeparator: function(button) {
     return new Element('span').addClassName('midas-' + (button == '*' ? 'flex-separator' : button == '-' ? 'line-separator' : 'separator'));
-  },
-
-  disableToolbars: function() {
-    for (var toolbar in this.toolbars) {
-      this.toolbars[toolbar].element.addClassName('disabled');
-    }
   },
 
   setActiveRegion: function(region) {
@@ -1150,13 +1189,43 @@ Midas.Toolbar = Class.create({
     return this.positioningElement.cumulativeOffset().top;
   },
 
-  toggleDisabled: function() {
+  disableToolbars: function() {
     for (var i = 0; i < arguments.length; ++i) {
-      var element;
-      element = this.element.down('.midas-' + arguments[i]);
-      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-      if (element) element.toggleClassName('disabled');
+      if (this.toolbars[arguments[i]]) {
+        this.toolbars[arguments[i]]['element'].addClassName('disabled');
+      }
+      if (this.groups[arguments[i]]) {
+        this.groups[arguments[i]]['element'].addClassName('disabled');
+      }
+      if (this.buttons[arguments[i]]) {
+        this.buttons[arguments[i]]['element'].addClassName('disabled');
+      }
+
+//      var element;
+//      element = this.element.down('.midas-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
+//      if (element) element.addClassName('disabled');
+    }
+  },
+
+  enableToolbars: function() {
+    for (var i = 0; i < arguments.length; ++i) {
+      if (this.toolbars[arguments[i]]) {
+        this.toolbars[arguments[i]]['element'].removeClassName('disabled');
+      }
+      if (this.groups[arguments[i]]) {
+        this.groups[arguments[i]]['element'].removeClassName('disabled');
+      }
+      if (this.buttons[arguments[i]]) {
+        this.buttons[arguments[i]]['element'].removeClassName('disabled');
+      }
+//
+//      var element;
+//      element = this.element.down('.midas-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
+//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
+//      if (element) element.removeClassName('disabled');
     }
   },
 
@@ -1814,6 +1883,7 @@ Object.extend(Midas.modal, {
   },
 
   load: function(url, options) {
+    var url = (Midas.debug ? url + '?' + Math.random() : url);
     if (options) {
       this._options = Object.clone(this.options);
       Object.extend(this._options, options);
@@ -2019,20 +2089,21 @@ Midas.Config = {
       undoredo:              {
         undo:                ['Undo', 'Undo your last action'],
         redo:                ['Redo', 'Redo your last action'],
-        sep2:                ' '
+        sep:                 ' '
         },
       insert:                {
         insertlink:          ['Link', 'Insert a hyperlink', ['modal', '/midas/modals/link.html']],
         insertmedia:         ['Media', 'Insert media', ['modal', '/midas/modals/media.html']],
         inserttable:         ['Table', 'Insert a table', ['modal', '/midas/modals/table.html']],
-        insertobject:        ['Object', 'Insert an object (form, widget, etc)', ['modal', '/midas/modals/object.html']],
         insertcharacter:     ['Character', 'Insert special characters', ['modal', '/midas/modals/character.html']],
-        sep3:                '*'
+        sep:                 ' '
         },
-      inspector:             {
+      editorpanels:          {
+//        objectspanel:        ['Objects', 'Insert an object (form, widget, etc)', ['panel', '/midas/panels/objects.html']],
+//        sep1:                ' ',
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
-        sep3:                '*'
-        }
+        sep2:                '*'
+        }//,
 //      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
 //      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
       },
@@ -2046,7 +2117,7 @@ Midas.Config = {
       decoration:            {
         bold:                ['Bold', '', ['context']],
         italic:              ['Italicize', '', ['context']],
-        //overline:            ['Overline', '', ['context']],
+        overline:            ['Overline', '', ['context']],
         strikethrough:       ['Strikethrough', '', ['context']],
         underline:           ['Underline', '', ['context']],
         sep:                 '-'
@@ -2082,10 +2153,8 @@ Midas.Config = {
       //  deletecolumn:        ['Delete Column', 'Delete this table column'],
       //  sep:                 '-'
       //  },
-      breaks:                {
-        horizontalrule:      ['Horizontal Rule', ''],
-        sep:                 '-'
-        },
+      horizontalrule:        ['Horizontal Rule', ''],
+      sep:                   '-',
       removeformatting:      ['Remove Formatting', ''],
       htmleditor:            ['Edit HTML', '']
       }
