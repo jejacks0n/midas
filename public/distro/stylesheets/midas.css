@@ -116,17 +116,17 @@
 .midas-actionsbar .midas-button-insertlink em      { background-image: url(../images/midas/toolbars/actions/insertlink.png) }
 .midas-actionsbar .midas-button-insertmedia em     { background-image: url(../images/midas/toolbars/actions/insertmedia.png) }
 .midas-actionsbar .midas-button-inserttable em     { background-image: url(../images/midas/toolbars/actions/inserttable.png) }
-.midas-actionsbar .midas-button-insertobject em    { background-image: url(../images/midas/toolbars/actions/insertobject.png) }
 .midas-actionsbar .midas-button-insertcharacter em { background-image: url(../images/midas/toolbars/actions/insertcharacter.png) }
+.midas-actionsbar .midas-button-objectspanel em    { background-image: url(../images/midas/toolbars/actions/objectspanel.png) }
 .midas-actionsbar .midas-button-inspectorpanel em  { background-image: url(../images/midas/toolbars/actions/inspectorpanel.png) }
-/*.midas-actionsbar .midas-button-notespanel em      { background-image: url(../images/midas/toolbars/actions/notespanel.png) }*/
-/*.midas-actionsbar .midas-button-historypanel em    { background-image: url(../images/midas/toolbars/actions/historypanel.png) }*/
+.midas-actionsbar .midas-button-notespanel em      { background-image: url(../images/midas/toolbars/actions/notespanel.png) }
+.midas-actionsbar .midas-button-historypanel em    { background-image: url(../images/midas/toolbars/actions/historypanel.png) }
 
-/* Toolbar: HTMLEditor
+/* Toolbar: Region
  *----------------------------------------------------------------------------*/
 .midas-regionbar {
   padding: 3px 13px 1px 10px;
-  background: #D2D2D1 url(../images/midas/toolbars/htmleditor/_background.png) repeat-x bottom;
+  background: #D2D2D1 url(../images/midas/toolbars/region/_background.png) repeat-x bottom;
   }
 .midas-regionbar:after {
 	content: ".";
@@ -147,10 +147,10 @@
   padding: 0;
   margin: 0 7px 0 0;
   width: 1px;
-  background: url(../images/midas/toolbars/htmleditor/_separator.png) no-repeat;
+  background: url(../images/midas/toolbars/region/_separator.png) no-repeat;
   }
 .midas-regionbar .midas-line-separator {
-  background: url(../images/midas/toolbars/htmleditor/_line_separator.png) no-repeat;
+  background: url(../images/midas/toolbars/region/_line_separator.png) no-repeat;
   }
 .midas-regionbar .midas-button {
   display: block;
@@ -165,7 +165,7 @@
   }
 .midas-regionbar .midas-button,
 .midas-regionbar .midas-button em {
-  background-image: url(../images/midas/toolbars/htmleditor/buttons.png);
+  background-image: url(../images/midas/toolbars/region/buttons.png);
   }
 .midas-regionbar .midas-button.disabled,
 .midas-regionbar.disabled .midas-button,
@@ -237,12 +237,10 @@
 .midas-regionbar .midas-button-deletecolumn.active        { background-position: -519px -18px }
 .midas-regionbar .midas-button-horizontalrule             { background-position: -542px 0 }
 .midas-regionbar .midas-button-horizontalrule.active      { background-position: -542px -18px }
-.midas-regionbar .midas-button-pagebreak                  { background-position: -565px 0 }
-.midas-regionbar .midas-button-pagebreak.active           { background-position: -565px -18px }
-.midas-regionbar .midas-button-removeformatting           { background-position: -588px 0 }
-.midas-regionbar .midas-button-removeformatting.active    { background-position: -588px -18px }
-.midas-regionbar .midas-button-htmleditor                 { background-position: -612px 0 }
-.midas-regionbar .midas-button-htmleditor.active          { background-position: -612px -18px }
+.midas-regionbar .midas-button-removeformatting           { background-position: -566px 0 }
+.midas-regionbar .midas-button-removeformatting.active    { background-position: -566px -18px }
+.midas-regionbar .midas-button-htmleditor                 { background-position: -590px 0 }
+.midas-regionbar .midas-button-htmleditor.active          { background-position: -590px -18px }
 
 /* color palette buttons */
 .midas-regionbar .midas-palette-button,
@@ -392,7 +390,7 @@
 .midas-panel {
   position: absolute;
   background-color: #111;
-  opacity: 0.85;
+  opacity: 0.90;
   width: 0;
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, .5);
