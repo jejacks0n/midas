@@ -27,3 +27,5 @@ pkg
 ## PROJECT::SPECIFIC
 spec/javascripts/fixtures/fixtures.js
 non-web
+.bundle/config
+old_code.js
