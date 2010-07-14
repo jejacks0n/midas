@@ -3,9 +3,9 @@ Midas.Region = Class.create({
   version: 0.2,
   name: null,
   options: {
+    inline: false,
     configuration: null,
-    contentWindow: window,
-    inline: false
+    contentWindow: window
   },
   previewing: false,
 
