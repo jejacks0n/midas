@@ -5,7 +5,7 @@ var Midas = Class.create({
     saveUrl: window.location.href,
     saveMethod: 'put',
     configuration: null,
-    useIframe: false // boolean true, or a string of the document to load
+    useIframe: false // boolean true/false, or a string of the document to load
   },
   modes: {},
   contentWindow: window,

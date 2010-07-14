@@ -112,7 +112,7 @@ String.prototype.repeat = function(times) {
     saveUrl: window.location.href,
     saveMethod: 'put',
     configuration: null,
-    useIframe: false // boolean true, or a string of the document to load
+    useIframe: false // boolean true/false, or a string of the document to load
   },
   modes: {},
   contentWindow: window,
@@ -532,9 +532,9 @@ Midas.Region = Class.create({
   version: 0.2,
   name: null,
   options: {
+    inline: false,
     configuration: null,
-    contentWindow: window,
-    inline: false
+    contentWindow: window
   },
   previewing: false,
 
