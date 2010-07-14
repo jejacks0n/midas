@@ -8,6 +8,7 @@ Midas.modal = function(url, options) {
 Object.extend(Midas.modal, {
   version: 0.2,
   initialized: false,
+  animationDuration: .50,
   options: {
     title: ''
   },
@@ -26,7 +27,7 @@ Object.extend(Midas.modal, {
   _build: function() {
 		this.overlayElement = new Element('div', {id: 'midas_modal_overlay', style: 'display:none'});
 		this.element = new Element('div', {id: 'midas_modal', style: 'display:none'});
-    this.element.update('<form class="midas-modal-frame"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></form>');
+    this.element.update('<form class="midas-modal-frame" id="midas_modal_form"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></form>');
 
     this.frameElement = this.element.down('.midas-modal-frame');
     this.contentContainerElement = this.element.down('.midas-modal-content-container');
@@ -75,7 +76,7 @@ Object.extend(Midas.modal, {
     this.visible = true;
     new Effect.Appear(this.overlayElement, {
       transition: Effect.Transitions.sinoidal,
-      duration: .25,
+      duration: this.animationDuration / 2,
       to: .65,
       afterFinish: function() {
         this.element.show();
@@ -84,7 +85,7 @@ Object.extend(Midas.modal, {
         new Effect.Morph(this.frameElement, {
           style: {top: '0px'}, 
           transition: Effect.Transitions.sinoidal,
-          duration: .25,
+          duration: this.animationDuration / 2,
           afterFinish: function() {
             this.showing = true;
             this.load(url);
@@ -212,7 +213,7 @@ Object.extend(Midas.modal, {
       height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
     }
 
-    var duration = .45;
+    var duration = this.animationDuration;
     if ((keepHeight || this.contentContainerElement.getHeight() == height) && this.frameElement.getWidth() == dimensions.width) {
       duration = .1;
     }
@@ -228,7 +229,7 @@ Object.extend(Midas.modal, {
         this.contentElement.setStyle({display: 'none', visibility: 'visible', height: (height - 30) + 'px'});
         new Effect.Appear(this.contentElement, {
           transition: Effect.Transitions.sinoidal,
-          duration: .25
+          duration: this.animationDuration / 2
         })
       }.bind(this)
     });
