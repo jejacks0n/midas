@@ -143,6 +143,7 @@ String.prototype.repeat = function(times) {
     this.regions = [];
 
     if (this.options['useIframe']) {
+      document.body.setStyle('visibility:hidden;opacity:0');
       var src = (this.options['useIframe'] === true) ? window.location.href + '?midas_regions=true' : this.options['useIframe'];
 
       this.iframe = new Element('iframe', {
@@ -208,6 +209,7 @@ String.prototype.repeat = function(times) {
       if (this.toolbar) this.toolbar.reinitializeObservers();
     }
 
+    document.body.setStyle('visibility:visible;opacity:1');
     this.resize();
   },
 
