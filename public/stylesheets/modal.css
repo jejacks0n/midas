@@ -171,3 +171,13 @@
   font-family: monospace;
   white-space: pre;
   }
+
+/* link generator */
+#midas_link_generator {
+  width: 400px;
+  }
+#midas_link_generator label {
+  display: block;
+  float: left;
+  width: 100px;
+  }
