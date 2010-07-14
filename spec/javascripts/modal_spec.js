@@ -127,7 +127,7 @@ describe('Midas.Modal', function() {
         this.spy = spyOn(Ajax, 'Request').andCallFake(function(url, options) {
           options.onSuccess({responseText: $('with_two_panes').innerHTML});
         });
-        this.modal = Midas.modal();
+        this.modal = Midas.modal('testing');
       });
 
       it('creates pane navigation buttons', function() {

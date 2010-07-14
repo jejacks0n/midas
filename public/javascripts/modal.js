@@ -63,37 +63,41 @@ Object.extend(Midas.modal, {
     this.contentElement.innerHTML = '';
     this.updateTitle();
 
-		if (!this.showing) {
-      this.showing = true;
+    if (!this.showing) {
+      this.fire('onShow');
       this.appear(url);
-			this.fire('onShow');
-		} else {
-			this.update();
-      this.load(url);
-		}
+    } else {
+      this.update(url);
+    }
   },
 
   appear: function(url) {
     this.visible = true;
-    this.overlayElement.show();
-    new Effect.Appear(this.element, {
+    new Effect.Appear(this.overlayElement, {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
-      to: 1, // setting this to less than 100% is buggy
+      duration: .25,
+      to: .65,
       afterFinish: function() {
-        this.load(url);
+        this.element.show();
+        var height = this.frameElement.getHeight();
+        this.frameElement.setStyle({top: (-height) + 'px', visibility: 'visible'});
+        new Effect.Morph(this.frameElement, {
+          style: {top: '0px'}, 
+          transition: Effect.Transitions.sinoidal,
+          duration: .25,
+          afterFinish: function() {
+            this.showing = true;
+            this.load(url);
+          }.bind(this)
+        });
       }.bind(this)
     });
   },
 
-  resize: function() {
-    this.contentElement.hide();
-    this.contentElement.slideDown();
-  },
-
-  update: function() {
+  update: function(url) {
     if (!this.initialized) throw("Midas.Modal cannot update before it's been initialized");
 
+    this.load(url);
     this.fire('onUpdate');
   },
 
@@ -110,6 +114,11 @@ Object.extend(Midas.modal, {
 
     this.element.hide();
     this.overlayElement.hide();
+
+    this.element.setStyle({width: null});
+    this.frameElement.setStyle({width: null});
+    this.contentContainerElement.setStyle({height: null});
+    this.contentElement.setStyle({height: null});
 
     if (this.controls) {
       this.controls.remove();
@@ -129,7 +138,7 @@ Object.extend(Midas.modal, {
   },
 
   load: function(url, options) {
-    var url = (Midas.debug ? url + '?' + Math.random() : url);
+    url = (Midas.debug ? url + '?' + Math.random() : url);
     if (options) {
       this._options = Object.clone(this.options);
       Object.extend(this._options, options);
@@ -137,29 +146,32 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-      new Ajax.Request(url, {
-        method: this._options['method'] || 'get',
-        parameters: this._options['parameters'] || {},
-        onSuccess: function(transport) {
-          this.loaded = true;
-          this.element.removeClassName('loading');
-          this.contentElement.innerHTML = transport.responseText;
-          transport.responseText.evalScripts();
-          this.setupControls();
+    new Ajax.Request(url, {
+      method: this._options['method'] || 'get',
+      parameters: this._options['parameters'] || {},
+      onSuccess: function(transport) {
+        var width = this.element.getWidth();
+        this.element.setStyle({width: width + 'px'});
+        this.frameElement.setStyle({width: width + 'px'});
 
-          this.position();
-          this.resize();
-          this.fire('afterLoad');
-        }.bind(this),
-        onFailure: function() {
-          this.hide();
-          alert('Midas was unable to load "' + url + '" for the modal');
-        }.bind(this)
-      });
+        this.loaded = true;
+        this.element.removeClassName('loading');
+        this.contentElement.innerHTML = transport.responseText;
+        transport.responseText.evalScripts();
+        this.setupControls();
+
+        this.resize();
+        this.fire('afterLoad');
+      }.bind(this),
+      onFailure: function() {
+        this.hide();
+        alert('Midas was unable to load "' + url + '" for the modal');
+      }.bind(this)
+    });
   },
 
   position: function() {
-    if (!this.element) return;
+    if (!this.element || !this.showing) return;
     
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
@@ -167,23 +179,54 @@ Object.extend(Midas.modal, {
 
     this.frameElement.setStyle({display: 'block'});
 
-
     var dimensions = this.frameElement.getDimensions();
 
     this.element.setStyle({width: dimensions.width + 'px'});
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
-//    this broke a bunch of tests...
-//    this.contentElement.hide();
-//    this.contentElement.slideDown();
-
     var viewportDimensions = document.viewport.getDimensions();
-    if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {
+    if (dimensions.height >= viewportDimensions.height - 15 || this._options['fullHeight']) {
       var titleHeight = this.element.down('h1').getHeight();
       var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
       this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
       this.contentElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 60) + 'px'});
     }
+  },
+
+  resize: function(keepHeight) {
+    if (!this.element) return;
+
+    this.contentContainerElement.setStyle('width:auto;position:absolute;overflow:hidden');
+    if (!keepHeight) this.contentContainerElement.setStyle('height:25px');
+    var dimensions = this.contentContainerElement.getDimensions();
+    this.contentContainerElement.setStyle('position:static');
+
+    this.contentElement.setStyle('height:auto;width:auto;visibility:hidden');
+    var height = this.contentElement.getHeight() + 30;
+
+    var viewportDimensions = document.viewport.getDimensions();
+    var titleHeight = this.element.down('h1').getHeight();
+    var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
+    if (height + titleHeight + controlsHeight >= viewportDimensions.height - 20 || this._options['fullHeight']) {
+      height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
+    }
+
+    new Effect.Parallel([
+      new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
+      new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
+      new Effect.Morph(this.frameElement, {style: {width: dimensions.width + 'px'}, sync: true})
+      ], {
+      transition: Effect.Transitions.sinoidal,
+      duration: .45,
+      afterFinish: function() {
+        this.contentContainerElement.setStyle('overflow:auto');
+        this.contentElement.setStyle('display:none;visibility:visible');
+        new Effect.Appear(this.contentElement, {
+          transition: Effect.Transitions.sinoidal,
+          duration: .25
+        })
+      }.bind(this)
+    });
   },
 
   setupControls: function() {
@@ -242,6 +285,7 @@ Object.extend(Midas.modal, {
     });
 
     this.panes[this.paneIndex].setStyle('display:block');
+    this.resize(true);
   },
 
   fire: function(eventName) {

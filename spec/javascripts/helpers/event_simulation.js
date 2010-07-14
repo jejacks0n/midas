@@ -479,7 +479,7 @@ jasmine.simulate = {
    * @static
    */
   tab: function(target) {
-    this.keypress(target, {keyCode: 9});
+    this.keydown(target, {keyCode: 9});
   },
 
   /**
