@@ -197,8 +197,10 @@ Object.extend(Midas.modal, {
     if (!this.element) return;
 
     this.contentContainerElement.setStyle('width:auto;position:absolute;overflow:hidden');
-    if (!keepHeight) this.contentContainerElement.setStyle('height:25px');
     var dimensions = this.contentContainerElement.getDimensions();
+    var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
+
+    if (!keepHeight) this.contentContainerElement.setStyle({height: (25 - (controlsHeight - 30)) + 'px'});
     this.contentContainerElement.setStyle('position:static');
 
     this.contentElement.setStyle('height:auto;width:auto;visibility:hidden');
@@ -206,21 +208,24 @@ Object.extend(Midas.modal, {
 
     var viewportDimensions = document.viewport.getDimensions();
     var titleHeight = this.element.down('h1').getHeight();
-    var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
     if (height + titleHeight + controlsHeight >= viewportDimensions.height - 20 || this._options['fullHeight']) {
       height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
     }
 
+    var duration = .45;
+    if ((keepHeight || this.contentContainerElement.getHeight() == height) && this.frameElement.getWidth() == dimensions.width) {
+      duration = .1;
+    }
     new Effect.Parallel([
       new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
       new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
       new Effect.Morph(this.frameElement, {style: {width: dimensions.width + 'px'}, sync: true})
       ], {
       transition: Effect.Transitions.sinoidal,
-      duration: .45,
+      duration: duration,
       afterFinish: function() {
         this.contentContainerElement.setStyle('overflow:auto');
-        this.contentElement.setStyle('display:none;visibility:visible');
+        this.contentElement.setStyle({display: 'none', visibility: 'visible', height: (height - 30) + 'px'});
         new Effect.Appear(this.contentElement, {
           transition: Effect.Transitions.sinoidal,
           duration: .25

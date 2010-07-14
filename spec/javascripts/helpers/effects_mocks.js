@@ -17,3 +17,7 @@ Effect.Morph = function(element, options) {
   element.setStyle(options['style']);
   if (options['afterFinish']) options['afterFinish']();
 };
+
+Effect.Parallel = function(effects, options) {
+  if (options['afterFinish']) options['afterFinish']();
+};
