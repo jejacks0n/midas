@@ -102,7 +102,10 @@ String.prototype.regExEscape = function() {
   }
   return this.replace(arguments.callee.sRE, '\\$1');
 };
-var Midas = Class.create({
+
+String.prototype.repeat = function(times) {
+  return new Array(times + 1).join(this);  
+};var Midas = Class.create({
   version: 0.2,
   options: {
     classname: 'editable',
@@ -262,7 +265,7 @@ var Midas = Class.create({
       if (this.regions.indexOf(a['region']) < 0) return;
 
       if (this.statusbar) this.statusbar.update(this.activeRegion, a['event']);
-      if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+      if (this.toolbar) this.toolbar.setActiveButtons(this.activeRegion);
     }.bind(this);
 
     Event.observe(window, 'resize', this.resize.bind(this));
@@ -317,7 +320,7 @@ var Midas = Class.create({
     this.activeRegion.handleAction(action, event, toolbar, options);
 
     if (this.statusbar) this.statusbar.update(this.activeRegion, event);
-    if (this.toolbar) this.toolbar.setActiveButtons(this.regions, this.activeRegion);
+    if (this.toolbar) this.toolbar.setActiveButtons(this.activeRegion);
   },
 
   handleMode: function(mode, toolbar, reset) {
@@ -569,7 +572,7 @@ Midas.Region = Class.create({
     this.element.contentEditable = true;
 
     this.doc.execCommand('styleWithCSS', false, false);
-    //this.doc.execCommand('enableInlineTableEditing', false, false);
+    this.doc.execCommand('enableInlineTableEditing', false, false);
   },
 
   setupObservers: function() {
@@ -631,8 +634,53 @@ Midas.Region = Class.create({
     }.bind(this));
 
     Event.observe(this.element, 'keydown', function(e) {
+      this.updateSelections();
       if (Midas.modal.showing && e.keyCode != 27) e.stop();
+
+      switch (e.keyCode) {
+        case 9: // tab
+          this.selections.each(function(selection) {
+            var container = selection.commonAncestorContainer;
+            if (container.nodeType == 3) container = container.parentNode;
+
+            if (container.tagName == 'LI' || container.up('li')) {
+              this.handleAction('indent');
+              e.stop();
+              return false;
+            }
+
+            if (container.up('table')) {
+              var thisCell = (container.tagName == 'TD' || container.tagName == 'TH') ? container : container.up('th, td');
+              var thisRow = thisCell.up();
+              var nextCellInRow = thisCell.nextSiblings()[0];
+              Element.writeAttribute(thisRow, '_midas_current_row', 'true');
+
+              var tableRows = Element.up(thisRow, 'table').descendants('tr');
+
+              var rowIndex;
+              tableRows.each(function(row, i) {
+                if (row.readAttribute('_midas_current_row') == 'true') {
+                  row.removeAttribute('_midas_current_row');
+                  rowIndex = i;
+                }
+              });
+
+              var nextRow = (rowIndex < tableRows.length) ? tableRows[rowIndex + 1] : false;
+              if (nextCellInRow) {
+                this.selectNextCell(nextCellInRow, 0);
+                e.stop();
+              } else if (nextRow) {
+                this.selectNextCell(Element.down(nextRow, 'td, th'));
+                e.stop();
+              }
+              return false;
+
+            }
+          }.bind(this));
+          break;
+      }
     }.bind(this));
+
     Event.observe(this.element, 'keyup', function(e) {
       if (this.previewing) return;
       this.updateSelections();
@@ -660,16 +708,6 @@ Midas.Region = Class.create({
       }
 
       switch (e.keyCode) {
-        case 9: // tab
-          this.selections.each(function(selection) {
-            var container = selection.commonAncestorContainer;
-            if (container.nodeType == 3) container = container.parentNode;
-            if (container.tagName == 'LI' || container.up('li')) {
-              e.stop();
-              this.handleAction('indent');
-            }
-          }.bind(this));
-          break;
         case 13: // enter
           if (Prototype.Browser.Gecko && this.element.tagName != 'DIV') {
             this.execCommand('insertHTML', '<br/>');
@@ -678,6 +716,15 @@ Midas.Region = Class.create({
           break;
       }
     }.bind(this));
+  },
+
+  selectNextCell: function(cell) {
+    var selection = this.options['contentWindow'].getSelection();
+    selection.removeAllRanges();
+    var range = this.doc.createRange();
+    range.selectNodeContents(cell);
+    range.collapse(true);
+    selection.addRange(range);
   },
 
   setContents: function(content) {
@@ -703,6 +750,7 @@ Midas.Region = Class.create({
   },
 
   afterPaste: function(beforeHtml) {
+    beforeHtml = beforeHtml.replace(/^\<br\>/, "");
     var pastedRegion = this.element.down('.midas-region');
     if (pastedRegion) {
       var selection = this.options['contentWindow'].getSelection();
@@ -741,7 +789,8 @@ Midas.Region = Class.create({
       style.remove();
     });
 
-    return temp.textContent.replace(/\n\n/g, '<br/>').
+    return temp.textContent.escapeHTML().
+                            replace(/\n\n/g, '<br/>').
                             replace(/.*<!--.*-->/g, '').
                             replace(/^(<br\/>)+|(<br\/>\s*)+$/g, '');
   },
@@ -809,39 +858,11 @@ Midas.Region = Class.create({
         }
       }
     } else {
-      switch (action) {
-        case 'removeformatting':
-          this.execCommand('insertHTML', this.selections[0].cloneContents().textContent);
-          break;
-        case 'style':
-          this.wrap('span', function() {
-            return new Element('span', {'class': options['value']});
-          }, function(element) {
-            element.addClassName(options['value']);
-          });
-          break;
-        case 'backcolor':
-          this.wrap('font', function() {
-            return new Element('font', {style: 'background-color:' + options['value']});
-          }, function(element) {
-            element.setStyle('background-color:' + options['value']);
-          });
-          break;
-        case 'overline':
-          this.wrap('span', function() {
-            return new Element('span', {style: 'text-decoration:overline'});
-          }, function(element) {
-            element.setStyle('text-decoration:overline');
-          });
-          break;
-        case 'replaceHTML':
-          var selection = this.options['contentWindow'].getSelection();
-          var range = this.doc.createRange();
-          range.selectNodeContents(this.element);
-          selection.addRange(range);
-          this.execCommand('insertHTML', options['value']);
-          break;
-        default: this.execCommand(action, options['value']);
+      Midas.trace('Midas.Region.handleAction', action, options);
+      if (this.defaultActions[action]) {
+        this.defaultActions[action].call(this, options);
+      } else {
+        this.execCommand(action, options['value']);
       }
     }
   },
@@ -884,6 +905,258 @@ Midas.Region = Class.create({
 
     var html = wrapper.innerHTML;
     this.execCommand('insertHTML', html);
+  },
+
+  defaultActions: {
+
+    removeformatting: function(options) {
+      this.execCommand('insertHTML', this.selections[0].cloneContents().textContent);
+    },
+
+    style: function(options) {
+      this.wrap('span', function() {
+        return new Element('span', {'class': options['value']});
+      }, function(element) {
+        element.addClassName(options['value']);
+      });
+    },
+
+    backcolor: function(options) {
+      this.wrap('font', function() {
+        return new Element('font', {style: 'background-color:' + options['value']});
+      }, function(element) {
+        element.setStyle('background-color:' + options['value']);
+      });
+    },
+
+    overline: function(options) {
+      this.wrap('span', function() {
+        return new Element('span', {style: 'text-decoration:overline'});
+      }, function(element) {
+        element.setStyle('text-decoration:overline');
+      });
+    },
+
+    replaceHTML: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = this.doc.createRange();
+      range.selectNodeContents(this.element);
+      selection.addRange(range);
+      this.execCommand('insertHTML', options['value']);
+    },
+
+    insertrowafter: function(options) {
+      this.defaultActions['insertRow'].call(this, options, 'after');
+    },
+
+    insertrowbefore: function(options) {
+      this.defaultActions['insertRow'].call(this, options, 'before');
+    },
+
+    insertRow: function(options, position) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+      var columnCount = Element.siblings(baseCell).length + 1;
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, baseCell.tagName, matrix.x);
+
+      var args = {};
+      args[position] = '<tr _midas_dirty="true">' + ('<' + baseCell.tagName + '></' + baseCell.tagName + '>').repeat(columnCount) + '</tr>';
+      Element.insert(row, args);
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      selectNode.up('tr').removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    deleterow: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var nextRow = Element.nextSiblings(row)[0] || Element.previousSiblings(row)[0];
+      if (!nextRow) return;
+
+      Element.writeAttribute(nextRow, '_midas_dirty', 'true');
+      Element.remove(row);
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      selectNode.up('tr').removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    insertcolumnbefore: function(options) {
+      this.defaultActions['insertColumn'].call(this, options, 'before');
+    },
+
+    insertcolumnafter: function(options) {
+      this.defaultActions['insertColumn'].call(this, options, 'after');
+    },
+
+    insertColumn: function(options, position) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, 'td, th', matrix.x);
+      Element.writeAttribute(cell, '_midas_dirty', 'true');
+
+      Element.select(table, 'tr').each(function(tr) {
+        var cell = Element.down(tr, 'td, th', matrix.x);
+
+        var args = {};
+        args[position] = new Element(cell.tagName);
+        Element.insert(cell, args);
+      });
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse(true);
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    },
+
+    deletecolumn: function(options) {
+      var selection = this.options['contentWindow'].getSelection();
+      var range = selection.getRangeAt(0);
+      if (!range) return;
+
+      var node = range.commonAncestorContainer;
+      var baseCell = node.tagName == 'TH' || node.tagName == 'TD' ? node : Element.up(node, 'td, th');
+      if (!baseCell) return;
+
+      var baseRow = Element.up(baseCell, 'tr');
+      var baseContainer = Element.up(baseRow, 'thead, tbody, tfoot, table');
+      var baseTable = Element.up(baseRow, 'table');
+
+      // TODO: math is wrong for the following two lines -- we need to handle colspan and rowspan
+      var matrix = {x: Element.previousSiblings(baseCell).length, y: Element.previousSiblings(baseRow).length};
+
+      var newRange = this.doc.createRange();
+      newRange.selectNode(baseTable);
+      var fragment = newRange.cloneContents();
+
+      var container = new Element('div');
+      container.appendChild(fragment);
+
+      var table = Element.down(container, 'table');
+      var row = Element.down(table, baseContainer.tagName + ' tr', matrix.y);
+      var cell = Element.down(row, baseCell.tagName, matrix.x);
+      var nextCell = Element.nextSiblings(cell)[0] || Element.previousSiblings(cell)[0];
+      if (!nextCell) return;
+
+      Element.writeAttribute(nextCell, '_midas_dirty', 'true');
+      Element.select(table, 'tr').each(function(tr) {
+        Element.down(tr, 'td, th', matrix.x).remove();
+      });
+
+      var scrollPosition = this.doc.viewport.getScrollOffsets();
+
+      selection.addRange(newRange);
+      this.execCommand('insertHTML', container.innerHTML + ' ');
+      selection.removeAllRanges();
+
+      var finalRange = this.doc.createRange();
+      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      selectNode.removeAttribute('_midas_dirty');
+      finalRange.selectNodeContents(selectNode);
+      finalRange.collapse();
+      selection.addRange(finalRange);
+
+      this.options['contentWindow'].scroll(scrollPosition.left, scrollPosition.top);
+    }
+
   },
 
   handle: {
@@ -948,13 +1221,13 @@ Midas.Toolbar = Class.create({
         var element = new Element('div').addClassName('midas-' + toolbar + 'bar');
         var buttons = this.config['toolbars'][toolbar];
         for (var button in buttons) {
-          element.appendChild(this.makeButton(button, buttons[button]));
+          var buttonElement = this.makeButton(button, buttons[button]);
+          if (buttonElement) element.appendChild(buttonElement);
         }
         this.element.appendChild(element);
         if (toolbar != 'actions') {
           this.toolbars[toolbar] = {element: element};
           this.disableToolbars(toolbar);
-          //element.addClassName('disabled');
         }
       }
     }
@@ -1051,6 +1324,8 @@ Midas.Toolbar = Class.create({
   },
 
   makeButton: function(action, buttonSpec) {
+    if (action == '_context') return;
+    
     var element;
     if (Object.isArray(buttonSpec)) {
       var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
@@ -1132,8 +1407,15 @@ Midas.Toolbar = Class.create({
   makeButtonGroup: function(action, group) {
     var element = new Element('div', {'class': 'midas-group midas-group-' + action});
     this.groups[action] = {element: element};
+
+    if (group['_context']) {
+      element.addClassName(group['_context'][0]);
+      this.contexts.push({element: element, callback: action});
+    }
+
     for (var button in group) {
-      element.appendChild(this.makeButton(button, group[button]));
+      var buttonElement = this.makeButton(button, group[button]);
+      if (buttonElement) element.appendChild(buttonElement);
     }
     return element;
   },
@@ -1146,7 +1428,7 @@ Midas.Toolbar = Class.create({
     this.activeRegion = region;
   },
 
-  setActiveButtons: function(regions, activeRegion) {
+  setActiveButtons: function(activeRegion) {
     var selection = this.options['contentWindow'].getSelection();
     if (!selection.rangeCount) return;
 
@@ -1200,12 +1482,6 @@ Midas.Toolbar = Class.create({
       if (this.buttons[arguments[i]]) {
         this.buttons[arguments[i]]['element'].addClassName('disabled');
       }
-
-//      var element;
-//      element = this.element.down('.midas-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-//      if (element) element.addClassName('disabled');
     }
   },
 
@@ -1220,12 +1496,6 @@ Midas.Toolbar = Class.create({
       if (this.buttons[arguments[i]]) {
         this.buttons[arguments[i]]['element'].removeClassName('disabled');
       }
-//
-//      var element;
-//      element = this.element.down('.midas-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-group-' + arguments[i]);
-//      if (!element) element = this.element.down('.midas-button-' + arguments[i]);
-//      if (element) element.removeClassName('disabled');
     }
   },
 
@@ -1266,53 +1536,73 @@ Midas.Toolbar = Class.create({
 // Midas.Toolbar static methods
 Object.extend(Midas.Toolbar, {
   contexts: {
-    backcolor:           function(node) {
-                           this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
-                         },
-    forecolor:           function(node) {
-                           this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
-                         },
-    bold:                function(node) {
-                           var weight = Element.getStyle(node, 'font-weight');
-                           return weight == 'bold' || weight > 400;
-                         },
-    italic:              function(node) {
-                           return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
-                         },
-    strikethrough:       function(node) {
-                           return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
-                         },
-    underline:           function(node) {
-                           return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
-                         },
-    subscript:           function(node) {
-                           return node.nodeName == 'SUB' || node.up('sub');
-                         },
-    superscript:         function(node) {
-                           return node.nodeName == 'SUP' || node.up('sup');
-                         },
-    justifyleft:         function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('left') > -1;
-                         },
-    justifycenter:       function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('center') > -1;
-                         },
-    justifyright:        function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('right') > -1;
-                         },
-    justifyfull:         function(node) {
-                           return (Element.getStyle(node, 'text-align') || '').indexOf('justify') > -1;
-                         },
-    insertorderedlist:   function(node, region) {
-                           if (node.nodeName == 'OL') return true;
-                           var ol = Element.up(node, 'ol');
-                           return (ol) ? ol.descendantOf(region.element) : false;
-                         },
+
+    table: function(node, region) {
+      var table = node.up('table');
+      if (table && table.descendantOf(region.element)) this.groups['table']['element'].removeClassName('disabled');
+      else this.groups['table']['element'].addClassName('disabled');
+    },
+
+    backcolor: function(node) {
+      this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
+    },
+
+    forecolor: function(node) {
+      this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
+    },
+
+    bold: function(node) {
+      var weight = Element.getStyle(node, 'font-weight');
+      return weight == 'bold' || weight > 400;
+    },
+
+    italic: function(node) {
+      return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
+    },
+
+    strikethrough: function(node) {
+      return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
+    },
+
+    underline: function(node) {
+      return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
+    },
+
+    subscript: function(node) {
+      return node.nodeName == 'SUB' || node.up('sub');
+    },
+
+    superscript: function(node) {
+      return node.nodeName == 'SUP' || node.up('sup');
+    },
+
+    justifyleft: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('left') > -1;
+    },
+
+    justifycenter: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('center') > -1;
+    },
+
+    justifyright: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('right') > -1;
+    },
+
+    justifyfull: function(node) {
+      return (Element.getStyle(node, 'text-align') || '').indexOf('justify') > -1;
+    },
+
+    insertorderedlist: function(node, region) {
+      if (node.nodeName == 'OL') return true;
+      var ol = Element.up(node, 'ol');
+      return (ol) ? ol.descendantOf(region.element) : false;
+    },
+
     insertunorderedlist: function(node, region) {
-                           if (node.nodeName == 'ul') return true;
-                           var ul = Element.up(node, 'ul');
-                           return (ul) ? ul.descendantOf(region.element) : false;
-                         }
+      if (node.nodeName == 'ul') return true;
+      var ul = Element.up(node, 'ul');
+      return (ul) ? ul.descendantOf(region.element) : false;
+    }
   }
 });if (!Midas) var Midas = {};
 Midas.Statusbar = Class.create({
@@ -1818,36 +2108,40 @@ Object.extend(Midas.modal, {
     this.updateTitle();
 
 		if (!this.showing) {
-      this.showing = true;
+      this.fire('onShow');
       this.appear(url);
-			this.fire('onShow');
 		} else {
-			this.update();
-      this.load(url);
+			this.update(url);
 		}
   },
 
   appear: function(url) {
     this.visible = true;
-    this.overlayElement.show();
-    new Effect.Appear(this.element, {
+    new Effect.Appear(this.overlayElement, {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
-      to: 1, // setting this to less than 100% is buggy
+      duration: .25,
+      to: .65,
       afterFinish: function() {
-        this.load(url);
+        this.element.show();
+        var height = this.frameElement.getHeight();
+        this.frameElement.setStyle({top: (-height) + 'px', visibility: 'visible'});
+        new Effect.Morph(this.frameElement, {
+          style: {top: '0px'}, 
+          transition: Effect.Transitions.sinoidal,
+          duration: .25,
+          afterFinish: function() {
+            this.showing = true;
+            this.load(url);
+          }.bind(this)
+        });
       }.bind(this)
     });
   },
 
-  resize: function() {
-    this.contentElement.hide();
-    this.contentElement.slideDown();
-  },
-
-  update: function() {
+  update: function(url) {
     if (!this.initialized) throw("Midas.Modal cannot update before it's been initialized");
 
+    this.load(url);
     this.fire('onUpdate');
   },
 
@@ -1864,6 +2158,11 @@ Object.extend(Midas.modal, {
 
     this.element.hide();
     this.overlayElement.hide();
+
+    this.element.setStyle({width: null});
+    this.frameElement.setStyle({width: null});
+    this.contentContainerElement.setStyle({height: null});
+    this.contentElement.setStyle({height: null});
 
     if (this.controls) {
       this.controls.remove();
@@ -1883,7 +2182,7 @@ Object.extend(Midas.modal, {
   },
 
   load: function(url, options) {
-    var url = (Midas.debug ? url + '?' + Math.random() : url);
+    url = (Midas.debug ? url + '?' + Math.random() : url);
     if (options) {
       this._options = Object.clone(this.options);
       Object.extend(this._options, options);
@@ -1891,29 +2190,32 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
-      new Ajax.Request(url, {
-        method: this._options['method'] || 'get',
-        parameters: this._options['parameters'] || {},
-        onSuccess: function(transport) {
-          this.loaded = true;
-          this.element.removeClassName('loading');
-          this.contentElement.innerHTML = transport.responseText;
-          transport.responseText.evalScripts();
-          this.setupControls();
+    new Ajax.Request(url, {
+      method: this._options['method'] || 'get',
+      parameters: this._options['parameters'] || {},
+      onSuccess: function(transport) {
+        var width = this.element.getWidth();
+        this.element.setStyle({width: width + 'px'});
+        this.frameElement.setStyle({width: width + 'px'});
 
-          this.position();
-          this.resize();
-          this.fire('afterLoad');
-        }.bind(this),
-        onFailure: function() {
-          this.hide();
-          alert('Midas was unable to load "' + url + '" for the modal');
-        }.bind(this)
-      });
+        this.loaded = true;
+        this.element.removeClassName('loading');
+        this.contentElement.innerHTML = transport.responseText;
+        transport.responseText.evalScripts();
+        this.setupControls();
+
+        this.resize();
+        this.fire('afterLoad');
+      }.bind(this),
+      onFailure: function() {
+        this.hide();
+        alert('Midas was unable to load "' + url + '" for the modal');
+      }.bind(this)
+    });
   },
 
   position: function() {
-    if (!this.element) return;
+    if (!this.element || !this.showing) return;
     
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
@@ -1921,23 +2223,54 @@ Object.extend(Midas.modal, {
 
     this.frameElement.setStyle({display: 'block'});
 
-
     var dimensions = this.frameElement.getDimensions();
 
     this.element.setStyle({width: dimensions.width + 'px'});
     this.frameElement.setStyle({width: dimensions.width + 'px'});
 
-//    this broke a bunch of tests...
-//    this.contentElement.hide();
-//    this.contentElement.slideDown();
-
     var viewportDimensions = document.viewport.getDimensions();
-    if (dimensions.height >= viewportDimensions.height - 20 || this._options['fullHeight']) {
+    if (dimensions.height >= viewportDimensions.height - 15 || this._options['fullHeight']) {
       var titleHeight = this.element.down('h1').getHeight();
       var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
       this.contentContainerElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 20) + 'px'});
       this.contentElement.setStyle({height: (viewportDimensions.height - titleHeight - controlsHeight - 60) + 'px'});
     }
+  },
+
+  resize: function(keepHeight) {
+    if (!this.element) return;
+
+    this.contentContainerElement.setStyle('width:auto;position:absolute;overflow:hidden');
+    if (!keepHeight) this.contentContainerElement.setStyle('height:25px');
+    var dimensions = this.contentContainerElement.getDimensions();
+    this.contentContainerElement.setStyle('position:static');
+
+    this.contentElement.setStyle('height:auto;width:auto;visibility:hidden');
+    var height = this.contentElement.getHeight() + 30;
+
+    var viewportDimensions = document.viewport.getDimensions();
+    var titleHeight = this.element.down('h1').getHeight();
+    var controlsHeight = this.controls ? this.controls.offsetHeight : 0;
+    if (height + titleHeight + controlsHeight >= viewportDimensions.height - 20 || this._options['fullHeight']) {
+      height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
+    }
+
+    new Effect.Parallel([
+      new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
+      new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
+      new Effect.Morph(this.frameElement, {style: {width: dimensions.width + 'px'}, sync: true})
+      ], {
+      transition: Effect.Transitions.sinoidal,
+      duration: .45,
+      afterFinish: function() {
+        this.contentContainerElement.setStyle('overflow:auto');
+        this.contentElement.setStyle('display:none;visibility:visible');
+        new Effect.Appear(this.contentElement, {
+          transition: Effect.Transitions.sinoidal,
+          duration: .25
+        })
+      }.bind(this)
+    });
   },
 
   setupControls: function() {
@@ -1996,6 +2329,7 @@ Object.extend(Midas.modal, {
     });
 
     this.panes[this.paneIndex].setStyle('display:block');
+    this.resize(true);
   },
 
   fire: function(eventName) {
@@ -2144,15 +2478,15 @@ Midas.Config = {
         indent:              ['Increase Indentation', ''],
         sep:                 '-'
         },
-      //table:                 {
-      //  insertrowbefore:     ['Insert Row', 'Insert a table row before'],
-      //  insertrowafter:      ['Insert Row', 'Insert a table row after'],
-      //  deleterow:           ['Delete Row', 'Delete this table row'],
-      //  insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
-      //  insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
-      //  deletecolumn:        ['Delete Column', 'Delete this table column'],
-      //  sep:                 '-'
-      //  },
+      table:                 {_context: ['disabled'],
+        insertrowbefore:     ['Insert Row', 'Insert a table row before'],
+        insertrowafter:      ['Insert Row', 'Insert a table row after'],
+        deleterow:           ['Delete Row', 'Delete this table row'],
+        insertcolumnbefore:  ['Insert Column', 'Insert a table column before'],
+        insertcolumnafter:   ['Insert Column', 'Insert a table column after'],
+        deletecolumn:        ['Delete Column', 'Delete this table column'],
+        sep:                 '-'
+        },
       horizontalrule:        ['Horizontal Rule', ''],
       sep:                   '-',
       removeformatting:      ['Remove Formatting', ''],
