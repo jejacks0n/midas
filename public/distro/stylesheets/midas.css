@@ -453,6 +453,7 @@
 #midas_modal {
   width: 500px;
   margin: 0 auto;
+  font: normal normal normal 12px/normal Helvetica, Tahoma, Arial, sans-serif;
   }
 #midas_modal.loading .midas-modal-content {
   background: url(../images/midas/loading-light.gif) no-repeat center;
@@ -526,6 +527,54 @@
 #midas_modal td.midas-modal-pane {
   height: 100%;
   }
+
+/* Forms
+ *----------------------------------------------------------------------------*/
+#midas_modal fieldset {
+  border: 1px solid #CCC;
+  margin: 0 0 10px;
+  clear: both;
+  }
+#midas_modal fieldset.no-border {
+  border: none;
+  }
+#midas_modal fieldset legend {
+  font-weight: bold;
+  }
+#midas_modal p {
+  display: block;
+  clear: both;
+  margin: 0;
+  }
+#midas_modal label {
+  display: inline-block;
+  padding-top: 4px;
+  width: 30%;
+  }
+#midas_modal label.text-right {
+  text-align: right;
+  padding-top: 6px;
+  }
+#midas_modal input[type=text],
+#midas_modal select,
+#midas_modal textarea {
+  font-size: 13px;
+  width: 66%;
+  padding: 2px;
+  margin-left: 5px;
+  border: 2px solid #999;
+  }
+#midas_modal .midas-modal-content input[disabled] {
+  background: #EEE;
+  }
+
+#midas_modal .input {
+  display: inline-block;
+  margin-left: 30px;
+  padding-left: 5px;
+  width: 66%;
+  }
+
 
 /* Specific Modals
  *----------------------------------------------------------------------------*/
@@ -613,10 +662,15 @@
 
 /* link generator */
 #midas_link_generator {
-  width: 400px;
+  width: 500px;
   }
-#midas_link_generator label {
-  display: block;
-  float: left;
-  width: 100px;
+#midas_link_generator #midas_link_popup_options {
+  margin-left: 33%;
+  }
+#midas_link_generator #midas_link_popup_options label {
+  width: 70px;
+  text-align: right;
+  }
+#midas_link_generator #midas_link_popup_options input {
+  width: 60px;
   }
