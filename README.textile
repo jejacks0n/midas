@@ -37,7 +37,7 @@ Using the non-minified and non-bundled versions:
 
 h2. Midas Options
 
-The Midas constructer takes three arguments, all objects, in the following manner:
+The Midas constructor takes three arguments, all objects, in the following manner:
 
 * midas options
 * toolbar options
@@ -51,8 +51,9 @@ to as advanced as:
 
 <pre>
   var midas = new Midas({
-    useIframe: true,
-    classname: 'some-editable-classname'
+    classname: 'some-editable-classname',
+    saveUrl: '/path/to/save.aspx',
+    useIframe: false
     }, {
     // toolbar options
     }, {
@@ -62,7 +63,18 @@ to as advanced as:
 
 h3. Supported Options
 
-... coming soon ...
+1. Midas Options
+* classname -- the classname on block elements to look for (default: 'editable')
+* saveUrl: -- the path to save to (default: window.location.href)
+* saveMethod: -- the save method, can be 'put' for update, or 'post' for create (default: 'put')
+* configuration: -- optionally provide a different configuration object (default: Midas.Config)
+* useIframe: -- this will load the document being edited into an iframe over the document being shown -- can be true/false, or a string of the document to load (default: true)
+
+2. Toolbar Options
+* appendTo -- element to append the toolbar to (default: null)
+
+3. Region Options
+* inline -- inline mode allows the content regions to expand with the content, non-inline mode gets the width/height of the region and keeps it at that size (default: false)
 
 h2. Midas and Saving
 
