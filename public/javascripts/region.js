@@ -107,8 +107,53 @@ Midas.Region = Class.create({
     }.bind(this));
 
     Event.observe(this.element, 'keydown', function(e) {
+      this.updateSelections();
       if (Midas.modal.showing && e.keyCode != 27) e.stop();
+
+      switch (e.keyCode) {
+        case 9: // tab
+          this.selections.each(function(selection) {
+            var container = selection.commonAncestorContainer;
+            if (container.nodeType == 3) container = container.parentNode;
+
+            if (container.tagName == 'LI' || container.up('li')) {
+              this.handleAction('indent');
+              e.stop();
+              return false;
+            }
+
+            if (container.up('table')) {
+              var thisCell = (container.tagName == 'TD' || container.tagName == 'TH') ? container : container.up('th, td');
+              var thisRow = thisCell.up();
+              var nextCellInRow = thisCell.nextSiblings()[0];
+              Element.writeAttribute(thisRow, '_midas_current_row', 'true');
+
+              var tableRows = Element.up(thisRow, 'table').descendants('tr');
+
+              var rowIndex;
+              tableRows.each(function(row, i) {
+                if (row.readAttribute('_midas_current_row') == 'true') {
+                  row.removeAttribute('_midas_current_row');
+                  rowIndex = i;
+                }
+              });
+
+              var nextRow = (rowIndex < tableRows.length) ? tableRows[rowIndex + 1] : false;
+              if (nextCellInRow) {
+                this.selectNextCell(nextCellInRow, 0);
+                e.stop();
+              } else if (nextRow) {
+                this.selectNextCell(Element.down(nextRow, 'td, th'));
+                e.stop();
+              }
+              return false;
+
+            }
+          }.bind(this));
+          break;
+      }
     }.bind(this));
+
     Event.observe(this.element, 'keyup', function(e) {
       if (this.previewing) return;
       this.updateSelections();
@@ -136,16 +181,6 @@ Midas.Region = Class.create({
       }
 
       switch (e.keyCode) {
-        case 9: // tab
-          this.selections.each(function(selection) {
-            var container = selection.commonAncestorContainer;
-            if (container.nodeType == 3) container = container.parentNode;
-            if (container.tagName == 'LI' || container.up('li')) {
-              e.stop();
-              this.handleAction('indent');
-            }
-          }.bind(this));
-          break;
         case 13: // enter
           if (Prototype.Browser.Gecko && this.element.tagName != 'DIV') {
             this.execCommand('insertHTML', '<br/>');
@@ -154,6 +189,15 @@ Midas.Region = Class.create({
           break;
       }
     }.bind(this));
+  },
+
+  selectNextCell: function(cell) {
+    var selection = this.options['contentWindow'].getSelection();
+    selection.removeAllRanges();
+    var range = this.doc.createRange();
+    range.selectNodeContents(cell);
+    range.collapse(true);
+    selection.addRange(range);
   },
 
   setContents: function(content) {
@@ -467,7 +511,6 @@ Midas.Region = Class.create({
       this.execCommand('insertHTML', container.innerHTML + ' ');
       selection.removeAllRanges();
 
-      console.debug(container.innerHTML);
       var finalRange = this.doc.createRange();
       var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
       selectNode.up('tr').removeAttribute('_midas_dirty');
@@ -577,7 +620,6 @@ Midas.Region = Class.create({
       this.execCommand('insertHTML', container.innerHTML + ' ');
       selection.removeAllRanges();
 
-      console.debug(container.innerHTML);
       var finalRange = this.doc.createRange();
       var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
       selectNode.removeAttribute('_midas_dirty');

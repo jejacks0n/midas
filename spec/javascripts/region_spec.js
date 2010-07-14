@@ -125,7 +125,7 @@ describe('Midas.Region', function() {
     this.region.setContents($('word_crap_container').innerHTML);
     this.region.afterPaste('');
 
-    expect(this.region.getContents()).toEqual('Microsoft blows  &nbsp;');
+    expect(this.region.getContents()).toEqual('Microsoft blows&lt;br&gt;  &nbsp;');
   });
 
   describe('behave according to options', function() {
@@ -460,14 +460,14 @@ describe('Midas.Region', function() {
       expect(this.spy.callCount).toEqual(1);
     });
 
-    it('fires update selections on keyup', function() {
+    it('fires update selections on keyup and keydown', function() {
       this.region = new Midas.Region('region1');
       var spy = spyOn(this.region, 'updateSelections').andCallThrough();
 
       jasmine.simulate.keydown(this.region.element, {keyCode: 65});
       jasmine.simulate.keyup(this.region.element, {keyCode: 65});
 
-      expect(spy.callCount).toEqual(1);
+      expect(spy.callCount).toEqual(2);
     });
 
   });
