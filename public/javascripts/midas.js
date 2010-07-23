@@ -219,6 +219,7 @@ var Midas = Class.create({
   },
 
   handleMode: function(mode, toolbar, reset) {
+    toolbar = toolbar || this.toolbar;
     this.modes[mode] = this.modes[mode] ? false : true;
     switch(mode) {
       case 'preview':
@@ -333,16 +334,19 @@ Object.extend(Midas, {
   },
 
   onBeforeUnload: function() {
-    var prompt = false, message = "You have unsaved changes.  Are you sure you want to leave without saving them first?";
+    if (!Midas.silent && Midas.hasChanges()) return "You have unsaved changes.  Are you sure you want to leave without saving them first?";
+  },
+
+  hasChanges: function() {
     for (var i = 0; i < Midas.instances.length; ++i) {
       if (Midas.instances[i].changed) {
-        prompt = true;
+        return true;
         break;
       }
     }
-    if (!Midas.silent && prompt) return message;
+    return false;
   },
-
+  
   agent: function() {
     if (this.agentId) return this.agentId;
 
