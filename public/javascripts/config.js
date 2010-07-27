@@ -78,13 +78,9 @@ Midas.Config = {
         sep:                 ' '
         },
       editorpanels:          {
-//        objectspanel:        ['Objects', 'Insert an object (form, widget, etc)', ['panel', '/midas/panels/objects.html']],
-//        sep1:                ' ',
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
         sep2:                '*'
-        }//,
-//      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
-//      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
+        }
       },
     region: {
       style:                 ['Style', '', ['select', '/midas/selects/style.html']],
