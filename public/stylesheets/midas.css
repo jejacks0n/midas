@@ -4,6 +4,8 @@
   position: absolute;
   z-index: 10000;
   background: #FFF;
+  width: 100%;
   }
 .midas-iframe-window {
+  width: 100%;
   }
