@@ -114,6 +114,7 @@ String.prototype.repeat = function(times) {
     configuration: null,
     useIframe: false // boolean true/false, or a string of the document to load
   },
+  toolbarVisible: true,
   modes: {},
   contentWindow: window,
   actionsToHandle: ['save'],
@@ -387,7 +388,7 @@ String.prototype.repeat = function(times) {
     var view = document.viewport.getDimensions();
 
     if (this.iframe) {
-      var offsetTop = (this.toolbar) ? this.toolbar.getBottomOffset() : 0;
+      var offsetTop = (this.toolbar && this.toolbarVisible) ? this.toolbar.getBottomOffset() : 0;
       var statusbarHeight = (this.statusbar) ? this.statusbar.getHeight() : 0;
       this.iframeContainer.setStyle({
         height: (view.height - statusbarHeight - offsetTop - 10) + 'px',
@@ -1947,7 +1948,8 @@ Midas.Panel = Class.create(Midas.Dialog, {
       height: height + 'px',
       width: 'auto',
       display: keepVisible ? 'block' : 'none',
-      visibility: 'visible'
+      visibility: 'visible',
+      position: 'fixed'
     });
 
     if (!this.moved) {
@@ -1991,6 +1993,8 @@ Midas.Panel = Class.create(Midas.Dialog, {
     var newWidth = this.panelElement.getWidth();
     this.panelElement.setStyle({width: oldWidth + 'px'});
     var position = this.element.cumulativeOffset();
+
+    console.debug(newWidth);
 
     if (newWidth <= oldWidth) {
       this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
@@ -2445,13 +2449,9 @@ Midas.Config = {
         sep:                 ' '
         },
       editorpanels:          {
-//        objectspanel:        ['Objects', 'Insert an object (form, widget, etc)', ['panel', '/midas/panels/objects.html']],
-//        sep1:                ' ',
         inspectorpanel:      ['Inspector', 'Open the element inspector panel', ['panel', '/midas/panels/inspector.html']],
         sep2:                '*'
-        }//,
-//      notespanel:            ['Notes', 'Open the page notes panel', ['panel', '/midas/panels/notes.html', 'Page Notes']],
-//      historypanel:          ['History', 'Open the page history panel', ['panel', '/midas/panels/history.html']]
+        }
       },
     region: {
       style:                 ['Style', '', ['select', '/midas/selects/style.html']],

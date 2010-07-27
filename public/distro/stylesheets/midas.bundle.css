@@ -1,6 +1,6 @@
-.midas-iframe-container { position: absolute; z-index: 10000; background: #FFF; }
-.midas-iframe-window { }
-.midas-region { outline: 1px dotted #F00; }
+.midas-iframe-container { position: absolute; z-index: 10000; background: #FFF; width: 100%; }
+.midas-iframe-window { width: 100%; }
+.midas-region { outline: 1px dotted #F00; margin-right: 1px; margin-left: 1px; box-sizing: border-box; }
 .midas-region-preview { outline: none; }
 .midas-region table, .midas-region td, .midas-region th { border: 1px dotted #F00; }
 .midas-region .midas-page-break { height: 5px; background: #EEE; overflow: hidden; border: 1px dotted #999; border-width: 1px 0; margin: 2px 0; }
