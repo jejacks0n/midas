@@ -7,6 +7,7 @@ var Midas = Class.create({
     configuration: null,
     useIframe: false // boolean true/false, or a string of the document to load
   },
+  toolbarVisible: true,
   modes: {},
   contentWindow: window,
   actionsToHandle: ['save'],
@@ -280,7 +281,7 @@ var Midas = Class.create({
     var view = document.viewport.getDimensions();
 
     if (this.iframe) {
-      var offsetTop = (this.toolbar) ? this.toolbar.getBottomOffset() : 0;
+      var offsetTop = (this.toolbar && this.toolbarVisible) ? this.toolbar.getBottomOffset() : 0;
       var statusbarHeight = (this.statusbar) ? this.statusbar.getHeight() : 0;
       this.iframeContainer.setStyle({
         height: (view.height - statusbarHeight - offsetTop - 10) + 'px',

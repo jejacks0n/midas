@@ -271,27 +271,29 @@ describe('Midas', function () {
 
   describe('when using an iframe', function() {
 
+    afterEach(function() {
+      document.body.setStyle({opacity: 1, visibility: 'visible', overflow: 'auto'});
+    });
+
     it('creates an iframe', function() {
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
       expect($('midas-iframe-window')).not.toBeNull();
     });
-    
+
     it("doesn't prompt twice before leaving the page if any changes were made", function() {
-      expect(window.onbeforeunload).toEqual(Midas.onBeforeUnload);
-    
       expect(Midas.onBeforeUnload()).toEqual(null);
-    
+
       var midas = new Midas();
       midas.changed = true;
-    
+
       expect(Midas.onBeforeUnload()).toEqual('You have unsaved changes.  Are you sure you want to leave without saving them first?');
-    
+
       midas.destroy();
       midas = null;
     });
-    
+
     it('hijacks external links to set their targets to _top', function() {
       var container = $('external_links');
       Midas.hijackLinks(container);
@@ -310,7 +312,7 @@ describe('Midas', function () {
       expect(links[7].getAttribute('target')).toEqual(null);
       expect(links[8].getAttribute('target')).toEqual('_parent');
     });
-    
+
     it('communicates which contentWindow the toolbar should use', function() {
 
       // need to figure out a better way to test this...
