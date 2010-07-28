@@ -1948,8 +1948,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
       height: height + 'px',
       width: 'auto',
       display: keepVisible ? 'block' : 'none',
-      visibility: 'visible',
-      position: 'fixed'
+      visibility: 'visible'
     });
 
     if (!this.moved) {
@@ -1993,8 +1992,6 @@ Midas.Panel = Class.create(Midas.Dialog, {
     var newWidth = this.panelElement.getWidth();
     this.panelElement.setStyle({width: oldWidth + 'px'});
     var position = this.element.cumulativeOffset();
-
-    console.debug(newWidth);
 
     if (newWidth <= oldWidth) {
       this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
