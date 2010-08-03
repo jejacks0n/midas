@@ -107,7 +107,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
       new Effect.Morph(this.element, { style: {left: position.left - (newWidth - oldWidth) + 'px'} })
       ], {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
+      duration: Midas.durationMultiplier * .20,
       afterFinish: function() {
         this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
       }.bind(this)
@@ -140,7 +140,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     this.visible = true;
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
+      duration: Midas.durationMultiplier * .20,
       to: .90,
       afterFinish: function() {
         if (!this.loaded) this.load(this.resize.bind(this));

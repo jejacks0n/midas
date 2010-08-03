@@ -66,7 +66,7 @@ Midas.Dialog = Class.create({
     new Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
-      duration: .20,
+      duration: Midas.durationMultiplier * .20,
       to: .95,
       afterFinish: function() {
         var callback = (this.resize || this.show).bind(this);

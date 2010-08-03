@@ -324,6 +324,7 @@ Object.extend(Midas, {
   agentId: null,
   debug: false,
   silent: false,
+  durationMultiplier: 0,
   preloadedView: {},
 
   registerInstance: function(instance) {

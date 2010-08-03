@@ -431,6 +431,7 @@ Object.extend(Midas, {
   agentId: null,
   debug: false,
   silent: false,
+  durationMultiplier: 0,
   preloadedView: {},
 
   registerInstance: function(instance) {
@@ -1770,7 +1771,7 @@ Midas.Dialog = Class.create({
     new Effect.Appear(this.element, {
       queue: {scope: 'dialog:' + this.scopeId, limit: 2},
       transition: Effect.Transitions.sinoidal,
-      duration: .20,
+      duration: Midas.durationMultiplier * .20,
       to: .95,
       afterFinish: function() {
         var callback = (this.resize || this.show).bind(this);
@@ -2003,7 +2004,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
       new Effect.Morph(this.element, { style: {left: position.left - (newWidth - oldWidth) + 'px'} })
       ], {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
+      duration: Midas.durationMultiplier * .20,
       afterFinish: function() {
         this.panelElement.setStyle({visibility: 'visible', width: 'auto'});
       }.bind(this)
@@ -2036,7 +2037,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     this.visible = true;
     new Effect.Appear(this.element, {
       transition: Effect.Transitions.sinoidal,
-      duration: .2,
+      duration: Midas.durationMultiplier * .20,
       to: .90,
       afterFinish: function() {
         if (!this.loaded) this.load(this.resize.bind(this));
@@ -2059,7 +2060,6 @@ Midas.modal = function(url, options) {
 Object.extend(Midas.modal, {
   version: 0.2,
   initialized: false,
-  animationDuration: .50,
   options: {
     title: ''
   },
@@ -2127,7 +2127,7 @@ Object.extend(Midas.modal, {
     this.visible = true;
     new Effect.Appear(this.overlayElement, {
       transition: Effect.Transitions.sinoidal,
-      duration: this.animationDuration / 2,
+      duration: Midas.durationMultiplier * .20,
       to: .65,
       afterFinish: function() {
         this.element.show();
@@ -2136,7 +2136,7 @@ Object.extend(Midas.modal, {
         new Effect.Morph(this.frameElement, {
           style: {top: '0px'}, 
           transition: Effect.Transitions.sinoidal,
-          duration: this.animationDuration / 2,
+          duration: Midas.durationMultiplier * .20,
           afterFinish: function() {
             this.showing = true;
             this.load(url);
@@ -2264,10 +2264,11 @@ Object.extend(Midas.modal, {
       height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
     }
 
-    var duration = this.animationDuration;
+    var duration = Midas.durationMultiplier * .20;
     if ((keepHeight || this.contentContainerElement.getHeight() == height) && this.frameElement.getWidth() == dimensions.width) {
-      duration = .1;
+      duration = Midas.durationMultiplier * .1;
     }
+    console.debug(Midas.durationMultiplier);
     new Effect.Parallel([
       new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
       new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
@@ -2280,7 +2281,7 @@ Object.extend(Midas.modal, {
         this.contentElement.setStyle({display: 'none', visibility: 'visible', height: (height - 30) + 'px'});
         new Effect.Appear(this.contentElement, {
           transition: Effect.Transitions.sinoidal,
-          duration: this.animationDuration / 2
+          duration: Midas.durationMultiplier * .20
         })
       }.bind(this)
     });
