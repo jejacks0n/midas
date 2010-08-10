@@ -431,7 +431,7 @@ Object.extend(Midas, {
   agentId: null,
   debug: false,
   silent: false,
-  durationMultiplier: 0,
+  durationMultiplier: 1,
   preloadedView: {},
 
   registerInstance: function(instance) {
@@ -450,7 +450,6 @@ Object.extend(Midas, {
     for (var i = 0; i < Midas.instances.length; ++i) {
       if (Midas.instances[i].changed) {
         return true;
-        break;
       }
     }
     return false;
@@ -2078,26 +2077,17 @@ Object.extend(Midas.modal, {
   _build: function() {
 		this.overlayElement = new Element('div', {id: 'midas_modal_overlay', style: 'display:none'});
 		this.element = new Element('div', {id: 'midas_modal', style: 'display:none'});
-    this.element.update('<form class="midas-modal-frame" id="midas_modal_form"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></form>');
-
-    this.frameElement = this.element.down('.midas-modal-frame');
-    this.contentContainerElement = this.element.down('.midas-modal-content-container');
-    this.contentElement = this.element.down('.midas-modal-content');
 
     document.body.appendChild(this.overlayElement);
     document.body.appendChild(this.element);
+    this._buildInterface();
   },
 
   _setupObservers: function() {
     Event.observe(window, 'resize', this.position.bind(this));
-    Event.observe(this.element.down('h1 a'), 'click', this.hide.bind(this));
     Event.observe(this.overlayElement, 'mousedown', function(e) { e.stop(); });
     Event.observe(this.overlayElement, 'mouseup', function(e) { e.stop(); });
     Event.observe(this.element, 'mouseup', function(e) { e.stop(); });
-    Event.observe(this.element.down('h1'), 'mousedown', function(e) { e.stop(); });
-    Event.observe(this.frameElement, 'submit', function(e) {
-      if (window['midas_modal_submit']) window['midas_modal_submit'](e);
-    });
 
     var documents = [document];
     var iframe = $('midas-iframe-window');
@@ -2107,6 +2097,24 @@ Object.extend(Midas.modal, {
         if (this.showing && e.keyCode == 27) this.hide();
       }.bind(this));
     }.bind(this));
+  },
+
+  _buildInterface: function() {
+    if (this._options['form'] === false) {
+      this.element.update('<div class="midas-modal-frame" id="midas_modal_form"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></div>');
+    } else {
+      this.element.update('<form class="midas-modal-frame" id="midas_modal_form"><h1><span></span><a>&times;</a></h1><div class="midas-modal-content-container"><div class="midas-modal-content"></div></div></form>');
+    }
+
+    this.frameElement = this.element.down('.midas-modal-frame');
+    this.contentContainerElement = this.element.down('.midas-modal-content-container');
+    this.contentElement = this.element.down('.midas-modal-content');
+
+    Event.observe(this.element.down('h1 a'), 'click', this.hide.bind(this));
+    Event.observe(this.element.down('h1'), 'mousedown', function(e) { e.stop(); });
+    Event.observe(this.frameElement, 'submit', function(e) {
+      if (window['midas_modal_submit']) window['midas_modal_submit'](e);
+    });
   },
 
   show: function(url, options) {
@@ -2198,22 +2206,31 @@ Object.extend(Midas.modal, {
 
     this.element.addClassName('loading');
 
+    var loadContent = function(content) {
+      var width = this.element.getWidth();
+      this.element.setStyle({width: width + 'px'});
+      this.frameElement.setStyle({width: width + 'px'});
+
+      this.loaded = true;
+      this.element.removeClassName('loading');
+      this.contentElement.innerHTML = content;
+      content.evalScripts();
+      this.setupControls();
+
+      this.resize();
+      this.fire('afterLoad');
+    }.bind(this);
+
+    if (this._options['content']) {
+      loadContent(this._options['content']);
+      return;
+    }
+
     new Ajax.Request(url, {
       method: this._options['method'] || 'get',
       parameters: this._options['parameters'] || {},
       onSuccess: function(transport) {
-        var width = this.element.getWidth();
-        this.element.setStyle({width: width + 'px'});
-        this.frameElement.setStyle({width: width + 'px'});
-
-        this.loaded = true;
-        this.element.removeClassName('loading');
-        this.contentElement.innerHTML = transport.responseText;
-        transport.responseText.evalScripts();
-        this.setupControls();
-
-        this.resize();
-        this.fire('afterLoad');
+        loadContent(transport.responseText);
       }.bind(this),
       onFailure: function() {
         this.hide();
@@ -2268,7 +2285,7 @@ Object.extend(Midas.modal, {
     if ((keepHeight || this.contentContainerElement.getHeight() == height) && this.frameElement.getWidth() == dimensions.width) {
       duration = Midas.durationMultiplier * .1;
     }
-    console.debug(Midas.durationMultiplier);
+
     new Effect.Parallel([
       new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
       new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
