@@ -324,7 +324,7 @@ Object.extend(Midas, {
   agentId: null,
   debug: false,
   silent: false,
-  durationMultiplier: 0,
+  durationMultiplier: 1,
   preloadedView: {},
 
   registerInstance: function(instance) {
@@ -343,7 +343,6 @@ Object.extend(Midas, {
     for (var i = 0; i < Midas.instances.length; ++i) {
       if (Midas.instances[i].changed) {
         return true;
-        break;
       }
     }
     return false;
