@@ -82,10 +82,22 @@ describe('Midas.Modal', function() {
     expect(modal.frameElement.innerHTML).not.toContain('<div class="midas-modal-controls">bananas</div>');
   });
 
-  it('has a form', function() {
+  it('uses a form by default', function() {
     var modal = Midas.modal();
 
     expect(modal.element.down('form')).toBeDefined();
+  });
+
+  it('does not use a form when asked not to', function() {
+    var modal = Midas.modal('', {form: false});
+
+    expect(modal.element.down('form')).toBeUndefined();
+  });
+
+  it('can load contents from options', function() {
+    var modal = Midas.modal('', {content: 'this is a test'});
+
+    expect(modal.contentElement.innerHTML).toEqual('this is a test');
   });
 
   it('calls a predefined method on form submission', function() {
