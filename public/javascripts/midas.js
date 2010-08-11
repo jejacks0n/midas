@@ -52,8 +52,13 @@ var Midas = Class.create({
         this.finalizeInterface();
         this.resetModes();
 
-        Midas.hijackLinks(this.iframe.contentWindow.document.body);
-        // doesn't work in webkit
+        if (this.iframe.contentWindow.document.on) {
+          this.iframe.contentWindow.document.on('click', 'a:not([data-remote])', function(event, element) {
+            top.location.href = element.getAttribute('href');
+            event.stop();
+          }.bind(this));
+        }
+
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
@@ -67,7 +72,6 @@ var Midas = Class.create({
       this.initializeRegions(this.contentWindow);
       this.finalizeInterface();
 
-      Midas.hijackLinks(document.body);
       window.onbeforeunload = Midas.onBeforeUnload;
     }
   },
@@ -379,22 +383,6 @@ Object.extend(Midas, {
 
     // TODO: IE is disabled at this point because it doesn't follow the w3c standards in regards to designMode.
     return (agent && document.getElementById && document.designMode && agent != 'konqueror' && agent != 'msie') ? true : false;
-  },
-
-  hijackLinks: function(element) {
-    var links = Element.select(element, 'a');
-
-    for (var i = 0; i < links.length; ++i) {
-      var uri = links[i].getAttribute('href');
-      var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
-      if (host &&
-          host != window.location.host &&
-          host != window.location.hostname &&
-          ((links[i].target == '' || links[i].target == '_self')) &&
-          !links[i].up('.midas-region')) {
-        links[i].writeAttribute('target', '_top');
-      }
-    }
   },
 
   loadView: function(url, options) {
