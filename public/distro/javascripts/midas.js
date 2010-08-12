@@ -158,13 +158,7 @@ String.prototype.repeat = function(times) {
         this.finalizeInterface();
         this.resetModes();
 
-        if (this.iframe.contentWindow.document.on) {
-          this.iframe.contentWindow.document.on('click', 'a:not([data-remote])', function(event, element) {
-            top.location.href = element.getAttribute('href');
-            event.stop();
-          }.bind(this));
-        }
-
+        Midas.hijackLinks(this.iframe.contentWindow.document);
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
@@ -459,6 +453,16 @@ Object.extend(Midas, {
       }
     }
     return false;
+  },
+
+  hijackLinks: function(element) {
+    var links = Element.select(element, 'a');
+
+    for (var i = 0; i < links.length; ++i) {
+      if ((links[i].target == '' || links[i].target == '_self') && !links[i].up('.midas-region')) {
+        links[i].writeAttribute('target', '_top');
+      }
+    }
   },
   
   agent: function() {
