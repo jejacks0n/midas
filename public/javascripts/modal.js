@@ -59,7 +59,7 @@ Object.extend(Midas.modal, {
     this.contentContainerElement = this.element.down('.midas-modal-content-container');
     this.contentElement = this.element.down('.midas-modal-content');
 
-    Event.observe(this.element.down('h1 a'), 'click', this.hide.bind(this));
+    Event.observe(this.element.down('h1 a'), 'click', function() { this.hide() }.bind(this));
     Event.observe(this.element.down('h1'), 'mousedown', function(e) { e.stop(); });
     Event.observe(this.frameElement, 'submit', function(e) {
       if (window['midas_modal_submit']) window['midas_modal_submit'](e);
@@ -119,6 +119,7 @@ Object.extend(Midas.modal, {
     }
 
     this.fire('beforeHide');
+
     this.showing = false;
 
     this.element.hide();
