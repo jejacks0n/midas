@@ -149,21 +149,22 @@ String.prototype.repeat = function(times) {
       this.iframe = new Element('iframe', {
         seamless: 'true',
         frameborder: '0',
-        id: 'midas-iframe-window',
+        id: 'midas_iframe_window',
         src: 'about:blank'
       });
 
       Event.observe(this.iframe, 'load', function() {
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
-        this.resetModes();
+        this.iframeContainer.setStyle('visibility:visible');
 
+        this.resetModes();
         Midas.hijackLinks(this.iframe.contentWindow.document);
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
       this.iframe.src = src;
-      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});      
+      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container', style: 'visibility:hidden'});      
       this.iframeContainer.appendChild(this.iframe);
 
       document.body.setStyle('overflow:hidden');
@@ -212,6 +213,7 @@ String.prototype.repeat = function(times) {
     }
 
     this.resize();
+    Midas.fire('loaded');
   },
 
   setupObservers: function() {
@@ -2084,7 +2086,7 @@ Object.extend(Midas.modal, {
     Event.observe(this.element, 'mouseup', function(e) { e.stop(); });
 
     var documents = [document];
-    var iframe = $('midas-iframe-window');
+    var iframe = $('midas_iframe_window');
     if (iframe) documents.push(iframe.contentWindow.document);
     documents.each(function(doc) {
       Event.observe(doc, 'keydown', function(e) {

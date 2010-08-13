@@ -1,5 +1,4 @@
 .midas-iframe-container { position: absolute; z-index: 10000; background: #FFF; width: 100%; }
-.midas-iframe-window { width: 100%; }
 .midas-region { outline: 1px dotted #F00; margin-right: 1px; margin-left: 1px; box-sizing: border-box; }
 .midas-region-preview { outline: none; }
 .midas-region table, .midas-region td, .midas-region th { border: 1px dotted #F00; }
