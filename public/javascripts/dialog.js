@@ -35,7 +35,7 @@ Midas.Dialog = Class.create({
       this.position(this.visible);
     }.bind(this));
     Event.observe(this.element, 'mousedown', function(e) {
-      e.stop();
+      if (!this.element.hasClassName('midas-panel')) e.stop();
     });
     Event.observe(this.button, 'click', function() {
       if (!this.element || this.disabled()) return;
