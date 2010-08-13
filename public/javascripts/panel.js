@@ -6,7 +6,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     this.element = new Element('div', {'class': 'midas-panel loading', style: 'display:none;'});
     this.element.update('<h3 class="title">' + this.options['title'] + '</h3><div class="midas-panel-pane"></div>');
 
-    this.toolbar.element.appendChild(this.element);
+    document.body.appendChild(this.element);
 
     this.titleElement = this.element.down('h3.title');
     this.panelElement = this.element.down('div.midas-panel-pane');
