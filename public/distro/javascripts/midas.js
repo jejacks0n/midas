@@ -1240,7 +1240,7 @@ Midas.Toolbar = Class.create({
 
   setupObservers: function() {
     this.disableToolbar = true;
-    this.__mousedown = function(e) { e.stop() }.bind(this);
+    this.__mousedown = function(e) { e.stop() };
     this.__doc_mousedown = function(e) {
       var element = Event.element(e);
       if (Element.up(element, '#midas_modal')) {
@@ -1735,7 +1735,7 @@ Midas.Dialog = Class.create({
       this.position(this.visible);
     }.bind(this));
     Event.observe(this.element, 'mousedown', function(e) {
-      if (!this.element.hasClassName('midas-panel')) e.stop();
+      e.stop();
     });
     Event.observe(this.button, 'click', function() {
       if (!this.element || this.disabled()) return;
@@ -1794,7 +1794,6 @@ Midas.Dialog = Class.create({
 
   load: function(callback) {
     Midas.loadView(this.options.url, {
-//    new Ajax.Request(this.options.url, {
       method: 'get',
       onSuccess: function(transport) {
         this.loaded = true;
@@ -1898,7 +1897,7 @@ Midas.Panel = Class.create(Midas.Dialog, {
     this.element = new Element('div', {'class': 'midas-panel loading', style: 'display:none;'});
     this.element.update('<h3 class="title">' + this.options['title'] + '</h3><div class="midas-panel-pane"></div>');
 
-    this.toolbar.element.appendChild(this.element);
+    document.body.appendChild(this.element);
 
     this.titleElement = this.element.down('h3.title');
     this.panelElement = this.element.down('div.midas-panel-pane');
