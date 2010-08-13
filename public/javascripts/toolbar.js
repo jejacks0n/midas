@@ -60,7 +60,7 @@ Midas.Toolbar = Class.create({
 
   setupObservers: function() {
     this.disableToolbar = true;
-    this.__mousedown = function(e) { e.stop() }.bind(this);
+    this.__mousedown = function(e) { e.stop() };
     this.__doc_mousedown = function(e) {
       var element = Event.element(e);
       if (Element.up(element, '#midas_modal')) {
