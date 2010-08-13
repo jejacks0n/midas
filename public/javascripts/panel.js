@@ -22,9 +22,6 @@ Midas.Panel = Class.create(Midas.Dialog, {
     Event.observe(window, 'resize', function() {
       this.position(this.visible);
     }.bind(this));
-    Event.observe(this.element, 'mousedown', function(e) {
-      e.stop();
-    });
     Event.observe(this.button, 'click', function() {
       if (!this.element || this.disabled()) return;
       if (this.visible) this.hide();
