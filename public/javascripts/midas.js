@@ -42,21 +42,22 @@ var Midas = Class.create({
       this.iframe = new Element('iframe', {
         seamless: 'true',
         frameborder: '0',
-        id: 'midas-iframe-window',
+        id: 'midas_iframe_window',
         src: 'about:blank'
       });
 
       Event.observe(this.iframe, 'load', function() {
         this.initializeRegions(this.iframe.contentWindow);
         this.finalizeInterface();
-        this.resetModes();
+        this.iframeContainer.setStyle('visibility:visible');
 
+        this.resetModes();
         Midas.hijackLinks(this.iframe.contentWindow.document);
         this.iframe.contentWindow.onbeforeunload = Midas.onBeforeUnload;
       }.bind(this));
 
       this.iframe.src = src;
-      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container'});      
+      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container', style: 'visibility:hidden'});      
       this.iframeContainer.appendChild(this.iframe);
 
       document.body.setStyle('overflow:hidden');
@@ -105,6 +106,7 @@ var Midas = Class.create({
     }
 
     this.resize();
+    Midas.fire('loaded');
   },
 
   setupObservers: function() {

@@ -279,7 +279,7 @@ describe('Midas', function () {
       this.midas = new Midas({useIframe: 'about:blank'});
       spyOn(this.midas, 'initializeRegions');
       spyOn(this.midas, 'finalizeInterface');
-      expect($('midas-iframe-window')).not.toBeNull();
+      expect($('midas_iframe_window')).not.toBeNull();
     });
 
     it("doesn't prompt twice before leaving the page if any changes were made", function() {
@@ -294,7 +294,36 @@ describe('Midas', function () {
       midas = null;
     });
 
-    pending('hijacks iframe links and loads the url in "top"', function() {
+    it('keeps the iframe invisible until it loads', function() {
+      runs(function() {
+        this.midas = new Midas({useIframe: 'about:blank'});
+        expect(this.midas.iframeContainer.getStyle('visibility')).toEqual('hidden');
+      });
+
+      waits(500);
+
+      runs(function() {
+        expect(this.midas.iframeContainer.getStyle('visibility')).toEqual('visible');
+      })
+    });
+
+    it('hijacks external links to set their targets to _top', function() {
+      var container = $('external_links');
+      Midas.hijackLinks(container);
+      var links = container.select('a');
+
+      expect(links[0].getAttribute('target')).toEqual('_top');
+      expect(links[1].getAttribute('target')).toEqual('_top');
+      expect(links[2].getAttribute('target')).toEqual('_parent');
+
+      expect(links[3].getAttribute('target')).toEqual('_blank');
+
+      expect(links[4].getAttribute('target')).toEqual('_blank');
+      expect(links[5].getAttribute('target')).toEqual('_top');
+      expect(links[6].getAttribute('target')).toEqual('_top');
+
+      expect(links[7].getAttribute('target')).toEqual(null);
+      expect(links[8].getAttribute('target')).toEqual('_parent');
     });
 
     it('communicates which contentWindow the toolbar should use', function() {
@@ -306,7 +335,7 @@ describe('Midas', function () {
 
       runs(function() {
         this.midas = new Midas({useIframe: 'about:blank'});
-        this.iframe = $('midas-iframe-window');
+        this.iframe = $('midas_iframe_window');
       });
 
       waits(100);

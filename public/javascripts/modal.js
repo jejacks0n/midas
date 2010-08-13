@@ -39,7 +39,7 @@ Object.extend(Midas.modal, {
     Event.observe(this.element, 'mouseup', function(e) { e.stop(); });
 
     var documents = [document];
-    var iframe = $('midas-iframe-window');
+    var iframe = $('midas_iframe_window');
     if (iframe) documents.push(iframe.contentWindow.document);
     documents.each(function(doc) {
       Event.observe(doc, 'keydown', function(e) {
