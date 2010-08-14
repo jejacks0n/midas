@@ -641,6 +641,11 @@ Midas.Region = Class.create({
       if (Midas.modal.showing && e.keyCode != 27) e.stop();
 
       switch (e.keyCode) {
+        case 90: // undo and redo
+          if (!e.metaKey) break;
+          this.execCommand((e.shiftKey) ? 'redo' : 'undo');
+          e.stop();
+          break;
         case 9: // tab
           this.selections.each(function(selection) {
             var container = selection.commonAncestorContainer;
@@ -798,6 +803,14 @@ Midas.Region = Class.create({
                             replace(/^(<br\/>)+|(<br\/>\s*)+$/g, '');
   },
 
+  selectNode: function(element) {
+    var selection = this.options['contentWindow'].getSelection();
+    selection.removeAllRanges();
+    var range = this.doc.createRange();
+    range.selectNode(element);
+    selection.addRange(range);
+  },
+
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
     
@@ -814,7 +827,7 @@ Midas.Region = Class.create({
       }
       handled = true;
     }
-    if (!handled && supported) throw('Unknown action "' + action + '"');
+    if (!handled && supported && action != 'undo' && action != 'redo') throw('Unknown action "' + action + '"');
   },
 
   serialize: function() {
