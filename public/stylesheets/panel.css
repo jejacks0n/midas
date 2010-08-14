@@ -19,23 +19,27 @@
   }
 .midas-panel.loading {
   background-image: url(../images/midas/loading-dark.gif);
+  background-repeat: no-repeat;
+  background-position: center;
   }
 
 .midas-panel h3 {
-  font-size: 11pt;
+  font-size: 9pt;
   padding: 10px 60px 8px 15px;
   margin: 0;
   background: #333;
   }
 .midas-panel h3.title {
+  font-size: 10pt;
   -webkit-border-top-left-radius: 4px;
   -webkit-border-top-right-radius: 4px;
   -moz-border-radius-topleft: 4px;
   -moz-border-radius-topright: 4px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  height: 17px;
+  height: 15px;
   cursor: move;
+  text-shadow: 1px 1px 2px #000000;
   }
 .midas-panel .midas-panel-pane {
   padding: 15px;
@@ -45,7 +49,7 @@
   margin: 10px -15px;
   font-size: 9.5pt;
   font-weight: normal;
-  padding: 8px;
+  padding: 8px 14px;
   background: #333;
   }
 .midas-panel .midas-panel-pane .midas-panel-content {
