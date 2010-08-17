@@ -200,6 +200,12 @@ var Midas = Class.create({
     if (this.toolbar) this.toolbar.setActiveRegion(region);
   },
 
+  getRegion: function(elementId) {
+    for (var i = 0; i < this.regions.length; i += 1) {
+      if (this.regions[i].element.getAttribute('id') == elementId) return this.regions[i];
+    }
+  },
+  
   handleAction: function(action, event, toolbar, options) {
     options = options || {};
 

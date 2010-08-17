@@ -80,6 +80,12 @@ describe('Midas', function () {
     expect(this.midas.regionElements).toContain($('region2'));
   });
 
+  it("can find and return a region in it's list by id", function() {
+    this.midas = new Midas();
+
+    expect(this.midas.getRegion('region2').name).toEqual('region2');
+  });
+
   it('destroys', function() {
     this.midas = new Midas();
     var spy = spyOn(this.midas, 'removeObservers').andCallThrough();
