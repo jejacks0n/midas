@@ -307,6 +307,12 @@ String.prototype.repeat = function(times) {
     if (this.toolbar) this.toolbar.setActiveRegion(region);
   },
 
+  getRegion: function(elementId) {
+    for (var i = 0; i < this.regions.length; i += 1) {
+      if (this.regions[i].element.getAttribute('id') == elementId) return this.regions[i];
+    }
+  },
+  
   handleAction: function(action, event, toolbar, options) {
     options = options || {};
 
@@ -635,6 +641,29 @@ Midas.Region = Class.create({
         if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
       }
     }.bind(this));
+
+    // possible:drop custom event
+    if (Prototype.Browser.WebKit) {
+      // we have to do this because webkit doesn't fire the drop event unless both
+      // dragover and dragstart default behaviors are canceled... but when we do
+      // that and observe the drop event, the default behavior isn't handled (eg,
+      // putting the image where I've dropped it).. so to allow the browser to do
+      // it's thing, and also do our thing we have this little hack.  *sigh*
+      // read: http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html
+      Event.observe(this.element, 'dragover', function(e) {
+        if (this.__dropTimeout) return;
+        this.__dropTimeout = setTimeout(function() {
+          clearTimeout(this.__dropTimeout);
+          Event.fire(this.element, 'possible:drop');
+        }.bind(this), 100);
+      }.bind(this));
+    } else {
+      Event.observe(this.element, 'drop', function(e) {
+        setTimeout(function() {
+          Event.fire(this.element, 'possible:drop');
+        }.bind(this), 1);
+      }.bind(this));
+    }
 
     Event.observe(this.element, 'keydown', function(e) {
       this.updateSelections();
