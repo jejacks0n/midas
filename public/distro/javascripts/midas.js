@@ -653,7 +653,7 @@ Midas.Region = Class.create({
       Event.observe(this.element, 'dragover', function(e) {
         if (this.__dropTimeout) return;
         this.__dropTimeout = setTimeout(function() {
-          clearTimeout(this.__dropTimeout);
+          this.__dropTimeout = null;
           Event.fire(this.element, 'possible:drop');
         }.bind(this), 100);
       }.bind(this));
