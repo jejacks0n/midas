@@ -219,6 +219,19 @@ describe('Midas.Modal', function() {
 
   });
 
+  it('refreshes the modal content', function(){
+    var modal =  Midas.modal('/bananas');
+    expect(modal._url).toEqual('/bananas');
+
+    var updateSpy = spyOn(modal, 'update').andCallThrough();
+    var resizeSpy = spyOn(modal, 'resize').andCallThrough();
+
+    modal.refresh();
+    expect(modal.update).wasCalledWith('/bananas');
+    expect(modal.resize).wasCalledWith(true);
+    expect(this.spy.callCount).toEqual(2);
+  });
+
   pending('sets the title', function() {
   });
 

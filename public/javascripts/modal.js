@@ -68,6 +68,7 @@ Object.extend(Midas.modal, {
 
   show: function(url, options) {
     this._initialize(options);
+    this._url = url;
 
     this.contentElement.innerHTML = '';
     this.updateTitle();
@@ -108,6 +109,11 @@ Object.extend(Midas.modal, {
 
     this.load(url);
     this.fire('onUpdate');
+  },
+
+  refresh: function() {
+    this.update(this._url);
+    this.resize(true);
   },
 
   hide: function(options) {
