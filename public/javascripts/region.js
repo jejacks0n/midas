@@ -92,6 +92,12 @@ Midas.Region = Class.create({
       if (this.previewing) {
         var element = e.target;
         if (element.tagName == 'A') {
+
+          // read ignore classes and skip if this anchor has any of them
+          for (var i = 0; i < this.configuration['ignoredLinks']; i += 1) {
+            if (element.hasClassName(this.configuration['ignoredLinks'][i])) return;
+          }
+
           var uri = element.getAttribute('href');
           var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
           if (host && host != top.location.host && host != top.location.hostname) {

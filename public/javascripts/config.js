@@ -1,5 +1,12 @@
 Midas.Config = {
 
+  /* Links inside of regions are specially handled so that external links load outsite of the main
+   * content iframe.  There are times when you may be observing clicks on anchor tags where you
+   * might not want this behavior.  You can add classnames to this array and the handling won't be
+   * attached to them.
+   */
+  ignoredLinks: ['lightview'],
+
   /* Things like palettes, select menus, and panels can be preloaded when the page loads,
    * instead of loading the first time the button is clicked.
    */
