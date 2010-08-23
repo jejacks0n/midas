@@ -238,8 +238,8 @@ Object.extend(Midas.modal, {
 
     new Effect.Parallel([
       new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
-      new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
-      new Effect.Morph(this.frameElement, {style: {width: dimensions.width + 'px'}, sync: true})
+      new Effect.Morph(this.element, {style: {width: (this._options['width'] || dimensions.width) + 'px'}, sync: true}),
+      new Effect.Morph(this.frameElement, {style: {width: (this._options['width'] || dimensions.width) + 'px'}, sync: true})
       ], {
       transition: Effect.Transitions.sinoidal,
       duration: duration,

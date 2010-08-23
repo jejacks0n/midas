@@ -94,6 +94,18 @@ describe('Midas.Modal', function() {
     expect(modal.element.down('form')).toBeUndefined();
   });
 
+  it('handles width as an option', function() {
+    runs(function() {
+      this.modal = Midas.modal('', {width: 800});
+    });
+
+    waits(500);
+
+    runs(function() {
+      expect(this.modal.frameElement.getWidth()).toEqual(800);
+    });
+  });
+
   it('can load contents from options', function() {
     var modal = Midas.modal('', {content: 'this is a test'});
 
