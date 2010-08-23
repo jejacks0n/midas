@@ -5,7 +5,7 @@ Midas.Config = {
    * might not want this behavior.  You can add classnames to this array and the handling won't be
    * attached to them.
    */
-  ignoredLinks: ['lightview'],
+  ignoredLinks: [],
 
   /* Things like palettes, select menus, and panels can be preloaded when the page loads,
    * instead of loading the first time the button is clicked.
