@@ -95,6 +95,7 @@
   border: 1px solid #CCC;
   margin: 0 0 10px;
   clear: both;
+  padding: 7px;
   }
 #midas_modal fieldset.no-border {
   border: none;
