@@ -2329,8 +2329,8 @@ Object.extend(Midas.modal, {
 
     new Effect.Parallel([
       new Effect.Morph(this.contentContainerElement, {style: {height: height + 'px'}, sync: true}),
-      new Effect.Morph(this.element, {style: {width: dimensions.width + 'px'}, sync: true}),
-      new Effect.Morph(this.frameElement, {style: {width: dimensions.width + 'px'}, sync: true})
+      new Effect.Morph(this.element, {style: {width: (this._options['width'] || dimensions.width) + 'px'}, sync: true}),
+      new Effect.Morph(this.frameElement, {style: {width: (this._options['width'] || dimensions.width) + 'px'}, sync: true})
       ], {
       transition: Effect.Transitions.sinoidal,
       duration: duration,
@@ -2432,7 +2432,7 @@ Midas.Config = {
    * might not want this behavior.  You can add classnames to this array and the handling won't be
    * attached to them.
    */
-  ignoredLinks: ['lightview'],
+  ignoredLinks: [],
 
   /* Things like palettes, select menus, and panels can be preloaded when the page loads,
    * instead of loading the first time the button is clicked.
