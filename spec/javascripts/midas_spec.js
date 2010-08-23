@@ -300,6 +300,7 @@ describe('Midas', function () {
       midas = null;
     });
 
+    // TODO - does not pass in Chrome
     it('keeps the iframe invisible until it loads', function() {
       runs(function() {
         this.midas = new Midas({useIframe: 'about:blank'});
