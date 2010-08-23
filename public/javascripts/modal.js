@@ -62,7 +62,7 @@ Object.extend(Midas.modal, {
     Event.observe(this.element.down('h1 a'), 'click', function() { this.hide() }.bind(this));
     Event.observe(this.element.down('h1'), 'mousedown', function(e) { e.stop(); });
     Event.observe(this.frameElement, 'submit', function(e) {
-      if (window['midas_modal_submit']) window['midas_modal_submit'](e);
+      if (window['midas_modal_submit']) window['midas_modal_submit'].call(this, e);
     });
   },
 
