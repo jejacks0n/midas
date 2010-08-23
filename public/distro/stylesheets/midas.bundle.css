@@ -129,7 +129,7 @@
 #midas_modal .midas-modal-content:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
 #midas_modal .midas-modal-controls { padding: 15px 0 5px; margin: 0 20px; border-top: 1px solid #CCC; text-align: right; }
 #midas_modal td.midas-modal-pane { height: 100%; }
-#midas_modal fieldset { border: 1px solid #CCC; margin: 0 0 10px; clear: both; }
+#midas_modal fieldset { border: 1px solid #CCC; margin: 0 0 10px; clear: both; padding: 7px; }
 #midas_modal fieldset.no-border { border: none; }
 #midas_modal fieldset legend { font-weight: bold; }
 #midas_modal p { display: block; clear: both; margin: 0; }

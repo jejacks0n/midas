@@ -628,6 +628,12 @@ Midas.Region = Class.create({
       if (this.previewing) {
         var element = e.target;
         if (element.tagName == 'A') {
+
+          // read ignore classes and skip if this anchor has any of them
+          for (var i = 0; i < this.configuration['ignoredLinks']; i += 1) {
+            if (element.hasClassName(this.configuration['ignoredLinks'][i])) return;
+          }
+
           var uri = element.getAttribute('href');
           var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
           if (host && host != top.location.host && host != top.location.hostname) {
@@ -2420,6 +2426,13 @@ Object.extend(Midas.modal, {
   }
 });
 Midas.Config = {
+
+  /* Links inside of regions are specially handled so that external links load outsite of the main
+   * content iframe.  There are times when you may be observing clicks on anchor tags where you
+   * might not want this behavior.  You can add classnames to this array and the handling won't be
+   * attached to them.
+   */
+  ignoredLinks: ['lightview'],
 
   /* Things like palettes, select menus, and panels can be preloaded when the page loads,
    * instead of loading the first time the button is clicked.
