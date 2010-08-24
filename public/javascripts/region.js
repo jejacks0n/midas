@@ -92,17 +92,12 @@ Midas.Region = Class.create({
       if (this.previewing) {
         var element = e.target;
         if (element.tagName == 'A') {
-          for (var i = 0; i < this.options['configuration']['ignoredLinks']; i += 1) {
-            if (element.hasClassName(this.options['configuration']['ignoredLinks'][i])) return;
+          for (var i = 0; i < this.config['ignoredLinks'].length; i += 1) {
+            if (element.hasClassName(this.config['ignoredLinks'][i])) return;
           }
 
-          var uri = element.getAttribute('href');
-//          var host = uri.match(/^[http:|https:]/) ? uri.split('://')[1].split('/')[0] : false;
-//          if (host && host != top.location.host && host != top.location.hostname) {
-          this.options['contentWindow'].onbeforeunload = Midas.onBeforeUnload;
-          top.location.href = uri;
+          top.location.href = element.getAttribute('href');
           e.stop();
-//          }
         }
       } else {
         Midas.fire('region', {region: this, name: this.name, event: e});
