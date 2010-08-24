@@ -460,6 +460,11 @@ Midas.Region = Class.create({
       this.execCommand('insertHTML', options['value']);
     },
 
+    replaceNode: function(options) {
+      if (options['node']) this.selectNode(options['node']);
+      this.execCommand('insertHTML', options['value']);
+    },
+    
     insertrowafter: function(options) {
       this.defaultActions['insertRow'].call(this, options, 'after');
     },
