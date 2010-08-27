@@ -2105,16 +2105,18 @@ Object.extend(Midas.modal, {
     this._options = Object.clone(this.options);
     Object.extend(this._options, options || {});
 
+    this._build();
+
     if (this.initialized) return false;
 
-    this._build();
     this._setupObservers();
     this.initialized = true;
   },
 
   _build: function() {
-		this.overlayElement = new Element('div', {id: 'midas_modal_overlay', style: 'display:none'});
-		this.element = new Element('div', {id: 'midas_modal', style: 'display:none'});
+    try { this.destroy() } catch(e) {}
+    this.overlayElement = new Element('div', {id: 'midas_modal_overlay', style: 'display:none'});
+    this.element = new Element('div', {id: 'midas_modal', style: 'display:none'});
 
     document.body.appendChild(this.overlayElement);
     document.body.appendChild(this.element);
