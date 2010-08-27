@@ -625,10 +625,11 @@ Midas.Region = Class.create({
       Midas.fire('region:update', {region: this, name: this.name, event: e});
     }.bind(this));
     Event.observe(this.element, 'click', function(e) {
+      var element = e.target;
+      var i;
       if (this.previewing) {
-        var element = e.target;
         if (element.tagName == 'A') {
-          for (var i = 0; i < this.config['ignoredLinks'].length; i += 1) {
+          for (i = 0; i < this.config['ignoredLinks'].length; i += 1) {
             if (element.hasClassName(this.config['ignoredLinks'][i])) return;
           }
 
@@ -638,6 +639,14 @@ Midas.Region = Class.create({
       } else {
         Midas.fire('region', {region: this, name: this.name, event: e});
         if (this.getContents() == '&nbsp;' && Prototype.Browser.Gecko) this.setContents('&nbsp;');
+        if (element.tagName == 'A') {
+          for (i = 0; i < this.config['ignoredLinks'].length; i += 1) {
+            if (element.hasClassName(this.config['ignoredLinks'][i])) {
+              e.stop();
+              return;
+            }
+          }
+        }
       }
     }.bind(this));
 
