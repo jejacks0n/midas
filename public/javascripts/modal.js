@@ -119,6 +119,7 @@ Object.extend(Midas.modal, {
   },
 
   hide: function(options) {
+    window['midas_modal_submit'] = null;
     if (!this.initialized) throw("Midas.Modal cannot hide before it's been initialized");
 
     if (options) {
