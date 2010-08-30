@@ -38,7 +38,9 @@ Midas.Region = Class.create({
     if (this.options['inline']) {
       this.element.setStyle({height: 'auto', minHeight: '20px', minWidth: '20px'});
     } else {
-      this.element.setStyle({overflow: 'auto'});
+      if (this.element.getStyle('overflow') != 'hidden') {
+        this.element.setStyle({overflow: 'auto'});
+      }
       var width = this.element.getWidth();
       if (width) this.element.setStyle({maxWidth: width + 'px'});
     }
