@@ -91,16 +91,28 @@
 
 /* Forms
  *----------------------------------------------------------------------------*/
-#midas_modal fieldset {
-  border: 1px solid #CCC;
+#midas_modal form fieldset {
   margin: 0 0 10px;
   clear: both;
   padding: 7px;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  background: #F6F6F6;
+  border: 1px solid #CCC;
+  display: block;
   }
-#midas_modal fieldset.no-border {
+#midas_modal form div.legend {
+  border-bottom: 1px solid #B0B0B0;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 0 0 0.3em 0;
+  padding: 0;
+  }
+#midas_modal form fieldset.no-border {
   border: none;
+  background: transparent;
   }
-#midas_modal fieldset legend {
+#midas_modal form fieldset legend {
   font-weight: bold;
   }
 #midas_modal p {
@@ -111,32 +123,39 @@
 #midas_modal label {
   display: inline-block;
   padding-top: 4px;
-  width: 30%;
+  width: 28%;
+  }
+#midas_modal .date ul li label,
+#midas_modal .time ul li label,
+#midas_modal .datetime ul label {
+  display: none !important;
+  }
+#midas_modal form hr {
+  display: none
+  }
+#midas_modal form select,
+#midas_modal form input[type="text"],
+#midas_modal form input[type="password"],
+#midas_modal form textarea,
+#midas_modal form input.text,
+#midas_modal form fieldset ol li.radio ul,
+#midas_modal form fieldset ol li.check_boxes ul,
+#midas_modal form fieldset ol li.wrapper ul,
+#midas_modal form fieldset ol li.datetime ul {
+  width: 68%;
+  margin-bottom: 2px;
+  }
+#midas_modal form select {
+  width: auto;
+  max-width: 68%;
+  }
+#midas_modal form ol li select {
+  max-width: none;
   }
 #midas_modal label.text-right {
   text-align: right;
   padding-top: 6px;
   }
-#midas_modal input[type=text],
-#midas_modal select,
-#midas_modal textarea {
-  font-size: 13px;
-  width: 66%;
-  padding: 2px;
-  margin-left: 5px;
-  border: 2px solid #999;
-  }
-#midas_modal .midas-modal-content input[disabled] {
-  background: #EEE;
-  }
-
-#midas_modal .input {
-  display: inline-block;
-  margin-left: 30px;
-  padding-left: 5px;
-  width: 66%;
-  }
-
 
 /* Specific Modals
  *----------------------------------------------------------------------------*/
@@ -198,7 +217,7 @@
   height: 100%;
   }
 #midas_html_editor textarea {
-  width: 600px;
+  width: 600px !important;
   height: 100%;
   font-family: monospace;
   white-space: pre;
@@ -226,13 +245,46 @@
 #midas_link_generator {
   width: 500px;
   }
-#midas_link_generator #midas_link_popup_options {
-  margin-left: 33%;
-  }
-#midas_link_generator #midas_link_popup_options label {
-  width: 70px;
-  text-align: right;
-  }
 #midas_link_generator #midas_link_popup_options input {
   width: 60px;
+  }
+
+/* table creator */
+#midas-table-creator {
+  width:600px;
+  }
+#midas-table-creator #table_container {
+  float: left;
+  width: 200px;
+  margin-right: 40px;
+  height: 200px;
+  }
+#midas-table-creator .midas-modal-pane {
+  float: left;
+  width: 250px;
+  }
+#midas-table-creator table {
+  height: 100%;
+  width: 100%;
+  }
+#midas-table-creator tr {
+  height: auto;
+  }
+#midas-table-creator td {
+  height: auto;
+  }
+#midas-table-creator fieldset {
+  border: 0;
+  }
+#midas-table-creator td.selected {
+  background-color: blue;
+  }
+#midas_table_attributes label {
+  display: block;
+  }
+#midas_table_attributes em {
+  font-style: normal;
+  width: 110px;
+  display: block;
+  float: left;
   }

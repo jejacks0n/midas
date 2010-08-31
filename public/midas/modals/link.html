@@ -1,19 +1,105 @@
+<div id="midas_link_generator">
+
+  <div class="midas-modal-pane">
+    <fieldset class="no-border">
+      <p>
+        <label for="midas_link_text" class="text-right">Link Text</label>
+        <input type="text" id="midas_link_text"/>
+      </p>
+    </fieldset>
+
+    <div class="legend">Standard Links</div>
+    <fieldset>
+      <p>
+        <label for="midas_link_external_url">
+          <input type="radio" name="midas_link_type" value="external_url" id="midas_link_type_external_url" checked="checked"/>
+          External URL
+        </label>
+        <input type="text" id="midas_link_external_url" value="http://" onfocus="this.previousSiblings()[0].down('input').checked=true"/>
+      </p>
+    </fieldset>
+
+    <div class="legend">Bookmarks</div>
+    <fieldset>
+      <p>
+        <label for="midas_link_existing_bookmark">
+          <input type="radio" name="midas_link_type" value="existing_bookmark" id="midas_link_type_existing_bookmark"/>
+          Existing Bookmarks
+        </label>
+        <select id="midas_link_existing_bookmark" onfocus="this.previousSiblings()[0].down('input').checked=true"></select>
+      </p>
+      <p>
+        <label for="midas_link_new_bookmark">
+          <input type="radio" name="midas_link_type" value="new_bookmark" id="midas_link_type_new_bookmark"/>
+          New Bookmark
+        </label>
+        <input type="text" id="midas_link_new_bookmark" value="" onfocus="this.previousSiblings()[0].down('input').checked=true"/>
+      </p>
+    </fieldset>
+  </div>
+
+  <div class="midas-modal-pane">
+    <fieldset class="no-border">
+      <p>
+        <label for="midas_link_target" class="text-right">Link Target</label>
+        <select name="midas_link_target" id="midas_link_target">
+          <option value="" selected="selected">Self (the same window or tab)</option>
+          <option value="_blank">Blank (a new window or tab)</option>
+          <option value="_top">Top (removes any frames)</option>
+          <option value="popup">Popup Window (javascript popup)</option>
+        </select>
+      </p>
+    </fieldset>
+
+    <fieldset id="midas_link_popup_options">
+      <legend>Popup Options</legend>
+      <p>
+        <label for="midas_link_popup_width" class="text-right">Width</label>
+        <input type="text" id="midas_link_popup_width" disabled="disabled" value=""/>
+      </p>
+      <p>
+        <label for="midas_link_popup_height" class="text-right">Height</label>
+        <input type="text" id="midas_link_popup_height" disabled="disabled" value=""/>
+      </p>
+    </fieldset>
+  </div>
+
+  <div class="midas-modal-controls">
+    <input type="submit" value="Insert Link">
+  </div>
+
+</div>
+
 <script type="text/javascript">
 
-  //TODO: prefill $('midas_link_text') with whatever is selected
   //TODO: existing bookmarks should prefill
   //TODO: if the user selects the new bookmark radio, the next page button should be disabled
+  var selection = $('midas_iframe_window').contentWindow.getSelection();
+  if (selection.rangeCount) {
+    var range = selection.getRangeAt(0);
+    var anchor;
+    window.midasSelectedAnchor = null;
+    if (anchor = Element.up(range.commonAncestorContainer, 'a')) {
+      window.midasSelectedAnchor = anchor;
+      // TODO: how do we handle internal links?
+      $('midas_link_external_url').value = anchor.href;
+      range.selectNode(anchor);
+      selection.addRange(range);
+    }
+    $('midas_link_text').value = range.cloneContents().textContent;
+  }
 
   $('midas_link_target').observe('change', function(e) {
     var element = $('midas_link_target');
+    var selection = element.options[element.selectedIndex].value;
     $('midas_link_popup_options').select('input').each(function(input) {
-      input.disabled = element.options[element.selectedIndex].value != 'popup';
-    })
+      input.disabled = !(selection == 'popup');
+    });
   });
 
-  window['midas_modal_submit'] = function(e) {    
+  window['midas_modal_submit'] = function(e) {
     e.stop();
-    
+
     var contents = $('midas_link_text').value;
     var target = $('midas_link_target').value;
     var type = $('midas_modal_form').getInputs('radio', 'midas_link_type').find(function(radio) {
@@ -35,12 +121,12 @@
     switch (target) {
       case 'popup':
         var args = {
-          width: parseInt($('midas_link_popup_width')) || 500,
-          height: parseInt($('midas_link_popup_height')) || 500,
+          width: parseInt($('midas_link_popup_width').value) || 500,
+          height: parseInt($('midas_link_popup_height').value) || 500,
           menubar: 'no',
           toolbar: 'no'
         };
-        attrs['onclick'] = "window.open('" + attrs['href'] + "', 'window_" + Math.random() + "', '" + Object.toQueryString(args).replace('&', ',') + "')";
+        attrs['href'] = "javascript:void(window.open('" + attrs['href'] + "', 'window_" + Math.random() + "', '" + Object.toQueryString(args).replace('&', ',') + "'))";
         break;
       default:
         attrs['target'] = target;
@@ -49,76 +135,9 @@
     var element = new Element('a', attrs).update(contents);
     var container = new Element('div').update(element);
 
-    Midas.fire('action', {action: 'insertHTML', options: {value: container.innerHTML}});
+    Midas.fire('action', {action: 'replaceNode', options: {value: container.innerHTML, node: window.midasSelectedAnchor}});
     Midas.modal.hide();
     e.stop();
   };
+  
 </script>
-
-<div id="midas_link_generator">
-
-  <div class="midas-modal-pane">
-    <fieldset class="no-border">
-      <label for="midas_link_text" class="text-right">Link Text</label>
-      <input type="text" id="midas_link_text"/>
-    </fieldset>
-
-    <fieldset>
-      <legend>Standard Links</legend>
-
-      <label for="midas_link_external_url">
-        <input type="radio" name="midas_link_type" value="external_url" id="midas_link_type_external_url" checked="checked"/>
-        External URL
-      </label>
-      <input type="text" id="midas_link_external_url" value="http://" onfocus="this.previousSiblings()[0].down('input').checked=true"/>
-    </fieldset>
-
-    <fieldset>
-      <legend>Bookmarks</legend>
-
-      <label for="midas_link_existing_bookmark">
-        <input type="radio" name="midas_link_type" value="existing_bookmark" id="midas_link_type_existing_bookmark"/>
-        Existing Bookmarks
-      </label>
-      <select id="midas_link_existing_bookmark" onfocus="this.previousSiblings()[0].down('input').checked=true"></select>
-
-      <label for="midas_link_new_bookmark">
-        <input type="radio" name="midas_link_type" value="new_bookmark" id="midas_link_type_new_bookmark"/>
-        New Bookmark
-      </label>
-      <input type="text" id="midas_link_new_bookmark" value="" onfocus="this.previousSiblings()[0].down('input').checked=true"/>
-    </fieldset>
-  </div>
-
-  <div class="midas-modal-pane">
-    <fieldset class="no-border">
-      <label for="midas_link_target">Link Target</label>
-      <select name="midas_link_target" id="midas_link_target">
-        <option value="" selected="selected">Self (the same window or tab)</option>
-        <option value="_blank">Blank (a new window or tab)</option>
-        <option value="_top">Top (removes any frames)</option>
-        <option value="popup">Popup Window (javascript popup)</option>
-      </select>
-    </fieldset>
-
-    <fieldset id="midas_link_popup_options" class="extra">
-      <legend>Popup Options</legend>
-
-      <p>
-        <label for="midas_link_popup_width">Width</label>
-        <input type="text" id="midas_link_popup_width" disabled="disabled" value=""/>
-      </p>
-
-      <p>
-        <label for="midas_link_popup_height">Height</label>
-        <input type="text" id="midas_link_popup_height" disabled="disabled" value=""/>
-      </p>
-    </fieldset>
-  </div>
-
-  <div class="midas-modal-controls">
-    <input type="submit" value="Insert Link">
-  </div>
-
-</div>
-

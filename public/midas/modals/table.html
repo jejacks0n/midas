@@ -1,8 +1,51 @@
-<html>
-<body>
+<div id="midas-table-creator">
+  <div id="table_container">
+    <table width="100%" border="1" cellspacing="0">
+      <tr><td></td><td></td></tr>
+      <tr><td></td><td></td></tr>
+    </table>
+  </div>
+  
+  <div class="midas-modal-pane">
+    <h3>Table Creation</h3>
+    <label>Columns:</label>
+    <fieldset id="midas_column_buttons" class="table-buttons">
+      <button type="button" id="remove_column">-</button>
+      <button type="button" id="add_column">+</button>
+    </fieldset>
+    <label>Rows:</label>
+    <fieldset id="midas_row_buttons" class="table-buttons">
+      <button type="button" id="remove_row">-</button>
+      <button type="button" id="add_row">+</button>
+    </fieldset>
+    <hr/>
+    <label>Column Span:</label>
+    <fieldset id="midas_colspan_buttons" class="cell-buttons">
+      <button type="button" id="decrease_col_span">-</button>
+      <button type="button" id="increase_col_span">+</button>
+    </fieldset>
+    <label>Row Span:</label>
+    <fieldset id="midas_rowspan_buttons" class="cell-buttons">
+      <button type="button" id="decrease_row_span">-</button>
+      <button type="button" id="increase_row_span">+</button>
+    </fieldset>
+  </div>
+
+  <div class="midas-modal-pane" id="midas_table_attributes">
+    <h3>Table Attributes</h3>
+    <label><em>Border:</em> <input id="table_border" value="1"/></label>
+    <label><em>Cell Spacing:</em> <input id="table_cell_spacing" value="0"/></label>
+    <label><em>Cell Padding:</em> <input id="table_cell_padding"/></label>
+  </div>
+</div>
+
+<div id="midas_character_controls" class="midas-modal-controls">
+  <input type="submit" value="Insert Table">
+</div>
 
 <script type="text/javascript">
-  var TableCreator = new Class.create({
+
+  var TableCreator = Class.create({
     initialize: function() {
       this.element = $('midas-table-creator');
       this.tableContainerElement = this.element.down('#table_container');
@@ -290,103 +333,5 @@
   };
 
   table_creator = new TableCreator;
+
 </script>
-
-<div id="midas-table-creator">
-  <div id="table_container">
-    <table width="100%" border="1" cellspacing="0">
-      <tr><td></td><td></td></tr>
-      <tr><td></td><td></td></tr>
-    </table>
-  </div>
-
-  <div class="midas-modal-pane">
-    <h3>Table Creation</h3>
-    <label>Columns:</label>
-    <fieldset id="midas_column_buttons" class="table-buttons">
-      <button type="button" id="remove_column">-</button>
-      <button type="button" id="add_column">+</button>
-    </fieldset>
-    <label>Rows:</label>
-    <fieldset id="midas_row_buttons" class="table-buttons">
-      <button type="button" id="remove_row">-</button>
-      <button type="button" id="add_row">+</button>
-    </fieldset>
-    <hr/>
-    <label>Column Span:</label>
-    <fieldset id="midas_colspan_buttons" class="cell-buttons">
-      <button type="button" id="decrease_col_span">-</button>
-      <button type="button" id="increase_col_span">+</button>
-    </fieldset>
-    <label>Row Span:</label>
-    <fieldset id="midas_rowspan_buttons" class="cell-buttons">
-      <button type="button" id="decrease_row_span">-</button>
-      <button type="button" id="increase_row_span">+</button>
-    </fieldset>
-  </div>
-
-  <div class="midas-modal-pane" id="midas_table_attributes">
-    <h3>Table Attributes</h3>
-    <label><em>Width:</em> <input id="table_width" value="100%"/></label>
-    <label><em>Border:</em> <input id="table_border" value="1"/></label>
-    <label><em>Cell Spacing:</em> <input id="table_cell_spacing" value="0"/></label>
-    <label><em>Cell Padding:</em> <input id="table_cell_padding"/></label>
-
-    <h3>Cell Attributes</h3>
-    <label><em>Cell Width:</em> <input id="table_cell_width"/></label>
-    <!--<label><em>Alignment:</em> <select id="table_cell_alignment">-->
-      <!--<option></option>-->
-      <!--<option>left</option>-->
-      <!--<option>center</option>-->
-      <!--<option>right</option>-->
-    <!--</select></label>-->
-  </div>
-</div>
-
-<div id="midas_character_controls" class="midas-modal-controls">
-  <input type="submit" value="Insert Table">
-</div>
-
-<style type="text/css">
-#midas-table-creator {
-  width:600px;
-  }
-#midas-table-creator #table_container {
-  float: left;
-  width: 200px;
-  margin-right: 40px;
-  height: 200px;
-  }
-#midas-table-creator .midas-modal-pane {
-  float: left;
-  width: 250px;
-  }
-#midas-table-creator table {
-  height: 100%;
-  width: 100%;
-  }
-#midas-table-creator tr {
-  height: auto;
-  }
-#midas-table-creator td {
-  height: auto;
-  }
-#midas-table-creator fieldset {
-  border: 0;
-  }
-#midas-table-creator td.selected {
-  background-color: blue;
-  }
-#midas_table_attributes label {
-  display: block;
-  }
-#midas_table_attributes em {
-  font-style: normal;
-  width: 110px;
-  display: block;
-  float: left;
-  }
-</style>
-
-</body>
-</html>

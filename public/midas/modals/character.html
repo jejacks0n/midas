@@ -1,20 +1,3 @@
-<script type="text/javascript">
-  var display = $('midas_character_display');
-  $('midas_character_selector').select('div').each(function(div) {
-    Event.observe(div, 'click', function() {
-      if (div == display) return;
-      display.down('span').innerHTML = div.getAttribute('title');
-      display.down('em').innerHTML = "&" + div.getAttribute('data-entity') + ';';
-    });
-  });
-  window['midas_modal_submit'] = function(e) {
-    var innerHTML = display.down('em').innerHTML;
-    Midas.fire('action', {action: 'insertHTML', options: {value: innerHTML}});
-    Midas.modal.hide();
-    e.stop();
-  };
-</script>
-
 <div id="midas_character_selector" class="midas-modal-pane">
   <div data-name="quot"     data-entity="#34"   title="quotation mark (APL quote)">&#34;</div>
   <div data-name="amp"      data-entity="#38"   title="ampersand">&#38;</div>
@@ -262,9 +245,31 @@
   <div data-name="clubs"    data-entity="#9827" title="black club suit (shamrock)">&#9827;</div>
   <div data-name="hearts"   data-entity="#9829" title="black heart suit (valentine)">&#9829;</div>
   <div data-name="diams"    data-entity="#9830" title="black diamond suit">&#9830;</div>
-  <div id="midas_character_display"><span>Select a character to preview:</span><em></em></div>
+  <fieldset>
+    <div id="midas_character_display"><span>Select a character to preview:</span><em></em></div>
+  </fieldset>
 </div>
 
 <div id="midas_character_controls" class="midas-modal-controls">
-  <input type="submit" value="Submit">
+  <input type="submit" value="Insert Character">
 </div>
+
+<script type="text/javascript">
+
+  var display = $('midas_character_display');
+  $('midas_character_selector').select('div').each(function(div) {
+    Event.observe(div, 'click', function() {
+      if (div == display) return;
+      display.down('span').innerHTML = div.getAttribute('title');
+      display.down('em').innerHTML = "&" + div.getAttribute('data-entity') + ';';
+    });
+  });
+
+  window['midas_modal_submit'] = function(e) {
+    var innerHTML = display.down('em').innerHTML;
+    Midas.fire('action', {action: 'insertHTML', options: {value: innerHTML}});
+    Midas.modal.hide();
+    e.stop();
+  };
+
+</script>

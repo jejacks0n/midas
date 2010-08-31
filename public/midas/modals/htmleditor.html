@@ -1,20 +1,22 @@
+<table id="midas_html_editor">
+<tr>
+  <td class="midas-modal-pane">
+    <textarea rows="5" id="midas_html_editor_content"></textarea>
+  </td>
+</tr>
+</table>
+
+<div id="midas_html_editor_controls" class="midas-modal-controls">
+  <input type="submit" value="Save and Replace">
+</div>
+
 <script type="text/javascript">
+
   window['midas_modal_submit'] = function(e) {
     var value = $('midas_html_editor_content').value.replace(/\n/g, '');
     Midas.fire('action', {action: 'replaceHTML', options: {value: value}});
     Midas.modal.hide();
     e.stop();
   };
+
 </script>
-
-<table id="midas_html_editor">
-<tr>
-  <td class="midas-modal-pane">
-    <textarea rows="10" id="midas_html_editor_content"></textarea>
-  </td>
-</tr>
-</table>
-
-<div id="midas_html_editor_controls" class="midas-modal-controls">
-  <input type="submit" value="Save">
-</div>
