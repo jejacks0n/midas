@@ -589,6 +589,19 @@
   text-align: right;
   padding-top: 6px;
   }
+#midas_modal form fieldset.buttons {
+  border: 0;
+  background: transparent;
+  margin: 18px 0 -8px;
+  border-top: 1px solid #CCCCCC;
+  padding: 14px 0 5px;
+  text-align: right;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  }
+#midas_modal form fieldset.buttons ol {
+  margin: 0;
+  }
 
 /* Specific Modals
  *----------------------------------------------------------------------------*/
