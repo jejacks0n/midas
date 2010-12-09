@@ -29,20 +29,20 @@ Midas.Region = Class.create({
   },
 
   makeEditable: function() {
-    this.element.addClassName('midas-region');
+    Element.addClassName(this.element, 'midas-region');
 
     if (this.element.innerHTML.replace(/^\s+|\s+$/g, "") == '' && Prototype.Browser.Gecko) {
       this.setContents('&nbsp;')
     }
-    
+
     if (this.options['inline']) {
-      this.element.setStyle({height: 'auto', minHeight: '20px', minWidth: '20px'});
+      Element.setStyle(this.element, {height: 'auto', minHeight: '20px', minWidth: '20px'});
     } else {
-      if (this.element.getStyle('overflow') != 'hidden') {
-        this.element.setStyle({overflow: 'auto'});
+      if (Element.getStyle(this.element, 'overflow') != 'hidden') {
+        Element.setStyle(this.element, {overflow: 'auto'});
       }
       var width = this.element.getWidth();
-      if (width) this.element.setStyle({maxWidth: width + 'px'});
+      if (width) Element.setStyle(this.element, {maxWidth: width + 'px'});
     }
     this.element.contentEditable = true;
 
@@ -147,21 +147,21 @@ Midas.Region = Class.create({
         case 90: // undo and redo
           if (!e.metaKey) break;
           this.execCommand((e.shiftKey) ? 'redo' : 'undo');
-          e.stop();
+          Event.stop(e);
           break;
         case 9: // tab
           this.selections.each(function(selection) {
             var container = selection.commonAncestorContainer;
             if (container.nodeType == 3) container = container.parentNode;
 
-            if (container.tagName == 'LI' || container.up('li')) {
+            if (container.tagName == 'LI' || Element.up(container, 'li')) {
               this.handleAction('indent');
               e.stop();
               return false;
             }
 
             if (container.up('table')) {
-              var thisCell = (container.tagName == 'TD' || container.tagName == 'TH') ? container : container.up('th, td');
+              var thisCell = (container.tagName == 'TD' || container.tagName == 'TH') ? container : Element.up(container, 'th, td');
               var thisRow = thisCell.up();
               var nextCellInRow = thisCell.nextSiblings()[0];
               Element.writeAttribute(thisRow, '_midas_current_row', 'true');
@@ -262,7 +262,7 @@ Midas.Region = Class.create({
 
   afterPaste: function(beforeHtml) {
     beforeHtml = beforeHtml.replace(/^\<br\>/, "");
-    var pastedRegion = this.element.down('.midas-region');
+    var pastedRegion = Element.down(this.element, '.midas-region');
     if (pastedRegion) {
       var selection = this.options['contentWindow'].getSelection();
       selection.removeAllRanges();
@@ -316,7 +316,7 @@ Midas.Region = Class.create({
 
   execCommand: function(action, argument) {
     argument = typeof(argument) == 'undefined' ? null : argument;
-    
+
     var supported = this.doc.execCommand('styleWithCSS', false, false);
     var handled;
     try {
@@ -339,14 +339,14 @@ Midas.Region = Class.create({
 
   togglePreview: function() {
     if (this.previewing) {
-      this.element.removeClassName('midas-region-preview');
+      Element.removeClassName(this.element, 'midas-region-preview');
       this.makeEditable();
       this.previewing = false;
     } else {
       this.element.contentEditable = false;
-      this.element.addClassName('midas-region-preview');
-      this.element.setStyle({height: null, minHeight: null, minWidth: null, maxWidth: null, overflow: null});
-      this.element.removeClassName('midas-region');
+      Element.addClassName(this.element, 'midas-region-preview');
+      Element.setStyle(this.element, {height: null, minHeight: null, minWidth: null, maxWidth: null, overflow: null});
+      Element.removeClassName(this.element, 'midas-region');
       this.previewing = true;
     }
   },
@@ -354,12 +354,12 @@ Midas.Region = Class.create({
   destroy: function() {
     this.element.contentEditable = 'false';
     this.element.blur();
-    this.element.removeClassName('midas-region');
+    Element.removeClassName(this.element, 'midas-region');
   },
 
   handleAction: function(action, event, toolbar, options) {
     options = options || {};
-    
+
     if (this.config['behaviors'][action]) {
       var behaviors = this.config['behaviors'][action];
 
@@ -391,6 +391,7 @@ Midas.Region = Class.create({
     var range = this.selections[0];
     var fragment = range.cloneContents();
 
+    // TODO: !! this is a problem
     if (fragment.containsTags('div table tr td')) {
       this.wrapTextnodes(fragment, tagName, newElementCallback, updateElementCallback);
     } else {
@@ -468,7 +469,7 @@ Midas.Region = Class.create({
       if (options['node']) this.selectNode(options['node']);
       this.execCommand('insertHTML', options['value']);
     },
-    
+
     insertrowafter: function(options) {
       this.defaultActions['insertRow'].call(this, options, 'after');
     },
@@ -509,6 +510,7 @@ Midas.Region = Class.create({
       args[position] = '<tr _midas_dirty="true">' + ('<' + baseCell.tagName + '></' + baseCell.tagName + '>').repeat(columnCount) + '</tr>';
       Element.insert(row, args);
 
+      //TODO: !! this is a problem
       var scrollPosition = this.doc.viewport.getScrollOffsets();
 
       selection.addRange(newRange);
@@ -516,7 +518,7 @@ Midas.Region = Class.create({
       selection.removeAllRanges();
 
       var finalRange = this.doc.createRange();
-      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      var selectNode = Element.down(this.element, 'tr[_midas_dirty=true] ' + baseCell.tagName);
       selectNode.up('tr').removeAttribute('_midas_dirty');
       finalRange.selectNodeContents(selectNode);
       finalRange.collapse(true);
@@ -563,7 +565,7 @@ Midas.Region = Class.create({
       selection.removeAllRanges();
 
       var finalRange = this.doc.createRange();
-      var selectNode = this.element.down('tr[_midas_dirty=true] ' + baseCell.tagName);
+      var selectNode = Element.down( this.element, 'tr[_midas_dirty=true] ' + baseCell.tagName);
       selectNode.up('tr').removeAttribute('_midas_dirty');
       finalRange.selectNodeContents(selectNode);
       finalRange.collapse(true);
@@ -623,7 +625,7 @@ Midas.Region = Class.create({
       selection.removeAllRanges();
 
       var finalRange = this.doc.createRange();
-      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      var selectNode = Element.down(this.element, baseCell.tagName + '[_midas_dirty=true]');
       finalRange.selectNodeContents(selectNode);
       finalRange.collapse(true);
       selection.addRange(finalRange);
@@ -672,7 +674,7 @@ Midas.Region = Class.create({
       selection.removeAllRanges();
 
       var finalRange = this.doc.createRange();
-      var selectNode = this.element.down(baseCell.tagName + '[_midas_dirty=true]');
+      var selectNode = Element.down(this.element, baseCell.tagName + '[_midas_dirty=true]');
       selectNode.removeAttribute('_midas_dirty');
       finalRange.selectNodeContents(selectNode);
       finalRange.collapse();

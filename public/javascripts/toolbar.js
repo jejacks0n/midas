@@ -134,7 +134,7 @@ Midas.Toolbar = Class.create({
 
   generateId: function() {
     if (this.id) return this.id;
-    
+
     var id = null;
     var element = '';
     while (element !== null) {
@@ -148,7 +148,7 @@ Midas.Toolbar = Class.create({
 
   makeButton: function(action, buttonSpec) {
     if (action == '_context') return;
-    
+
     var element;
     if (Object.isArray(buttonSpec)) {
       var types = buttonSpec.without(buttonSpec[0]).without(buttonSpec[1]);
@@ -350,7 +350,7 @@ Midas.Toolbar = Class.create({
     this.palettes = [];
     this.selects = [];
     this.panels = [];
-    
+
     if (this.element) this.element.remove();
     if (this.element) this.element = null;
   }
@@ -361,17 +361,17 @@ Object.extend(Midas.Toolbar, {
   contexts: {
 
     table: function(node, region) {
-      var table = node.up('table');
-      if (table && table.descendantOf(region.element)) this.groups['table']['element'].removeClassName('disabled');
+      var table = Element.up(node, 'table');
+      if (table && Element.descendantOf(table, region.element)) this.groups['table']['element'].removeClassName('disabled');
       else this.groups['table']['element'].addClassName('disabled');
     },
 
     backcolor: function(node) {
-      this.buttons['backcolor']['element'].setStyle('background-color:' + node.getStyle('background-color'));
+      this.buttons['backcolor']['element'].setStyle('background-color:' + Element.getStyle(node, 'background-color'));
     },
 
     forecolor: function(node) {
-      this.buttons['forecolor']['element'].setStyle('background-color:' + node.getStyle('color'));
+      this.buttons['forecolor']['element'].setStyle('background-color:' + Element.getStyle(node, 'color'));
     },
 
     bold: function(node) {
@@ -380,23 +380,23 @@ Object.extend(Midas.Toolbar, {
     },
 
     italic: function(node) {
-      return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || node.up('i') || node.nodeName == 'EM' || node.up('em');
+      return Element.getStyle(node, 'font-style') == 'italic' || node.nodeName == 'I' || Element.up(node, 'i') || node.nodeName == 'EM' || Element.up(node, 'em');
     },
 
     strikethrough: function(node) {
-      return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || node.up('strike');
+      return Element.getStyle(node, 'text-decoration') == 'line-through' || node.nodeName == 'STRIKE' || Element.up(node, 'strike');
     },
 
     underline: function(node) {
-      return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || node.up('u');
+      return Element.getStyle(node, 'text-decoration') == 'underline' || node.nodeName == 'U' || Element.up(node, 'u');
     },
 
     subscript: function(node) {
-      return node.nodeName == 'SUB' || node.up('sub');
+      return node.nodeName == 'SUB' || Element.up(node, 'sub');
     },
 
     superscript: function(node) {
-      return node.nodeName == 'SUP' || node.up('sup');
+      return node.nodeName == 'SUP' || Element.up(node, 'sup');
     },
 
     justifyleft: function(node) {
@@ -418,13 +418,13 @@ Object.extend(Midas.Toolbar, {
     insertorderedlist: function(node, region) {
       if (node.nodeName == 'OL') return true;
       var ol = Element.up(node, 'ol');
-      return (ol) ? ol.descendantOf(region.element) : false;
+      return (ol) ? Element.descendantOf(ol, region.element) : false;
     },
 
     insertunorderedlist: function(node, region) {
       if (node.nodeName == 'ul') return true;
       var ul = Element.up(node, 'ul');
-      return (ul) ? ul.descendantOf(region.element) : false;
+      return (ul) ? Element.descendantOf(ul, region.element) : false;
     }
   }
 });

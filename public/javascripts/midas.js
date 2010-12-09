@@ -19,7 +19,7 @@ var Midas = Class.create({
       Midas.trace('Midas will only instantiate in "top", when using an iframe');
       return;
     }
-    
+
     Midas.registerInstance(this);
 
     this.options = Object.extend(Object.clone(this.options), options);
@@ -29,8 +29,8 @@ var Midas = Class.create({
     this.toolbarOptions = toolbarOptions || {};
     this.statusbarOptions = statusbarOptions || {};
     this.regionOptions = regionOptions || {};
-    
-    this.initializeInterface();        
+
+    this.initializeInterface();
   },
 
   initializeInterface: function() {
@@ -57,7 +57,7 @@ var Midas = Class.create({
       }.bind(this));
 
       this.iframe.src = src;
-      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container', style: 'visibility:hidden'});      
+      this.iframeContainer = new Element('div', {'class': 'midas-iframe-container', style: 'visibility:hidden'});
       this.iframeContainer.appendChild(this.iframe);
 
       document.body.setStyle('overflow:hidden');
@@ -96,7 +96,7 @@ var Midas = Class.create({
 
     Object.extend(this.toolbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
     Object.extend(this.statusbarOptions, {contentWindow: this.contentWindow, configuration: this.options['configuration']});
-    
+
     if (!this.toolbar && !this.statusbar) {
       this.toolbar = new Midas.Toolbar(this.toolbarOptions);
       this.statusbar = new Midas.Statusbar(this.statusbarOptions);
@@ -113,11 +113,11 @@ var Midas = Class.create({
     this.__mouseup = function(e) {
       var element = Event.element(e);
       if (element != document) {
-        if (this.toolbar && (element.descendantOf(this.toolbar.element) || element == this.toolbar.element)) return;
-        if (this.statusbar && (element.descendantOf(this.statusbar.element) || element == this.statusbar.element)) return;
+        if (this.toolbar && (Element.descendantOf(element, this.toolbar.element) || element == this.toolbar.element)) return;
+        if (this.statusbar && (Element.descendantOf(element, this.statusbar.element) || element == this.statusbar.element)) return;
 
         for (var i = 0; i < this.regions.length; ++i) {
-          if (element == this.regions[i].element || element.descendantOf(this.regions[i].element)) return;
+          if (element == this.regions[i].element || Element.descendantOf(element, this.regions[i].element)) return;
         }
       }
 
@@ -205,7 +205,7 @@ var Midas = Class.create({
       if (this.regions[i].element.getAttribute('id') == elementId) return this.regions[i];
     }
   },
-  
+
   handleAction: function(action, event, toolbar, options) {
     options = options || {};
 
@@ -220,7 +220,7 @@ var Midas = Class.create({
     if (!this.activeRegion) return;
 
     this.changed = true;
-    
+
     this.activeRegion.handleAction(action, event, toolbar, options);
 
     if (this.statusbar) this.statusbar.update(this.activeRegion, event);
@@ -360,12 +360,12 @@ Object.extend(Midas, {
     var links = Element.select(element, 'a');
 
     for (var i = 0; i < links.length; ++i) {
-      if ((links[i].target == '' || links[i].target == '_self') && !links[i].up('.midas-region')) {
-        links[i].writeAttribute('target', '_top');
+      if ((links[i].target == '' || links[i].target == '_self') && !Element.up(links[i], '.midas-region')) {
+        Element.writeAttribute(links[i], 'target', '_top');
       }
     }
   },
-  
+
   agent: function() {
     if (this.agentId) return this.agentId;
 
@@ -410,7 +410,7 @@ Object.extend(Midas, {
 
     Event.fire(document, event, memo);
   },
-  
+
   trace: function() {
     var args = [];
     for (var i = 0; i < arguments.length; ++i) args.push(arguments[i]);

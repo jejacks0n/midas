@@ -1,7 +1,7 @@
 require 'packr'
 require 'base64'
 
-javascript_files = %w[native_extensions midas region toolbar statusbar dialog palette select panel modal]
+javascript_files = %w[midas region toolbar statusbar dialog palette select panel modal]
 stylesheet_files = %w[midas region toolbar statusbar dialog palette select panel modal]
 
 namespace :midas do
@@ -36,11 +36,13 @@ namespace :midas do
     input_path = "#{thisfile}/../public/javascripts"
 
     code = ''
+    native_code = File.read("#{input_path}/native_extensions.js")
     config_code = File.read("#{input_path}/config.js")
     javascript_files.each do |file|
-      code << File.read("#{input_path}/#{file}.js")
+      code << File.read("#{input_path}/#{file}.js") + "\n"
     end
 
+    code = native_code + "\nMidas = {};\nif (typeof(Prototype) != 'undefined') {\n\n#{code}}\n\n"
     File.open("#{output_path}/midas.js", 'wb') { |file| file.write(code + config_code) }
     File.open("#{output_path}/midas.min.js", 'wb') do |file|
       file.write(Packr.pack(code, :base62 => true) + ";\n" + config_code + "\n\n")

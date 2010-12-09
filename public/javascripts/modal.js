@@ -9,7 +9,8 @@ Object.extend(Midas.modal, {
   version: 0.2,
   initialized: false,
   options: {
-    title: ''
+    title: '',
+    content: ''
   },
 
   _initialize: function(options) {
@@ -35,10 +36,12 @@ Object.extend(Midas.modal, {
   },
 
   _setupObservers: function() {
+    var stopper = function(e) { e.stop(); };
+
     Event.observe(window, 'resize', this.position.bind(this));
-    Event.observe(this.overlayElement, 'mousedown', function(e) { e.stop(); });
-    Event.observe(this.overlayElement, 'mouseup', function(e) { e.stop(); });
-    Event.observe(this.element, 'mouseup', function(e) { e.stop(); });
+    Event.observe(this.overlayElement, 'mousedown', stopper);
+    Event.observe(this.overlayElement, 'mouseup', stopper);
+    Event.observe(this.element, 'mouseup', stopper);
 
     var documents = [document];
     var iframe = $('midas_iframe_window');
@@ -94,7 +97,7 @@ Object.extend(Midas.modal, {
         var height = this.frameElement.getHeight();
         this.frameElement.setStyle({top: (-height) + 'px', visibility: 'visible'});
         new Effect.Morph(this.frameElement, {
-          style: {top: '0px'}, 
+          style: {top: '0px'},
           transition: Effect.Transitions.sinoidal,
           duration: Midas.durationMultiplier * .20,
           afterFinish: function() {
@@ -200,7 +203,7 @@ Object.extend(Midas.modal, {
 
   position: function() {
     if (!this.element || !this.showing) return;
-    
+
     this.frameElement.setStyle('width:auto');
     this.contentElement.setStyle('height:auto');
     this.contentContainerElement.setStyle('height:auto');
@@ -236,8 +239,8 @@ Object.extend(Midas.modal, {
 
     var viewportDimensions = document.viewport.getDimensions();
     var titleHeight = this.element.down('h1').getHeight();
-    if (height + titleHeight + controlsHeight >= viewportDimensions.height - 20 || this._options['fullHeight']) {
-      height = (viewportDimensions.height - titleHeight - controlsHeight - 20);
+    if (height + titleHeight + controlsHeight >= viewportDimensions.height - 200 || this._options['fullHeight']) {
+      height = (viewportDimensions.height - titleHeight - controlsHeight - 200);
     }
 
     var duration = Midas.durationMultiplier * .20;

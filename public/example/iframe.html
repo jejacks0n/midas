@@ -1,43 +1,15 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
 <head>
   <title>Midas Integration</title>
   <meta content='text/html; charset=UTF-8' http-equiv='content-type' />
   <meta content='en' http-equiv='content-language' />
   <meta content='no' http-equiv='imagetoolbar' />
-
-  <script src="/distro/javascripts/lib/prototype.js" type="text/javascript"></script>
-  <script src="/distro/javascripts/lib/effects.js" type="text/javascript"></script>
-  <script src="/distro/javascripts/lib/dragdrop.js" type="text/javascript"></script>
-
   <script src="/distro/javascripts/midas.min.js" type="text/javascript"></script>
-  <script src="/distro/javascripts/midas_dialogs.js" type="text/javascript"></script>
-  <link  href="/distro/stylesheets/midas.bundle.css" rel="stylesheet"/>
 
   <style type="text/css">
-    #toolbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      }
-    #region1, #region2 {
-      float: left;
-      }
-    #region1 a {
-      color: green !important;
-      }
-    #region1 h1, .region1 h1 {
-      color: red;
-      }
-    #region2 h1, .region2 h1 {
-      color: blue;
-      }
-    th {
-      background: black;
-      color: #FFF;
-      }
-
     .red {
       color: red;
       }
@@ -50,11 +22,19 @@
       }
   </style>
 </head>
-<body onload="Midas.debug = false; midas = new Midas({useIframe: 'iframe.html'}, {appendTo: 'toolbar'}, {inline: true});">
+<body>
 
   <div id="toolbar"></div>
 
   <h3 class="editable"></h3>
+
+  <table>
+    <tr>
+      <td class="editable">
+        asdasd
+      </td>
+    </tr>
+  </table>
 
   <div id="region1" class="editable">
     Lorem Ip<span>s</span>um....<img src="/images/midas/toolbars/actions/save.png" align="right">
@@ -77,8 +57,21 @@
         </tr>
       </tbody>
     </table>
-    <a href="http://google.com">external link</a>
-    <a href="/midas/examples/iframe.html">internal link</a>
+
+    <div style="height:0px;overflow:hidden;opacity:0">&nbsp;</div>
+
+    <table>
+      <tr>
+        <td>tr1td1</td>
+        <td>tr1td2</td>
+      </tr>
+      <tr>
+        <td>tr2td1</td>
+        <td>tr2td2</td>
+      </tr>
+    </table>
+
+    <div style="position:absolute;right:0;border:1px solid red;">absolute</div>
   </div>
 
   <div id="region2" class="editable">

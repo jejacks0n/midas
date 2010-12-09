@@ -19,7 +19,7 @@ GEM
       gherkin (>= 1.0.27)
       json_pure (>= 1.2.4)
       term-ansicolor (>= 1.0.4)
-    culerity (0.2.12)
+    culerity (0.2.10)
     daemons (1.1.0)
     diff-lcs (1.1.2)
     fastthread (1.0.7)
@@ -59,7 +59,7 @@ GEM
     selenium-client (1.2.18)
     selenium-rc (2.2.4)
       selenium-client (>= 1.2.18)
-    selenium-webdriver (0.0.28)
+    selenium-webdriver (0.0.27)
       ffi (>= 0.6.1)
       json_pure
       rubyzip
