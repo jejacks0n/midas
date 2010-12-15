@@ -154,7 +154,8 @@ var Midas = Class.create({
         seamless: 'true',
         frameborder: '0',
         id: 'midas_iframe_window',
-        src: 'about:blank'
+        src: 'about:blank',
+        width: '100%'
       });
 
       Event.observe(this.iframe, 'load', function() {
@@ -582,7 +583,7 @@ Midas.Region = Class.create({
       if (Element.getStyle(this.element, 'overflow') != 'hidden') {
         Element.setStyle(this.element, {overflow: 'auto'});
       }
-      var width = this.element.getWidth();
+      var width = this.element.scrollWidth;
       if (width) Element.setStyle(this.element, {maxWidth: width + 'px'});
     }
     this.element.contentEditable = true;
