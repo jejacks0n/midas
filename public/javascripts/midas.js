@@ -43,7 +43,8 @@ var Midas = Class.create({
         seamless: 'true',
         frameborder: '0',
         id: 'midas_iframe_window',
-        src: 'about:blank'
+        src: 'about:blank',
+        width: '100%'
       });
 
       Event.observe(this.iframe, 'load', function() {
